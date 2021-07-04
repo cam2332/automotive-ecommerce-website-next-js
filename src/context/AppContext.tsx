@@ -6,6 +6,12 @@ type AppContextProps = {
   cartTotal: number
   searchText: string
   setSearchText: (value: string) => void
+  selectedCarMake: string
+  setSelectedCarMake: (value: string) => void
+  selectedCarModel: string
+  setSelectedCarModel: (value: string) => void
+  selectedCarType: string
+  setSelectedCarType: (value: string) => void
 }
 
 export const AppContext = createContext<AppContextProps>({} as AppContextProps)
@@ -15,6 +21,9 @@ const AppProvider: React.FC = ({ children }): React.ReactElement => {
   const [cartCount, setCartCount] = useState(0)
   const [cartTotal, setCartTotal] = useState(0.0)
   const [searchText, setSearchText] = useState('')
+  const [selectedCarMake, setSelectedCarMake] = useState('')
+  const [selectedCarModel, setSelectedCarModel] = useState('')
+  const [selectedCarType, setSelectedCarType] = useState('')
 
   return (
     <AppContext.Provider
@@ -24,6 +33,12 @@ const AppProvider: React.FC = ({ children }): React.ReactElement => {
         cartTotal: cartTotal,
         searchText: searchText,
         setSearchText: setSearchText,
+        selectedCarMake: selectedCarMake,
+        setSelectedCarMake: setSelectedCarMake,
+        selectedCarModel: selectedCarModel,
+        setSelectedCarModel: setSelectedCarModel,
+        selectedCarType: selectedCarType,
+        setSelectedCarType: setSelectedCarType,
       }}>
       {children}
     </AppContext.Provider>
