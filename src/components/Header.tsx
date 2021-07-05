@@ -210,6 +210,8 @@ const PhoneIcon = tw(FaPhoneAlt)`
   text-xl
   cursor-pointer
   text-primary-color
+  ml-3
+  mr-1
 `
 
 const PhoneNumber = tw.span`
