@@ -5,7 +5,7 @@ function VehicleFilter() {
   const appContext = useAppContext()
 
   return (
-    <div className='flex flex-col items-center w-full pt-3 pb-6 space-y-5 bg-gray-200'>
+    <div className='flex flex-col items-center w-full pt-3 pb-6 space-y-5 bg-gray-200 lg:w-5xl lg:max-w-5xl'>
       <div className='flex flex-col w-90% justify-self-start md:w-full md:px-4'>
         <span className='font-semibold text-primary-color'>
           Wybierz samochód
