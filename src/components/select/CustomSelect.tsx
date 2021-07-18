@@ -70,8 +70,8 @@ const Container = tw.div`
   flex
   flex-col
   items-center
-  flex-auto
-  z-100
+  ${({ $expanded }: { $expanded: boolean }) => $expanded && 'z-100'}
+  w-full
 `
 
 const FullSizeBackground = tw.div`
@@ -85,6 +85,7 @@ const InnerContainer = tw.div`
   flex
   flex-col
   items-center
+  w-full
 `
 
 const ValueContainer = tw.div`
