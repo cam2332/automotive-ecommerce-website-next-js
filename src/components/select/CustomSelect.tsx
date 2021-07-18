@@ -5,9 +5,17 @@ import tw from 'tailwind-styled-components'
 function CustomSelect({
   value,
   children,
+  input,
+  inputValue,
+  inputPlaceholder,
+  onInputChange,
 }: {
   value: string
   children?: JSX.Element | JSX.Element[]
+  input?: boolean
+  inputValue?: string
+  inputPlaceholder?: string
+  onInputChange?: (text: string) => void
 }) {
   const [expanded, setExpanded] = useState(false)
   const [up, setUp] = useState(false)
@@ -30,14 +38,22 @@ function CustomSelect({
   }, [expanded])
 
   return (
-    <Container>
+    <Container $expanded={expanded}>
       <FullSizeBackground
         $expanded={expanded}
         onClick={() => setExpanded(false)}
       />
       <InnerContainer>
         <ValueContainer onClick={() => setExpanded(!expanded)}>
-          <Value>{value}</Value>
+          {input ? (
+            <Input
+              placeholder={inputPlaceholder}
+              value={inputValue}
+              onChange={(e) => onInputChange(e.target.value)}
+            />
+          ) : (
+            <Value>{value}</Value>
+          )}
           <IconWrapper>
             <ChevronIcon $expanded={expanded} />
           </IconWrapper>
@@ -85,6 +101,14 @@ const ValueContainer = tw.div`
   py-2px
   min-h-8
   min-w-70px
+`
+
+const Input = tw.input`
+  w-full
+  ml-3
+  mr-1
+  bg-white
+  outline-none
 `
 
 const Value = tw.span`
