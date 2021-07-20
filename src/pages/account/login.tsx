@@ -45,6 +45,7 @@ function Login() {
             title='Logowanie'
             fields={[
               <InputText
+                key='email'
                 ref={emailInputRef}
                 value={email}
                 onChangeText={(text) => {
@@ -61,6 +62,7 @@ function Login() {
                 autoComplete='email'
               />,
               <InputText
+                key='password'
                 ref={passwordInputRef}
                 value={password}
                 onChangeText={(text) => {
@@ -78,10 +80,14 @@ function Login() {
             ]}
             submitButtonText='Zaloguj'
             links={[
-              <Link onClick={() => router.push('/account/register')}>
+              <Link
+                key='register'
+                onClick={() => router.push('/account/register')}>
                 Rejestracja
               </Link>,
-              <Link onClick={() => router.push('/account/reset')}>
+              <Link
+                key='forgotPassword'
+                onClick={() => router.push('/account/reset')}>
                 Nie pamiętasz hasła?
               </Link>,
             ]}

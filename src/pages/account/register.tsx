@@ -60,6 +60,7 @@ function Register() {
             title='Rejestracja'
             fields={[
               <InputText
+                key='firstName'
                 ref={firstNameInputRef}
                 value={firstName}
                 onChangeText={(text) => {
@@ -76,6 +77,7 @@ function Register() {
                 autoComplete='given-name'
               />,
               <InputText
+                key='lastName'
                 ref={lastNameInputRef}
                 value={lastName}
                 onChangeText={(text) => {
@@ -92,6 +94,7 @@ function Register() {
                 autoComplete='given-name'
               />,
               <InputText
+                key='email'
                 ref={emailInputRef}
                 value={email}
                 onChangeText={(text) => {
@@ -108,6 +111,7 @@ function Register() {
                 autoComplete='email'
               />,
               <InputText
+                key='password'
                 ref={passwordInputRef}
                 value={password}
                 onChangeText={(text) => {
@@ -129,6 +133,7 @@ function Register() {
                 autoComplete='new-password'
               />,
               <InputText
+                key='confirmPassword'
                 ref={confirmPasswordInputRef}
                 value={confirmPassword}
                 onChangeText={(text) => {
