@@ -6,9 +6,10 @@ import EmptyHeader from '../../components/EmptyHeader'
 import Footer from '../../components/Footer'
 import InputText from '../../components/InputText'
 import Link from '../../components/form/Link'
-import SubmitButton from '../../components/form/SubmitButton'
 import Form from '../../components/form/Form'
 import {
+  firstNameValidator,
+  lastNameValidator,
   emailValidator,
   passwordsEqualValidator,
   passwordValidator,
@@ -16,19 +17,27 @@ import {
 
 function Register() {
   const router = useRouter()
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isFormValid, setIsFormValid] = useState(false)
+  const firstNameInputRef = useRef(null)
+  const lastNameInputRef = useRef(null)
   const emailInputRef = useRef(null)
   const passwordInputRef = useRef(null)
   const confirmPasswordInputRef = useRef(null)
 
   useEffect(() => {
     setIsFormValid(
-      email !== '' &&
+      firstName !== '' &&
+        lastName !== '' &&
+        email !== '' &&
         password !== '' &&
         confirmPassword !== '' &&
+        !firstNameInputRef.current.hasError() &&
+        !lastNameInputRef.current.hasError() &&
         !emailInputRef.current.hasError() &&
         !passwordInputRef.current.hasError() &&
         !confirmPasswordInputRef.current.hasError()
@@ -50,6 +59,38 @@ function Register() {
           <Form
             title='Rejestracja'
             fields={[
+              <InputText
+                ref={firstNameInputRef}
+                value={firstName}
+                onChangeText={(text) => {
+                  setFirstName(text)
+                  const [isFirstNameInvalid, invalidFirstNameText] =
+                    firstNameValidator(text)
+                  firstNameInputRef.current.setErrorValue(
+                    isFirstNameInvalid,
+                    invalidFirstNameText
+                  )
+                }}
+                placeholder='Imię'
+                inputType='text'
+                autoComplete='given-name'
+              />,
+              <InputText
+                ref={lastNameInputRef}
+                value={lastName}
+                onChangeText={(text) => {
+                  setLastName(text)
+                  const [isLastNameInvalid, invalidLastNameText] =
+                    lastNameValidator(text)
+                  lastNameInputRef.current.setErrorValue(
+                    isLastNameInvalid,
+                    invalidLastNameText
+                  )
+                }}
+                placeholder='Nazwisko'
+                inputType='text'
+                autoComplete='given-name'
+              />,
               <InputText
                 ref={emailInputRef}
                 value={email}
