@@ -8,13 +8,17 @@ function InputSelect({
   inputValue,
   inputPlaceholder,
   onInputChange,
+  onClickField,
+  active,
 }: {
   value: string
   options: { id: string; value: string }[]
-  onClickItem: (value: string) => void
+  onClickItem: ({ id, value }: { id: string; value: string }) => void
   inputValue: string
   inputPlaceholder?: string
   onInputChange: (text: string) => void
+  onClickField?: () => void
+  active?: boolean
 }) {
   return (
     <CustomSelect
@@ -22,13 +26,15 @@ function InputSelect({
       input={true}
       inputValue={inputValue}
       inputPlaceholder={inputPlaceholder}
-      onInputChange={onInputChange}>
+      onInputChange={onInputChange}
+      onClickField={() => onClickField && onClickField()}
+      active={active}>
       {options.map((option) => (
         <SimpleItem
           key={option.id}
-          value={value}
-          selected={option.id === value}
-          onClick={() => onClickItem(option.id)}
+          value={option.value}
+          selected={option.value === value}
+          onClick={() => onClickItem(option)}
         />
       ))}
     </CustomSelect>

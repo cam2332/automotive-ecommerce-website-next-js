@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { IoChevronUpSharp } from 'react-icons/io5'
+import { IoChevronDownSharp } from 'react-icons/io5'
 import tw from 'tailwind-styled-components'
 
 function CustomSelect({
@@ -9,6 +9,8 @@ function CustomSelect({
   inputValue,
   inputPlaceholder,
   onInputChange,
+  onClickField,
+  active = true,
 }: {
   value: string
   children?: JSX.Element | JSX.Element[]
@@ -16,6 +18,8 @@ function CustomSelect({
   inputValue?: string
   inputPlaceholder?: string
   onInputChange?: (text: string) => void
+  onClickField?: () => void
+  active?: boolean
 }) {
   const [expanded, setExpanded] = useState(false)
   const [up, setUp] = useState(false)
@@ -44,9 +48,14 @@ function CustomSelect({
         onClick={() => setExpanded(false)}
       />
       <InnerContainer>
-        <ValueContainer onClick={() => setExpanded(!expanded)}>
+        <ValueContainer
+          onClick={() => {
+            setExpanded(!expanded)
+            onClickField && onClickField()
+          }}>
           {input ? (
             <Input
+              disabled={!active}
               placeholder={inputPlaceholder}
               value={inputValue}
               onChange={(e) => onInputChange(e.target.value)}
@@ -55,11 +64,13 @@ function CustomSelect({
             <Value>{value}</Value>
           )}
           <IconWrapper>
-            <ChevronIcon $expanded={expanded} />
+            <ChevronIcon $active={active} $expanded={expanded} />
           </IconWrapper>
         </ValueContainer>
         <ListWrapper ref={listWrapperRef} $expanded={expanded} $up={up}>
-          <List onClick={() => setExpanded(!expanded)}>{children}</List>
+          <List onClick={() => active && setExpanded(!expanded)}>
+            {children}
+          </List>
         </ListWrapper>
       </InnerContainer>
     </Container>
@@ -126,10 +137,12 @@ const IconWrapper = tw.div`
   items-center
 `
 
-const ChevronIcon = tw(IoChevronUpSharp)`
-  text-sm
-  text-gray-600
-  ${({ $expanded }: { $expanded: boolean }) => !$expanded && 'rotate-180'}
+const ChevronIcon = tw(IoChevronDownSharp)`
+  text-sm  
+  ${({ $expanded, $active }: { $expanded: boolean; $active: boolean }) =>
+    `${$expanded && 'rotate-180'} ${
+      $active ? 'text-gray-600' : 'text-gray-300'
+    }`}
   ml-1
   mr-2
   duration-200
