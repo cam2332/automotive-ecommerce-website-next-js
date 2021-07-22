@@ -41,6 +41,7 @@ const ValueText = tw.span`
   leading-6
   group-hover:text-white
   ${({ $selected }: { $selected: boolean }) => $selected && 'text-white'}
+  text-sm
 `
 
 export default SimpleItem

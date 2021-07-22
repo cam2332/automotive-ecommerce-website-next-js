@@ -121,6 +121,7 @@ const Input = tw.input`
   mr-1
   bg-white
   outline-none
+  text-sm
 `
 
 const Value = tw.span`
@@ -130,6 +131,7 @@ const Value = tw.span`
   bg-white
   appearance-none
   text-primary-color
+  text-sm
 `
 
 const IconWrapper = tw.div`
