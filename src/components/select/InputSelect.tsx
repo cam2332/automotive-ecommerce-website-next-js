@@ -1,9 +1,8 @@
 import CustomSelect from './CustomSelect'
-import SimpleItem from './SimpleItem'
 
 function InputSelect({
   value,
-  options,
+  children,
   onClickItem,
   inputValue,
   inputPlaceholder,
@@ -12,7 +11,7 @@ function InputSelect({
   active,
 }: {
   value: string
-  options: { id: string; value: string }[]
+  children?: JSX.Element | JSX.Element[]
   onClickItem: ({ id, value }: { id: string; value: string }) => void
   inputValue: string
   inputPlaceholder?: string
@@ -29,14 +28,7 @@ function InputSelect({
       onInputChange={onInputChange}
       onClickField={() => onClickField && onClickField()}
       active={active}>
-      {options.map((option) => (
-        <SimpleItem
-          key={option.id}
-          value={option.value}
-          selected={option.value === value}
-          onClick={() => onClickItem(option)}
-        />
-      ))}
+      {children}
     </CustomSelect>
   )
 }
