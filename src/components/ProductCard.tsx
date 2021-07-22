@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import {
-  IoChevronDownSharp,
   IoCartSharp,
   IoCheckmarkSharp,
   IoHeartOutline,
   IoHeart,
   IoCloseSharp,
-  IoClose,
 } from 'react-icons/io5'
 import { GoPrimitiveDot } from 'react-icons/go'
 import tw from 'tailwind-styled-components'
@@ -303,6 +301,7 @@ const AvailabilityContainer = tw.div`
 
 const CheckmarkIcon = tw(IoCheckmarkSharp)`
   m-3
+  scale-200
   text-xl
   text-green-600
 `
