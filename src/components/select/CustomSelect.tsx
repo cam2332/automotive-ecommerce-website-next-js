@@ -61,7 +61,7 @@ function CustomSelect({
               onChange={(e) => onInputChange(e.target.value)}
             />
           ) : (
-            <Value>{value}</Value>
+            <Value $active={active}>{value}</Value>
           )}
           <IconWrapper>
             <ChevronIcon $active={active} $expanded={expanded} />
@@ -108,7 +108,6 @@ const ValueContainer = tw.div`
   bg-white
   border-2
   border-gray-200
-  cursor-pointer
   rounded-3xl
   py-2px
   min-h-8
@@ -132,6 +131,7 @@ const Value = tw.span`
   appearance-none
   text-primary-color
   text-sm
+  ${({ $active }: { $active: boolean }) => 'cursor-pointer'}
 `
 
 const IconWrapper = tw.div`
