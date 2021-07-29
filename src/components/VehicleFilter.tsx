@@ -1,56 +1,210 @@
-import { IoChevronDownSharp } from 'react-icons/io5'
+import { useState } from 'react'
+import useSWR from 'swr'
+import tw from 'tailwind-styled-components'
 import { useAppContext } from '../context/AppContext'
+import VehicleFilterSelect from './select/VehicleFilterSelect'
+
+const fetcher = (url) => fetch(url).then((res) => res.json())
+
+const useCarMakes = (): {
+  makes: any[]
+  isLoading: boolean
+  isError: boolean
+} => {
+  const { data, error } = useSWR('/api/car?onlyName=true', fetcher)
+
+  return {
+    makes: data?.data?.makes.map(({ name }) => name),
+    isLoading: !error && !data,
+    isError: error,
+  }
+}
+
+const useCarModels = (
+  makeId: string
+): { models: any[]; isLoading: boolean; isError: boolean } => {
+  const { data, error } = useSWR(`/api/car/${makeId}`, fetcher)
+
+  return {
+    models:
+      data?.data?.models?.map(
+        ({ id, group, name, productionStartYear, productionEndYear }) => {
+          return {
+            id,
+            value: `${group} ${name} (${productionStartYear} - ${productionEndYear})`,
+          }
+        }
+      ) || [],
+    isLoading: !error && !data,
+    isError: error,
+  }
+}
+
+const useCarTypes = (
+  makeId: string,
+  modelId: string
+): { types: any[]; isLoading: boolean; isError: boolean } => {
+  const { data, error } = useSWR(
+    makeId !== '' && modelId !== '' ? `/api/car/${makeId}/${modelId}` : '',
+    fetcher
+  )
+
+  return {
+    types:
+      data?.data?.model?.types
+        ?.sort((a, b) => {
+          if (a.group < b.group) return 1
+          if (a.group > b.group) return -1
+          return 0
+        })
+        .map(
+          ({
+            id,
+            group,
+            engineDisplacement,
+            type,
+            kW,
+            KM,
+            productionStartYear,
+            productionEndYear,
+          }) => {
+            return {
+              id,
+              value: `${engineDisplacement} ${type} ${kW}kW ${KM}KM (${productionStartYear} - ${productionEndYear})`,
+              group: group,
+            }
+          }
+        ) || [],
+    isLoading: !error && !data,
+    isError: error,
+  }
+}
 
 function VehicleFilter() {
   const appContext = useAppContext()
+  const [selectedCarMake, setSelectedCarMake] = useState<{
+    id: string
+    value: string
+  }>({ id: '', value: '' })
+  const [selectedCarModel, setSelectedCarModel] = useState<{
+    id: string
+    value: string
+  }>({ id: '', value: '' })
+  const [selectedCarType, setSelectedCarType] = useState<{
+    id: string
+    value: string
+  }>({ id: '', value: '' })
+  const { makes, isLoading: makesLoading, isError: makesError } = useCarMakes()
+  const {
+    models,
+    isLoading: modelsLoading,
+    isError: modelsError,
+  } = useCarModels(selectedCarMake.id)
+  const {
+    types,
+    isLoading: typesLoading,
+    isError: typesError,
+  } = useCarTypes(selectedCarMake.id, selectedCarModel.id)
 
   return (
-    <div className='flex flex-col items-center w-full pt-3 pb-6 space-y-5 bg-gray-200 lg:w-5xl lg:max-w-5xl'>
-      <div className='flex flex-col w-90% justify-self-start md:w-full md:px-4'>
-        <span className='font-semibold text-primary-color'>
-          Wybierz samochód
-        </span>
-      </div>
-      <div className='flex flex-col items-center w-full space-y-5 md:space-y-0 md:flex-row md:space-x-3 md:px-4'>
-        <div className='flex flex-row items-center w-90% border-2 rounded-full bg-white py-2px'>
-          <select
-            className='ml-3 mr-1 w-90% text-primary-color appearance-none bg-white'
-            value={appContext.selectedCarMake}
-            onChange={(e) => appContext.setSelectedCarMake(e.target.value)}>
-            <option value='' disabled selected hidden>
-              Wybierz markę
-            </option>
-          </select>
-          <IoChevronDownSharp className='my-2 ml-1 mr-3 text-sm cursor-pointer text-secondary-color' />
-        </div>
-        <div className='flex flex-row items-center w-90% border-2 rounded-full bg-white py-2px'>
-          <select
-            className='ml-3 mr-1 w-90% text-primary-color appearance-none bg-white'
-            value={appContext.selectedCarModel}
-            onChange={(e) => appContext.setSelectedCarModel(e.target.value)}>
-            <option value='' disabled selected hidden>
-              Wybierz model
-            </option>
-          </select>
-          <IoChevronDownSharp className='my-2 ml-1 mr-3 text-sm cursor-pointer text-secondary-color' />
-        </div>
-        <div className='flex flex-row items-center w-90% border-2 rounded-full bg-white py-2px'>
-          <select
-            className='ml-3 mr-1 w-90% text-primary-color appearance-none bg-white'
-            value={appContext.selectedCarType}
-            onChange={(e) => appContext.setSelectedCarType(e.target.value)}>
-            <option value='' disabled selected hidden>
-              Wybierz typ
-            </option>
-          </select>
-          <IoChevronDownSharp className='my-2 ml-1 mr-3 text-sm cursor-pointer text-secondary-color' />
-        </div>
-        <div className='flex flex-col items-center w-90% border-2 border-secondary-color rounded-full bg-secondary-color py-2px'>
-          <button className='font-semibold text-body-color'>SZUKAJ</button>
-        </div>
-      </div>
-    </div>
+    <Container>
+      <TitleWrapper>
+        <TitleText>Wybierz samochód</TitleText>
+      </TitleWrapper>
+      <FieldsContainer>
+        <VehicleFilterSelect
+          value={selectedCarMake.value}
+          options={
+            makesLoading || makesError
+              ? []
+              : makes.map((val) => {
+                  return { id: val, value: val }
+                })
+          }
+          onClickItem={(item) => setSelectedCarMake(item)}
+          inputPlaceholder={'Marka'}
+          onClickField={() => {
+            setSelectedCarMake({ id: '', value: '' })
+            setSelectedCarModel({ id: '', value: '' })
+            setSelectedCarType({ id: '', value: '' })
+          }}
+          active={true}
+        />
+        <VehicleFilterSelect
+          value={selectedCarModel.value}
+          options={modelsLoading || modelsError ? [] : models}
+          onClickItem={(item) => setSelectedCarModel(item)}
+          inputPlaceholder={'Model'}
+          onClickField={() => {
+            setSelectedCarModel({ id: '', value: '' })
+            setSelectedCarType({ id: '', value: '' })
+          }}
+          active={selectedCarMake.id !== ''}
+        />
+        <VehicleFilterSelect
+          value={selectedCarType.value}
+          options={typesLoading || typesError ? [] : types}
+          groupBy={'group'}
+          onClickItem={(item) => setSelectedCarType(item)}
+          inputPlaceholder={'Typ'}
+          onClickField={() => setSelectedCarType({ id: '', value: '' })}
+          active={selectedCarModel.id !== ''}
+        />
+      </FieldsContainer>
+    </Container>
   )
 }
+
+const Container = tw.div`
+  flex
+  flex-col
+  items-center
+  w-full
+  pt-3
+  pb-6
+  space-y-5
+  bg-gray-200
+  
+  lg:w-5xl
+  lg:max-w-5xl
+`
+
+const TitleWrapper = tw.div`
+  flex
+  flex-col
+  w-full
+  justify-self-start
+  px-4
+`
+
+const TitleText = tw.span`
+  font-semibold
+  text-primary-color
+`
+
+const FieldsContainer = tw.div`
+  flex
+  flex-col
+  items-center
+  w-full
+  space-y-5
+  px-4
+
+  md:space-y-0
+  md:flex-row
+  md:space-x-3
+`
+
+const SearchButton = tw.button`
+  flex
+  flex-col
+  items-center
+  w-full
+  font-semibold
+  rounded-full
+  bg-secondary-color
+  py-2px
+  text-body-color
+`
 
 export default VehicleFilter
