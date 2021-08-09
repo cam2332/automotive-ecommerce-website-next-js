@@ -1,4 +1,12 @@
+import { CarMakeDocument, ICarMake } from '../DAO/documents/CarMake'
 import { ICategory, CategoryDocument } from '../DAO/documents/Category'
+
+export const fromCarMakeDocument = (carMake: CarMakeDocument): ICarMake => {
+  return {
+    id: carMake._id || carMake.id,
+    name: carMake.name,
+  }
+}
 
 export const fromCategoryDocument = (category: CategoryDocument): ICategory => {
   return {
