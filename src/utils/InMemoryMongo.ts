@@ -12,6 +12,8 @@ export const connect = async (): Promise<void> => {
     useUnifiedTopology: true,
   }
 
+  process.env.MONGODB_URI = uri
+
   await mongoose.connect(uri, mongooseOptions)
 }
 
@@ -19,6 +21,7 @@ export const closeDatabase = async (): Promise<void> => {
   await mongoose.connection.dropDatabase()
   await mongoose.connection.close()
   await mongodb.stop()
+  delete process.env.MONGODB_URI
 }
 
 export const clearDatabase = async (): Promise<void> => {
