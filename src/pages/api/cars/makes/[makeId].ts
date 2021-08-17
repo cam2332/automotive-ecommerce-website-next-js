@@ -1,40 +1,39 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from '../../../../utils/dbConnect'
-import CarMake from '../../../../DAO/models/CarMake'
+import { findCarMakeById } from '../../../../business/CarMakeManager'
+import ApplicationError from '../../../../utils/ApplicationError'
 
 export default async function handler(
   { method, query: { makeId } }: NextApiRequest,
   res: NextApiResponse
 ) {
-  await dbConnect()
+  try {
+    await dbConnect()
+  } catch (err) {
+    const error = ApplicationError.INTERNAL_ERROR.setDetail(
+      'The server is currently unable to complete the request.'
+    ).setInstance('/cars/makes/' + makeId)
+
+    res.status(error.status).json(error.toObject())
+  }
 
   switch (method) {
     case 'GET':
-      try {
-        if (makeId === undefined || makeId === '') {
-          res.status(400).json({ success: false, message: 'Invalid parameter' })
-        } else {
-          const make = await CarMake.findMakeById(makeId.toString())
+      const foundCarMake = await findCarMakeById(makeId.toString())
 
-          if (make) {
-            res.status(200).json({
-              success: true,
-              data: make,
-            })
-          } else {
-            res.status(404).json({
-              success: false,
-              message: 'Make with given id not found',
-            })
-          }
-        }
-      } catch (error) {
-        console.log(error)
-        res.status(400).json({ success: false })
-      }
+      foundCarMake.applyOnLeft((error) => {
+        res.status(error.status).json(error.toObject())
+      })
+
+      foundCarMake.applyOnRight((carMake) => res.status(200).json(carMake))
+
       break
     default:
-      res.status(400).json({ success: false })
+      const error = ApplicationError.METHOD_NOT_ALLOWED.setDetail(
+        `The '${method}' method is not supported.`
+      ).setInstance('/cars/makes/' + makeId)
+
+      res.status(error.status).json(error.toObject())
       break
   }
 }
