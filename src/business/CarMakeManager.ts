@@ -67,14 +67,14 @@ export const findCarMakeById = async (
     return left(
       ApplicationError.MISSING_REQUIRED_PATH_PARAMETER.setDetail(
         `The 'id' URL parameter must be provided in the request.`
-      ).setInstance('/cars/makes')
+      ).setInstance('/cars/makes/:id')
     )
   }
   if (typeof id !== 'string' || id.length < 1) {
     return left(
       ApplicationError.UNSUPPORTED_PATH_PARAMETER.setDetail(
         `The 'id' path parameter must be a string.`
-      ).setInstance('/cars/makes')
+      ).setInstance('/cars/makes/:id')
     )
   }
 
@@ -87,14 +87,14 @@ export const findCarMakeById = async (
       return left(
         ApplicationError.RESOURCE_NOT_FOUND.setDetail(
           `Car make with id ${id} does not exists.`
-        ).setInstance('/cars/makes')
+        ).setInstance(`/cars/makes/${id}`)
       )
     }
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
-        'Cannot find car make.'
-      ).setInstance('/cars/makes')
+        `Cannot find car make with id ${id}.`
+      ).setInstance(`/cars/makes/${id}`)
     )
   }
 }
