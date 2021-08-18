@@ -1,44 +1,65 @@
 import Image from 'next/image'
+import { ICategory } from '../DAO/documents/Category'
+
+interface CategoryCardProps extends ICategory {
+  onClickMainCategory: () => void
+  onClickSubCategory: (id: string, name: string) => void
+  maxNumberOfSubCategoriesVisible: number
+}
 
 function CategoryCard({
+  id,
   name,
-  subCategories,
+  categories,
   thumbnailUrl,
-}: {
-  id: string
-  name: string
-  subCategories: { id: string; name: string; count: number }[]
-  thumbnailUrl: string
-}) {
+  onClickMainCategory,
+  onClickSubCategory,
+  maxNumberOfSubCategoriesVisible,
+}: CategoryCardProps) {
   return (
     <div className='flex flex-col items-center p-4 md:p-6'>
-      <div className='flex flex-row items-center space-x-3 cursor-pointer hover:underline'>
-        <div className='grid p-2 w-28'>
-          <Image
-            width={100}
-            height={100}
-            layout='responsive'
-            src={thumbnailUrl}
-          />
+      <div
+        className='flex flex-row items-center justify-between w-full space-x-1 cursor-pointer hover:underline'
+        onClick={() => onClickMainCategory()}>
+        <div className='grid w-24 h-24'>
+          {thumbnailUrl && (
+            <Image
+              width={160}
+              height={160}
+              layout='responsive'
+              src={thumbnailUrl}
+            />
+          )}
         </div>
-        <span className='text-lg font-medium text-center text-primary-color'>
+        <span className='flex pr-3 text-lg font-medium text-right truncate whitespace-normal text-primary-color max-w-full-96px'>
           {name}
         </span>
       </div>
-      <div className='flex flex-col p-4'>
+      <div className='flex flex-col w-full p-4'>
         <ul className='space-y-2'>
-          {subCategories.map(({ id, name, count }) => (
-            <li key={id} className='flex flex-row items-center space-x-2'>
-              <div className='flex flex-row space-x-3 cursor-pointer hover:underline'>
-                <span className='text-sm font-semibold text-primary-color'>
-                  {name}
-                </span>
-                <span className='text-sm font-semibold text-gray-400'>
-                  {count}
-                </span>
-              </div>
-            </li>
-          ))}
+          {categories &&
+            categories
+              .slice(0, maxNumberOfSubCategoriesVisible)
+              .map(({ id, name, numberOfProducts }) => (
+                <li
+                  key={id}
+                  className='flex flex-row items-center'
+                  onClick={() => onClickSubCategory(id, name)}>
+                  <div className='flex flex-row justify-between w-full space-x-3 cursor-pointer hover:underline'>
+                    <span className='text-sm font-semibold truncate whitespace-normal max-w-160px text-primary-color'>
+                      {name}
+                    </span>
+                    <span className='text-sm font-semibold text-gray-400'>
+                      {numberOfProducts}
+                    </span>
+                  </div>
+                </li>
+              ))}
+          {categories &&
+            categories.length > 2 &&
+            maxNumberOfSubCategoriesVisible < categories.length && (
+              <span>...</span>
+            )}
         </ul>
       </div>
     </div>
