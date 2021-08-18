@@ -142,6 +142,11 @@ export const findCategoryById = async (
       )
     }
   })
+  return left(
+    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+      `Category with id '${id}' does not exists.`
+    ).setInstance(`/categories/${id}`)
+  )
 }
 
 export const findRootCategoryById = async (
@@ -188,6 +193,11 @@ export const findRootCategoryById = async (
       ).setInstance(`/categories/${id}`)
     )
   })
+  return left(
+    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+      `Category with id '${id}' does not exists.`
+    ).setInstance(`/categories/${id}`)
+  )
 }
 
 const searchCategoryInBranchByName = (
@@ -257,6 +267,11 @@ export const findCategoryByName = async (
       ).setInstance('/categories')
     )
   })
+  return left(
+    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+      `Category with name '${name}' does not exists.`
+    ).setInstance('/categories/')
+  )
 }
 
 export const findRootCategoryByName = async (
@@ -303,4 +318,9 @@ export const findRootCategoryByName = async (
       ).setInstance('/categories')
     )
   })
+  return left(
+    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+      `Category with name '${name}' does not exists.`
+    ).setInstance('/categories/')
+  )
 }
