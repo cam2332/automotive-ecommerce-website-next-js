@@ -1,9 +1,5 @@
 import { Schema, Types } from 'mongoose'
-import {
-  createDataTree,
-  fromCategoryDocument,
-} from '../../utils/MongoConverter'
-import { ICategory, CategoryDocument } from '../documents/Category'
+import { CategoryDocument } from '../documents/Category'
 import Category from '../models/Category'
 
 const CategorySchema: Schema = new Schema<CategoryDocument>(
@@ -44,8 +40,6 @@ CategorySchema.statics.findAllCategories = async (): Promise<
   let categories = await Category.find(
     {},
     {
-      _id: 0,
-      id: '$_id',
       name: 1,
       numberOfProducts: 1,
       thumbnailUrl: 1,
@@ -61,7 +55,7 @@ CategorySchema.statics.findCategoryByName = async (
   name: string
 ): Promise<CategoryDocument | null> => {
   const category = await Category.findOne({
-    name: new RegExp('^' + name + '$', 'i'),
+    name: new RegExp('.*' + name + '.*', 'i'),
   })
 
   return category
