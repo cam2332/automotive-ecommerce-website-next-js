@@ -11,10 +11,12 @@ const useCarMakes = (): {
   isLoading: boolean
   isError: boolean
 } => {
-  const { data, error } = useSWR('/api/car?onlyName=true', fetcher)
+  const { data, error } = useSWR('/api/cars/makes', fetcher)
 
   return {
-    makes: data?.data?.makes.map(({ name }) => name),
+    makes: data?.map(({ id, name }) => {
+      return { id, value: name }
+    }),
     isLoading: !error && !data,
     isError: error,
   }
@@ -23,15 +25,19 @@ const useCarMakes = (): {
 const useCarModels = (
   makeId: string
 ): { models: any[]; isLoading: boolean; isError: boolean } => {
-  const { data, error } = useSWR(`/api/car/${makeId}`, fetcher)
+  const { data, error } = useSWR(
+    makeId !== '' ? `/api/cars/models?makeId=${makeId}` : '',
+    fetcher
+  )
 
   return {
     models:
-      data?.data?.models?.map(
+      data?.data?.map(
         ({ id, group, name, productionStartYear, productionEndYear }) => {
           return {
             id,
             value: `${group} ${name} (${productionStartYear} - ${productionEndYear})`,
+            group: group,
           }
         }
       ) || [],
@@ -45,13 +51,13 @@ const useCarTypes = (
   modelId: string
 ): { types: any[]; isLoading: boolean; isError: boolean } => {
   const { data, error } = useSWR(
-    makeId !== '' && modelId !== '' ? `/api/car/${makeId}/${modelId}` : '',
+    makeId !== '' && modelId !== '' ? `/api/cars/types?modelId=${modelId}` : '',
     fetcher
   )
 
   return {
     types:
-      data?.data?.model?.types
+      data?.data
         ?.sort((a, b) => {
           if (a.group < b.group) return 1
           if (a.group > b.group) return -1
@@ -114,13 +120,7 @@ function VehicleFilter() {
       <FieldsContainer>
         <VehicleFilterSelect
           value={selectedCarMake.value}
-          options={
-            makesLoading || makesError
-              ? []
-              : makes.map((val) => {
-                  return { id: val, value: val }
-                })
-          }
+          options={makesLoading || makesError ? [] : makes}
           onClickItem={(item) => setSelectedCarMake(item)}
           inputPlaceholder={'Marka'}
           onClickField={() => {
@@ -133,6 +133,7 @@ function VehicleFilter() {
         <VehicleFilterSelect
           value={selectedCarModel.value}
           options={modelsLoading || modelsError ? [] : models}
+          groupBy={'group'}
           onClickItem={(item) => setSelectedCarModel(item)}
           inputPlaceholder={'Model'}
           onClickField={() => {
@@ -150,6 +151,7 @@ function VehicleFilter() {
           onClickField={() => setSelectedCarType({ id: '', value: '' })}
           active={selectedCarModel.id !== ''}
         />
+        {/* <SearchButton>SZUKAJ</SearchButton> */}
       </FieldsContainer>
     </Container>
   )
