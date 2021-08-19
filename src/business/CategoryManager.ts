@@ -115,18 +115,11 @@ export const findCategoryById = async (
   }
 
   let category: ICategory
-  const categories = await findAllCategories(true)
-  console.log('categories', categories)
-  categories.applyOnLeft((error) => {
-    return left(
-      ApplicationError.INTERNAL_ERROR.setDetail(
-        `Cannot find category with id ${id}.`
-      ).setInstance(`/categories/${id}`)
-    )
-  })
-  categories.applyOnRight((categories) => {
-    for (let i = 0; i < categories.length; i++) {
-      category = searchCategoryInBranchById(categories[i], id)
+  const allCategories = await findAllCategories(true)
+  console.log('categories', allCategories)
+  if (allCategories.isRight()) {
+    for (let i = 0; i < allCategories.value.length; i++) {
+      category = searchCategoryInBranchById(allCategories.value[i], id)
       if (category) {
         break
       }
@@ -141,12 +134,13 @@ export const findCategoryById = async (
         ).setInstance(`/categories/${id}`)
       )
     }
-  })
-  return left(
-    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-      `Category with id '${id}' does not exists.`
-    ).setInstance(`/categories/${id}`)
-  )
+  } else {
+    return left(
+      ApplicationError.INTERNAL_ERROR.setDetail(
+        `Cannot find category with id ${id}.`
+      ).setInstance(`/categories/${id}`)
+    )
+  }
 }
 
 export const findRootCategoryById = async (
@@ -167,11 +161,12 @@ export const findRootCategoryById = async (
     )
   }
   let category: ICategory
-  const categories = await findAllCategories(true)
-  categories.applyOnRight((categories) => {
-    for (let i = 0; i < categories.length; i++) {
-      if (searchCategoryInBranchById(categories[i], id)) {
-        category = categories[i]
+  const allCategories = await findAllCategories(true)
+  console.log(allCategories)
+  if (allCategories.isRight()) {
+    for (let i = 0; i < allCategories.value.length; i++) {
+      if (searchCategoryInBranchById(allCategories.value[i], id)) {
+        category = allCategories.value[i]
         break
       }
     }
@@ -185,19 +180,13 @@ export const findRootCategoryById = async (
         ).setInstance(`/categories/${id}`)
       )
     }
-  })
-  categories.applyOnLeft((error) => {
+  } else {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
         `Cannot find category with id ${id}.`
       ).setInstance(`/categories/${id}`)
     )
-  })
-  return left(
-    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-      `Category with id '${id}' does not exists.`
-    ).setInstance(`/categories/${id}`)
-  )
+  }
 }
 
 const searchCategoryInBranchByName = (
@@ -241,10 +230,10 @@ export const findCategoryByName = async (
   }
 
   let category: ICategory
-  const categories = await findAllCategories(true)
-  categories.applyOnRight((categories) => {
-    for (let i = 0; i < categories.length; i++) {
-      category = searchCategoryInBranchByName(categories[i], name)
+  const allCategories = await findAllCategories(true)
+  if (allCategories.isRight()) {
+    for (let i = 0; i < allCategories.value.length; i++) {
+      category = searchCategoryInBranchByName(allCategories.value[i], name)
       if (category) {
         break
       }
@@ -259,19 +248,13 @@ export const findCategoryByName = async (
         ).setInstance('/categories/')
       )
     }
-  })
-  categories.applyOnLeft((error) => {
+  } else {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
         `Cannot find category with name ${name}.`
       ).setInstance('/categories')
     )
-  })
-  return left(
-    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-      `Category with name '${name}' does not exists.`
-    ).setInstance('/categories/')
-  )
+  }
 }
 
 export const findRootCategoryByName = async (
@@ -292,11 +275,11 @@ export const findRootCategoryByName = async (
     )
   }
   let category: ICategory
-  const categories = await findAllCategories(true)
-  categories.applyOnRight((categories) => {
-    for (let i = 0; i < categories.length; i++) {
-      if (searchCategoryInBranchByName(categories[i], name)) {
-        category = categories[i]
+  const allCategories = await findAllCategories(true)
+  if (allCategories.isRight()) {
+    for (let i = 0; i < allCategories.value.length; i++) {
+      if (searchCategoryInBranchByName(allCategories.value[i], name)) {
+        category = allCategories.value[i]
         break
       }
     }
@@ -310,17 +293,11 @@ export const findRootCategoryByName = async (
         ).setInstance('/categories')
       )
     }
-  })
-  categories.applyOnLeft((error) => {
+  } else {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
         `Cannot find category with name ${name}.`
       ).setInstance('/categories')
     )
-  })
-  return left(
-    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-      `Category with name '${name}' does not exists.`
-    ).setInstance('/categories/')
-  )
+  }
 }
