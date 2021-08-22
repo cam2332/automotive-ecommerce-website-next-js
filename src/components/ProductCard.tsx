@@ -12,7 +12,7 @@ import tw from 'tailwind-styled-components'
 import QuantitySelect from './select/QuantitySelect'
 
 function ProductCard({
-  thumbnailPath,
+  thumbnailUrl,
   title,
   subTitle,
   identifier,
@@ -28,7 +28,7 @@ function ProductCard({
   onAddToCart,
   onClickTitle,
 }: {
-  thumbnailPath: string
+  thumbnailUrl: string
   title: string
   subTitle: string
   identifier: string
@@ -53,12 +53,14 @@ function ProductCard({
   return (
     <Container>
       <ThumbnailWrapper>
-        <Image
-          width={100}
-          height={100}
-          layout='responsive'
-          src={thumbnailPath}
-        />
+        {thumbnailUrl && (
+          <Image
+            width={100}
+            height={100}
+            layout='responsive'
+            src={thumbnailUrl}
+          />
+        )}
       </ThumbnailWrapper>
 
       <MainContainer>
@@ -103,7 +105,7 @@ function ProductCard({
 
           <PricesContainer>
             <PriceText>
-              {price.toFixed(2).replace('.', ',')} {currency}
+              {price && price.toFixed(2).replace('.', ',')} {currency}
             </PriceText>
             {oldPrice && (
               <OldPriceText>
