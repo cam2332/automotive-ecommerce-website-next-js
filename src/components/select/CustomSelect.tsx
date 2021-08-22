@@ -2,16 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { IoChevronDownSharp } from 'react-icons/io5'
 import tw from 'tailwind-styled-components'
 
-function CustomSelect({
-  value,
-  children,
-  input,
-  inputValue,
-  inputPlaceholder,
-  onInputChange,
-  onClickField,
-  active = true,
-}: {
+interface ICustomSelectProps {
   value: string
   children?: JSX.Element | JSX.Element[]
   input?: boolean
@@ -19,11 +10,18 @@ function CustomSelect({
   inputPlaceholder?: string
   onInputChange?: (text: string) => void
   onClickField?: () => void
-  active?: boolean
-}) {
-  const [expanded, setExpanded] = useState(false)
+  disabled?: boolean
+  expanded?: boolean
+}
+
+function CustomSelect(props: ICustomSelectProps) {
+  const [expanded, setExpanded] = useState<boolean>(props.expanded || false)
   const [up, setUp] = useState(false)
   const listWrapperRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setExpanded(props.expanded)
+  }, [props.expanded])
 
   useEffect(() => {
     const { innerHeight } = window
@@ -51,25 +49,25 @@ function CustomSelect({
         <ValueContainer
           onClick={() => {
             setExpanded(!expanded)
-            onClickField && onClickField()
+            props.onClickField && props.onClickField()
           }}>
-          {input ? (
+          {props.input ? (
             <Input
-              disabled={!active}
-              placeholder={inputPlaceholder}
-              value={inputValue}
-              onChange={(e) => onInputChange(e.target.value)}
+              disabled={props.disabled}
+              placeholder={props.inputPlaceholder}
+              value={props.inputValue}
+              onChange={(e) => props.onInputChange(e.target.value)}
             />
           ) : (
-            <Value $active={active}>{value}</Value>
+            <Value $active={!props.disabled}>{props.value}</Value>
           )}
           <IconWrapper>
-            <ChevronIcon $active={active} $expanded={expanded} />
+            <ChevronIcon $active={!props.disabled} $expanded={expanded} />
           </IconWrapper>
         </ValueContainer>
         <ListWrapper ref={listWrapperRef} $expanded={expanded} $up={up}>
-          <List onClick={() => active && setExpanded(!expanded)}>
-            {children}
+          <List onClick={() => !props.disabled && setExpanded(!expanded)}>
+            {props.children}
           </List>
         </ListWrapper>
       </InnerContainer>
