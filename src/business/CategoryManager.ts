@@ -145,7 +145,9 @@ export const findCategoryById = async (
 
 export const findRootCategoryById = async (
   id: string
-): Promise<Either<ApplicationError, ICategory>> => {
+): Promise<
+  Either<ApplicationError, { category: ICategory; selectedCategory: ICategory }>
+> => {
   if (id === undefined) {
     return left(
       ApplicationError.MISSING_REQUIRED_PATH_PARAMETER.setDetail(
@@ -161,18 +163,20 @@ export const findRootCategoryById = async (
     )
   }
   let category: ICategory
+  let selectedCategory: ICategory
   const allCategories = await findAllCategories(true)
   console.log(allCategories)
   if (allCategories.isRight()) {
     for (let i = 0; i < allCategories.value.length; i++) {
-      if (searchCategoryInBranchById(allCategories.value[i], id)) {
+      selectedCategory = searchCategoryInBranchById(allCategories.value[i], id)
+      if (selectedCategory) {
         category = allCategories.value[i]
         break
       }
     }
 
     if (category) {
-      return right(category)
+      return right({ category, selectedCategory })
     } else {
       return left(
         ApplicationError.RESOURCE_NOT_FOUND.setDetail(
