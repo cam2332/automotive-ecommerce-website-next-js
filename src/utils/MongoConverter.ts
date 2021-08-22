@@ -1,5 +1,6 @@
 import { CarMakeDocument, ICarMake } from '../DAO/documents/CarMake'
 import { ICategory, CategoryDocument } from '../DAO/documents/Category'
+import { IProduct, ProductDocument } from '../DAO/documents/Product'
 
 export const fromCarMakeDocument = (carMake: CarMakeDocument): ICarMake => {
   return {
@@ -32,4 +33,23 @@ export const createDataTree = (dataset, id: string, parentId: string) => {
     }
   })
   return dataTree
+}
+
+export const fromProductDocument = (product: ProductDocument): IProduct => {
+  return {
+    id: product._id || product.id,
+    title: product.title,
+    subTitle: product.subTitle || null,
+    identifier: product.identifier,
+    price: product.price,
+    oldPrice: product.oldPrice || null,
+    currency: product.currency,
+    quantity: product.quantity,
+    properties: JSON.parse(JSON.stringify(product.properties)) || null,
+    manufacturer: product.manufacturer,
+    categoryId: product.categoryId,
+    compatibleCarTypeIds: product.compatibleCarTypeIds || null,
+    thumbnailUrl: product.thumbnailUrl || null,
+    inWishList: product.inWishList || null,
+  }
 }
