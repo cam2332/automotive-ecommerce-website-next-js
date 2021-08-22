@@ -22,15 +22,31 @@ export const fromCategoryDocument = (category: CategoryDocument): ICategory => {
 export const createDataTree = (dataset, id: string, parentId: string) => {
   const hashTable = Object.create(null)
   dataset.forEach(
-    (aData) => (hashTable[aData[id]] = { ...aData, categories: [] })
+    (aData) =>
+      (hashTable[aData[id]] = {
+        ...aData,
+        categories: [],
+        numberOfProducts: aData.numberOfProducts || 0,
+      })
   )
-  const dataTree = []
+  const dataTree: ICategory[] = []
   dataset.forEach((aData) => {
     if (aData[parentId] && hashTable[aData[parentId]]) {
       hashTable[aData[parentId]].categories.push(hashTable[aData[id]])
+      hashTable[aData[parentId]].numberOfProducts +=
+        hashTable[aData[id]].numberOfProducts
     } else {
       dataTree.push(hashTable[aData[id]])
     }
+  })
+
+  dataTree.forEach((aData) => {
+    aData.numberOfProducts = aData.categories.reduce(
+      (accumulator, currentValue) => {
+        return accumulator + currentValue.numberOfProducts
+      },
+      0
+    )
   })
   return dataTree
 }
