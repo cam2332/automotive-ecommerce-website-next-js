@@ -1,6 +1,7 @@
 import { CarMakeDocument, ICarMake } from '../DAO/documents/CarMake'
 import { ICategory, CategoryDocument } from '../DAO/documents/Category'
 import { IProduct, ProductDocument } from '../DAO/documents/Product'
+import { IUser, UserDocument } from '../DAO/documents/User'
 
 export const fromCarMakeDocument = (carMake: CarMakeDocument): ICarMake => {
   return {
@@ -67,5 +68,13 @@ export const fromProductDocument = (product: ProductDocument): IProduct => {
     compatibleCarTypeIds: product.compatibleCarTypeIds || null,
     thumbnailUrl: product.thumbnailUrl || null,
     inWishList: product.inWishList || null,
+  }
+}
+
+export const fromUserDocument = (user: UserDocument): IUser => {
+  return {
+    id: user._id || user.id,
+    name: user.name,
+    email: user.email,
   }
 }
