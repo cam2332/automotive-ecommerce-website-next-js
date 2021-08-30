@@ -11,6 +11,7 @@
     },
     "dependencies": {
         "argon2": "^0.28.2",
+        "cookie": "^0.4.1",
         "eslint-config-prettier": "^8.3.0",
         "jsonwebtoken": "^8.5.1",
         "mongodb-memory-server": "^7.3.4",
