@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useMutation } from 'react-query'
+import redaxios from 'redaxios'
 import tw from 'tailwind-styled-components'
 import EmptyHeader from '../../components/EmptyHeader'
 import Footer from '../../components/Footer'
@@ -11,14 +13,26 @@ import {
   emailValidator,
   passwordValidator,
 } from '../../services/FormValidation'
+import { useAppContext } from '../../context/AppContext'
 
 function Login() {
   const router = useRouter()
+  const appContext = useAppContext()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isFormValid, setIsFormValid] = useState(false)
   const emailInputRef = useRef(null)
   const passwordInputRef = useRef(null)
+
+  const mutation = useMutation(
+    (params) => redaxios.post('/api/sessions', params),
+    {
+      onSuccess: (data) => {
+        router.push('/')
+        appContext.setUser(data as any)
+      },
+    }
+  )
 
   useEffect(() => {
     setIsFormValid(
@@ -30,7 +44,9 @@ function Login() {
   }, [email, password])
 
   // implement login functionality
-  const login = () => {}
+  const login = () => {
+    mutation.mutate({ email: email, password: password } as unknown as void)
+  }
 
   return (
     <div>
