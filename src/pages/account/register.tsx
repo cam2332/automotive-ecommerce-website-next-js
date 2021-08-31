@@ -1,6 +1,10 @@
+import React from 'react'
 import { useRef, useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useMutation } from 'react-query'
+import redaxios from 'redaxios'
+import { userFromRequest } from '../../services/Tokens'
 import tw from 'tailwind-styled-components'
 import EmptyHeader from '../../components/EmptyHeader'
 import Footer from '../../components/Footer'
@@ -14,6 +18,7 @@ import {
   passwordsEqualValidator,
   passwordValidator,
 } from '../../services/FormValidation'
+import { GetServerSidePropsContext } from 'next'
 
 function Register() {
   const router = useRouter()
@@ -28,6 +33,13 @@ function Register() {
   const emailInputRef = useRef(null)
   const passwordInputRef = useRef(null)
   const confirmPasswordInputRef = useRef(null)
+
+  const mutation = useMutation(
+    (params) => redaxios.post('/api/users', params),
+    {
+      onSuccess: () => router.replace(router.asPath),
+    }
+  )
 
   useEffect(() => {
     setIsFormValid(
@@ -45,7 +57,14 @@ function Register() {
   }, [email, password, confirmPassword])
 
   // implement register functionality
-  const register = () => {}
+  const register = () => {
+    mutation.mutate({
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    } as unknown as void)
+  }
 
   return (
     <div>
@@ -162,6 +181,23 @@ function Register() {
       <Footer />
     </div>
   )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const user = await userFromRequest(context.req)
+
+  if (user) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {},
+  }
 }
 
 const PageContainer = tw.div`
