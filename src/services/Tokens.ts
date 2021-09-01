@@ -26,17 +26,25 @@ function setCookie(
   const stringValue =
     typeof value === 'object' ? `j:${JSON.stringify(value)}` : String(value)
 
-  res.setHeader('Set-Cookie', serialize(name, String(stringValue)))
+  res.setHeader('Set-Cookie', serialize(name, String(stringValue), options))
 }
 
-export function authenticateUser(res: NextApiResponse, user: IUser): void {
-  if (!user) return
-
-  const token = jwt.sign({ email: user.email }, JWT_TOKEN_KEY, {
+function generateToken(user: IUser): string {
+  const token = jwt.sign({ id: user.id, email: user.email }, JWT_TOKEN_KEY, {
     expiresIn: '1d',
   })
 
+  return token
+}
+
+export function authenticateUser(res: NextApiResponse, user: IUser): string {
+  if (!user) return
+
+  const token = generateToken(user)
+
   setCookie(res, 'auth', token, cookieOptions)
+
+  return token
 }
 
 export function clearUser(res: NextApiResponse): void {
@@ -47,6 +55,10 @@ export function clearUser(res: NextApiResponse): void {
   })
 }
 
+export function verifyToken(token: string) {
+  return jwt.verify(token, JWT_TOKEN_KEY)
+}
+
 export async function userFromRequest(
   req: IncomingMessage & { cookies: NextApiRequestCookies }
 ): Promise<IUser | undefined> {
@@ -55,7 +67,7 @@ export async function userFromRequest(
   if (!token) return undefined
 
   try {
-    const data = jwt.verify(token, JWT_TOKEN_KEY)
+    const data = verifyToken(token)
 
     if (!data) return undefined
 
