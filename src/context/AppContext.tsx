@@ -1,6 +1,9 @@
 import { createContext, useContext, useState } from 'react'
+import { IUser } from '../DAO/documents/User'
 
 type AppContextProps = {
+  user: IUser
+  setUser: (user: IUser) => void
   wishListCount: number
   cartCount: number
   cartTotal: number
@@ -17,6 +20,7 @@ type AppContextProps = {
 export const AppContext = createContext<AppContextProps>({} as AppContextProps)
 
 const AppProvider: React.FC = ({ children }): React.ReactElement => {
+  const [user, setUser] = useState<IUser | undefined>(undefined)
   const [wishListCount, setWishListCount] = useState(0)
   const [cartCount, setCartCount] = useState(0)
   const [cartTotal, setCartTotal] = useState(0.0)
@@ -28,6 +32,8 @@ const AppProvider: React.FC = ({ children }): React.ReactElement => {
   return (
     <AppContext.Provider
       value={{
+        user: user,
+        setUser: setUser,
         wishListCount: wishListCount,
         cartCount: cartCount,
         cartTotal: cartTotal,
