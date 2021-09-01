@@ -67,7 +67,7 @@ function index({
 
   const setCategoryId = (categoryId: string) => {
     delete router.query.page
-    delete router.query.category
+    delete router.query.categoryId
     router.push({
       pathname: '/category/' + categoryId,
       query: { ...router.query },
