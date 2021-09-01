@@ -165,7 +165,6 @@ export const findRootCategoryById = async (
   let category: ICategory
   let selectedCategory: ICategory
   const allCategories = await findAllCategories(true)
-  console.log(allCategories)
   if (allCategories.isRight()) {
     for (let i = 0; i < allCategories.value.length; i++) {
       selectedCategory = searchCategoryInBranchById(allCategories.value[i], id)

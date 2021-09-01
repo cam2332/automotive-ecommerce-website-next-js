@@ -1,5 +1,5 @@
 import { Model, model } from 'mongoose'
-import { CategoryDocument, ICategory } from '../documents/Category'
+import { CategoryDocument } from '../documents/Category'
 import CategorySchema from '../schemas/CategorySchema'
 
 export interface CategoryModel extends Model<CategoryDocument> {
