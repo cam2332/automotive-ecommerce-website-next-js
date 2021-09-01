@@ -27,9 +27,10 @@ function Login() {
   const mutation = useMutation(
     (params) => redaxios.post('/api/sessions', params),
     {
-      onSuccess: (data) => {
+      onSuccess: (response) => {
+        appContext.setUser(response.data.user)
+        sessionStorage.setItem('jwtToken', response.data.token)
         router.push('/')
-        appContext.setUser(data as any)
       },
     }
   )
