@@ -10,7 +10,7 @@ const handler = defaultHandler<NextApiRequest, NextApiResponse>().post(
 
     if (user.isRight()) {
       authenticateUser(res, user.value as IUser)
-      res.json(user)
+      res.json(user.value)
     } else {
       res.status(user.value.status).json(user.value.toObject())
     }
