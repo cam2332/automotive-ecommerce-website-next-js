@@ -29,6 +29,13 @@ UserSchema.statics.createUser = async (
   return createdUser
 }
 
+UserSchema.statics.findUserById = async (
+  id: string
+): Promise<UserDocument | null> => {
+  const result = await User.findById(id)
+  return result
+}
+
 UserSchema.statics.findUserByEmail = async (
   email: string
 ): Promise<UserDocument | null> => {

@@ -8,6 +8,7 @@ export interface UserModel extends Model<UserDocument> {
     email: string,
     password: string
   ): Promise<UserDocument>
+  findUserById(id: string): Promise<UserDocument | null>
   findUserByEmail(email: string): Promise<UserDocument | null>
 }
 

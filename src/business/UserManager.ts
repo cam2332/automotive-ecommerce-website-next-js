@@ -130,3 +130,42 @@ export const loginUser = async (requestBody: {
     )
   }
 }
+
+export const findUserById = async (
+  id: string
+): Promise<Either<ApplicationError, IUser>> => {
+  if (id === undefined) {
+    return left(
+      ApplicationError.MISSING_REQUIRED_PATH_PARAMETER.setDetail(
+        `The 'id' URL parameter must be provided in the request.`
+      ).setInstance('/users/:id')
+    )
+  }
+  if (typeof id !== 'string' || id.length < 1) {
+    return left(
+      ApplicationError.UNSUPPORTED_PATH_PARAMETER.setDetail(
+        `The 'id' path parameter must be a string.`
+      ).setInstance('/users/:id')
+    )
+  }
+
+  try {
+    const user = await User.findUserById(id)
+
+    if (user) {
+      return right(fromUserDocument(user))
+    } else {
+      return left(
+        ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+          `User with id ${id} does not exists.`
+        ).setInstance(`/users/${id}`)
+      )
+    }
+  } catch (error) {
+    return left(
+      ApplicationError.INTERNAL_ERROR.setDetail(
+        `Cannot find user with id ${id}.`
+      ).setInstance(`/users/${id}`)
+    )
+  }
+}
