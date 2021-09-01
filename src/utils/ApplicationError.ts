@@ -1,5 +1,25 @@
 export default class ApplicationError {
   /**
+   * @param {string} title - A required query parameter was not specified in the request URL.
+   * @param {number} status - 400
+   */
+  public static MISSING_REQUIRED_QUERY_PARAMETER = new ApplicationError(
+    'A required query parameter was not specified in the request URL.',
+    400,
+    '/missing-required-query-parameter'
+  )
+
+  /**
+   * @param {string} title - One of the query parameters specified in the request URL is not supported.
+   * @param {number} status - 400
+   */
+  public static UNSUPPORTED_QUERY_PARAMETER = new ApplicationError(
+    'One of the query parameters specified in the request URL is not supported.',
+    400,
+    '/unsupported-query-parameter'
+  )
+
+  /**
    * @param {string} title - A required path parameter was not specified in the request URL.
    * @param {number} status - 400
    */
@@ -40,6 +60,16 @@ export default class ApplicationError {
   )
 
   /**
+   * @param {string} title - A required authorization header was not provided.
+   * @param {number} status - 401
+   */
+  public static UNAUTHORIZED = new ApplicationError(
+    'A required authorization header was not provided.',
+    401,
+    '/unauthorized'
+  )
+
+  /**
    * @param {string} title - The specified resource does not exist.
    * @param {number} status - 404
    */
@@ -51,7 +81,7 @@ export default class ApplicationError {
 
   /**
    * @param {string} title - The method received in the request is not supported by the target resource.
-   * @param {number} status - 404
+   * @param {number} status - 405
    */
   public static METHOD_NOT_ALLOWED = new ApplicationError(
     'The method received in the request is not supported by the target resource.',
