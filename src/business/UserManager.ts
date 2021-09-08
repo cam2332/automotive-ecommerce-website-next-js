@@ -6,21 +6,42 @@ import { fromUserDocument } from '../utils/MongoConverter'
 import { encryptPassword, verifyPassword } from '../utils/passwordUtils'
 
 export const createUser = async (requestBody: {
-  name: string
+  firstName: string
+  lastName: string
   email: string
   password: string
 }): Promise<Either<ApplicationError, IUser>> => {
-  if (!requestBody.name) {
+  if (!requestBody.firstName) {
     return left(
       ApplicationError.MISSING_REQUIRED_PROPERTY.setDetail(
-        `The 'name' property must be present in the request body.`
+        `The 'first name' property must be present in the request body.`
       ).setInstance('/users')
     )
   }
-  if (typeof requestBody.name !== 'string' || requestBody.name.length < 1) {
+  if (
+    typeof requestBody.firstName !== 'string' ||
+    requestBody.firstName.length < 1
+  ) {
     return left(
       ApplicationError.UNSUPPORTED_PROPERTY.setDetail(
-        `The 'name' property must be a string.`
+        `The 'first name' property must be a string.`
+      ).setInstance('/users')
+    )
+  }
+  if (!requestBody.lastName) {
+    return left(
+      ApplicationError.MISSING_REQUIRED_PROPERTY.setDetail(
+        `The 'last name' property must be present in the request body.`
+      ).setInstance('/users')
+    )
+  }
+  if (
+    typeof requestBody.lastName !== 'string' ||
+    requestBody.lastName.length < 1
+  ) {
+    return left(
+      ApplicationError.UNSUPPORTED_PROPERTY.setDetail(
+        `The 'last name' property must be a string.`
       ).setInstance('/users')
     )
   }
@@ -59,7 +80,8 @@ export const createUser = async (requestBody: {
   try {
     const encrypted = await encryptPassword(requestBody.password)
     const user = await User.createUser(
-      requestBody.name,
+      requestBody.firstName,
+      requestBody.lastName,
       requestBody.email,
       encrypted
     )

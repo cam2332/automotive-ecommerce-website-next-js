@@ -4,7 +4,8 @@ import UserSchema from '../schemas/UserSchema'
 
 export interface UserModel extends Model<UserDocument> {
   createUser(
-    name: string,
+    firstName: string,
+    lastName: string,
     email: string,
     password: string
   ): Promise<UserDocument>

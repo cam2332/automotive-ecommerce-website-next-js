@@ -5,7 +5,8 @@ import User from '../models/User'
 const UserSchema = new Schema(
   {
     _id: { type: Schema.Types.String, required: true },
-    name: { type: Schema.Types.String, required: true },
+    firstName: { type: Schema.Types.String, required: true },
+    lastName: { type: Schema.Types.String, required: true },
     email: { type: Schema.Types.String, required: true },
     password: { type: Schema.Types.String, required: true },
   },
@@ -15,13 +16,15 @@ const UserSchema = new Schema(
 )
 
 UserSchema.statics.createUser = async (
-  name: string,
+  firstName: string,
+  lastName: string,
   email: string,
   password: string
 ): Promise<UserDocument> => {
   const user = new User({
     _id: Types.ObjectId().toHexString(),
-    name: name,
+    firstName: firstName,
+    lastName: lastName,
     email: email,
     password: password,
   })
