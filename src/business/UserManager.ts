@@ -140,9 +140,18 @@ export const loginUser = async (requestBody: {
         ).setInstance(`/users/${requestBody.email}`)
       )
     }
-
-    if (await verifyPassword(user.password, requestBody.password)) {
+    const passwordCorrect = await verifyPassword(
+      user.password,
+      requestBody.password
+    )
+    if (passwordCorrect) {
       return right(fromUserDocument(user))
+    } else {
+      return left(
+        ApplicationError.UNAUTHORIZED.setDetail(
+          'Incorrect password.'
+        ).setInstance('/users')
+      )
     }
   } catch (error) {
     return left(
