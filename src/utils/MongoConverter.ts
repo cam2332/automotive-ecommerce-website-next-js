@@ -74,7 +74,8 @@ export const fromProductDocument = (product: ProductDocument): IProduct => {
 export const fromUserDocument = (user: UserDocument): IUser => {
   return {
     id: user._id || user.id,
-    name: user.name,
+    firstName: user.firstName,
+    lastName: user.lastName,
     email: user.email,
   }
 }
