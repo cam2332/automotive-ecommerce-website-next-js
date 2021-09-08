@@ -72,7 +72,6 @@ const SessionProvider: React.FC = ({ children }): React.ReactElement => {
   }): Promise<boolean> => {
     try {
       const response = await redaxios.post('/api/sessions', params)
-      console.log(response)
       setUser(response.data.user)
       setToken(response.data.token)
       sessionStorage.setItem('jwtToken', response.data.token)

@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useMutation } from 'react-query'
-import redaxios from 'redaxios'
 import tw from 'tailwind-styled-components'
 import EmptyHeader from '../../components/EmptyHeader'
 import Footer from '../../components/Footer'
@@ -13,27 +11,16 @@ import {
   emailValidator,
   passwordValidator,
 } from '../../services/FormValidation'
-import { useAppContext } from '../../context/AppContext'
+import { useSessionContext } from '../../context/SessionContext'
 
 function Login() {
   const router = useRouter()
-  const appContext = useAppContext()
+  const sessionContext = useSessionContext()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isFormValid, setIsFormValid] = useState(false)
   const emailInputRef = useRef(null)
   const passwordInputRef = useRef(null)
-
-  const mutation = useMutation(
-    (params) => redaxios.post('/api/sessions', params),
-    {
-      onSuccess: (response) => {
-        appContext.setUser(response.data.user)
-        sessionStorage.setItem('jwtToken', response.data.token)
-        router.push('/')
-      },
-    }
-  )
 
   useEffect(() => {
     setIsFormValid(
@@ -44,9 +31,17 @@ function Login() {
     )
   }, [email, password])
 
-  // implement login functionality
-  const login = () => {
-    mutation.mutate({ email: email, password: password } as unknown as void)
+  const login = async () => {
+    const success = await sessionContext.signIn({
+      email: email,
+      password: password,
+    })
+    if (success) {
+      router.push('/')
+    } else {
+      console.log('error login')
+      // implement error handling
+    }
   }
 
   return (

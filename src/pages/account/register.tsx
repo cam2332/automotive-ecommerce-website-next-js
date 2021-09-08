@@ -2,8 +2,6 @@ import React from 'react'
 import { useRef, useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useMutation } from 'react-query'
-import redaxios from 'redaxios'
 import { userFromRequest } from '../../services/Tokens'
 import tw from 'tailwind-styled-components'
 import EmptyHeader from '../../components/EmptyHeader'
@@ -19,9 +17,11 @@ import {
   passwordValidator,
 } from '../../services/FormValidation'
 import { GetServerSidePropsContext } from 'next'
+import { useSessionContext } from '../../context/SessionContext'
 
 function Register() {
   const router = useRouter()
+  const sessionContext = useSessionContext()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -33,13 +33,6 @@ function Register() {
   const emailInputRef = useRef(null)
   const passwordInputRef = useRef(null)
   const confirmPasswordInputRef = useRef(null)
-
-  const mutation = useMutation(
-    (params) => redaxios.post('/api/users', params),
-    {
-      onSuccess: () => router.replace(router.asPath),
-    }
-  )
 
   useEffect(() => {
     setIsFormValid(
@@ -56,14 +49,19 @@ function Register() {
     )
   }, [email, password, confirmPassword])
 
-  // implement register functionality
-  const register = () => {
-    mutation.mutate({
+  const register = async () => {
+    const success = await sessionContext.signUp({
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password,
-    } as unknown as void)
+    })
+    if (success) {
+      router.push('/')
+    } else {
+      console.log('error login')
+      // implement error handling
+    }
   }
 
   return (
