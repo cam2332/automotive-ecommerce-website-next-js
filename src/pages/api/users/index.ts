@@ -9,8 +9,8 @@ const handler = defaultHandler<NextApiRequest, NextApiResponse>().post(
     const user = await createUser(req.body)
 
     if (user.isRight()) {
-      authenticateUser(res, user.value as IUser)
-      res.json(user.value)
+      const token = authenticateUser(res, user.value as IUser)
+      res.json({ user: user.value, token: token })
     } else {
       res.status(user.value.status).json(user.value.toObject())
     }
