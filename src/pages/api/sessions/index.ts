@@ -14,7 +14,7 @@ const handler = defaultHandler<NextApiRequest, NextApiResponse>()
     const user = await loginUser(req.body)
     if (user.isRight()) {
       const token = authenticateUser(res, user.value as IUser)
-      res.json({ user: user.value, token: token })
+      res.status(200).json({ user: user.value, token: token })
     } else {
       res.status(user.value.status).json(user.value.toObject())
     }
@@ -34,7 +34,7 @@ const handler = defaultHandler<NextApiRequest, NextApiResponse>()
       const user = await findUserById(data.id)
       if (user.isRight()) {
         const newToken = authenticateUser(res, user.value as IUser)
-        res.json({ user: user.value, token: newToken })
+        res.status(200).json({ user: user.value, token: newToken })
       } else {
         res.status(user.value.status).json(user.value.toObject())
       }
