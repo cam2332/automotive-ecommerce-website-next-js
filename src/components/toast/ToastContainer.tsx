@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { useToastContext } from './ToastContext'
+import { useToastContext } from '../../context/ToastContext'
 import ToastElement from './ToastElement'
 
 const placements = {

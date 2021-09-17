@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import * as IoIcons from 'react-icons/io5'
 import { IoCloseSharp } from 'react-icons/io5'
 import tw from 'tailwind-styled-components'
-import { useToastContext } from './ToastContext'
+import { useToastContext } from '../../context/ToastContext'
 import { appearances } from './types/AppearanceTypes'
 import Toast from './types/Toast'
 

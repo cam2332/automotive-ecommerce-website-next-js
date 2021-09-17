@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from 'react'
-import ToastContainer from './ToastContainer'
-import Placement from './types/Placement'
-import Toast, { ToastInput } from './types/Toast'
+import ToastContainer from '../components/toast/ToastContainer'
+import Placement from '../components/toast/types/Placement'
+import Toast, { ToastInput } from '../components/toast/types/Toast'
 
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
