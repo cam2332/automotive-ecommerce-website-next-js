@@ -18,10 +18,12 @@ import {
 } from '../../services/FormValidation'
 import { GetServerSidePropsContext } from 'next'
 import { useSessionContext } from '../../context/SessionContext'
+import { useToastContext } from '../../context/ToastContext'
 
 function Register() {
   const router = useRouter()
   const sessionContext = useSessionContext()
+  const toastContext = useToastContext()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -50,17 +52,25 @@ function Register() {
   }, [email, password, confirmPassword])
 
   const register = async () => {
-    const success = await sessionContext.signUp({
+    const result = await sessionContext.signUp({
       firstName: firstName,
       lastName: lastName,
       email: email,
       password: password,
     })
-    if (success) {
+    if (result.isRight()) {
       router.push('/')
+      toastContext.removeAllToasts()
     } else {
-      console.log('error login')
-      // implement error handling
+      if (result.value[1] === 409) {
+        emailInputRef.current.setErrorValue(true, result.value[0])
+      }
+      toastContext.addToast({
+        appearance: 'error',
+        autoDismiss: true,
+        dismissDelay: 5000,
+        text: result.value[0],
+      })
     }
   }
 

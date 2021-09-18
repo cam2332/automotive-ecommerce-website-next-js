@@ -87,6 +87,13 @@ export const createUser = async (requestBody: {
     )
     return right(fromUserDocument(user))
   } catch (error) {
+    if (error.code === 11000 && error.keyPattern['email'] === 1) {
+      return left(
+        ApplicationError.RESOURCE_EXISTS.setDetail(
+          `User with e-mail '${requestBody.email}' already exists`
+        ).setInstance('/users')
+      )
+    }
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
         'Cannot create user'

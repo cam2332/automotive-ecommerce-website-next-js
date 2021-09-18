@@ -12,10 +12,12 @@ import {
   passwordValidator,
 } from '../../services/FormValidation'
 import { useSessionContext } from '../../context/SessionContext'
+import { useToastContext } from '../../context/ToastContext'
 
 function Login() {
   const router = useRouter()
   const sessionContext = useSessionContext()
+  const toastContext = useToastContext()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isFormValid, setIsFormValid] = useState(false)
@@ -32,15 +34,26 @@ function Login() {
   }, [email, password])
 
   const login = async () => {
-    const success = await sessionContext.signIn({
+    const result = await sessionContext.signIn({
       email: email,
       password: password,
     })
-    if (success) {
+    if (result.isRight()) {
       router.push('/')
+      toastContext.removeAllToasts()
     } else {
-      console.log('error login')
-      // implement error handling
+      if (result.value[1] === 404) {
+        emailInputRef.current.setErrorValue(true, result.value[0])
+      }
+      if (result.value[1] === 401) {
+        passwordInputRef.current.setErrorValue(true, result.value[0])
+      }
+      toastContext.addToast({
+        appearance: 'error',
+        autoDismiss: true,
+        dismissDelay: 5000,
+        text: result.value[0],
+      })
     }
   }
 
