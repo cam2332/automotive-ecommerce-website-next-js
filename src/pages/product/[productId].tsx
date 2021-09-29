@@ -1,0 +1,414 @@
+import React, { useState } from 'react'
+import { GetServerSideProps } from 'next'
+import Image from 'next/image'
+import tw from 'tailwind-styled-components'
+import {
+  IoHeart,
+  IoHeartOutline,
+  IoCartSharp,
+  IoStarOutline,
+  IoStarSharp,
+} from 'react-icons/io5'
+import { findProductById } from '../../business/ProductManager'
+import SiteWrapper from '../../components/SiteWrapper'
+import { IProduct } from '../../DAO/documents/Product'
+import dbConnect from '../../utils/dbConnect'
+import QuantitySelect from '../../components/select/QuantitySelect'
+
+function index({
+  thumbnailUrl,
+  title,
+  subTitle,
+  identifier,
+  price,
+  oldPrice,
+  currency,
+  quantity,
+  inWishList,
+  properties,
+  compatibleCarTypeIds,
+}: IProduct) {
+  const [amount, setAmount] = useState<number>(1)
+
+  return (
+    <SiteWrapper>
+      <Overview>
+        <BigThumbnailWrapper>
+          <ThumbnailWrapper>
+            {thumbnailUrl && (
+              <Image
+                width={200}
+                height={200}
+                layout='responsive'
+                src={thumbnailUrl}
+              />
+            )}
+          </ThumbnailWrapper>
+        </BigThumbnailWrapper>
+        <Container>
+          <TitleWrapper>
+            <Title>
+              <TitleText>{title}</TitleText>
+              <SubTitleText>{subTitle}</SubTitleText>
+            </Title>
+            {inWishList ? (
+              <HeartFillIcon onClick={toggleInWishList} />
+            ) : (
+              <HeartOutlineIcon onClick={toggleInWishList} />
+            )}
+          </TitleWrapper>
+          <SmallThumbnailWrapper>
+            <ThumbnailWrapper>
+              {thumbnailUrl && (
+                <Image
+                  width={200}
+                  height={200}
+                  layout='responsive'
+                  src={thumbnailUrl}
+                />
+              )}
+            </ThumbnailWrapper>
+          </SmallThumbnailWrapper>
+          <PricesContainer>
+            <Prices>
+              <PriceText>
+                {price && (price * amount).toFixed(2).replace('.', ',')}{' '}
+                {currency}
+              </PriceText>
+              {oldPrice && (
+                <OldPriceText>
+                  {(oldPrice * amount).toFixed(2).replace('.', ',')} {currency}
+                </OldPriceText>
+              )}
+            </Prices>
+            <ApiecePriceText>
+              Cena za sztukę: {price && price.toFixed(2).replace('.', ',')}{' '}
+              {currency}
+            </ApiecePriceText>
+          </PricesContainer>
+          <AvailabilityContainer>
+            {quantity > 0 && (
+              <QuantityWrapper>
+                <QuantitySelect
+                  selectedValue={amount}
+                  numberOfOptions={quantity}
+                  onClickItem={(amount: number) => setAmount(amount)}
+                />
+              </QuantityWrapper>
+            )}
+            <AddToCartButton
+              onClick={addToCart}
+              disabled={quantity < 0}
+              $quantity={quantity}>
+              <CartIcon />
+              <AddToCartText>Dodaj do koszyka</AddToCartText>
+            </AddToCartButton>
+          </AvailabilityContainer>
+        </Container>
+      </Overview>
+      <DescriptionContainer>
+        <SectionWrapper>
+          <SectionTitle>Szczegóły produktu</SectionTitle>
+          <PropertiesWrapper>
+            <PropertiesList>
+              <PropertyItem key={identifier}>
+                <PropertyContainer>
+                  <PropertyNameText>Kod produktu:</PropertyNameText>
+                  <PropertyValueText>{identifier}</PropertyValueText>
+                </PropertyContainer>
+              </PropertyItem>
+              {properties &&
+                properties
+                  .slice(0, Math.floor(properties.length / 2))
+                  .map(({ name, unit, value }, index) => (
+                    <PropertyItem key={index}>
+                      <PropertyContainer>
+                        <PropertyNameText>
+                          {name}
+                          {unit && ` [${unit}]`}:
+                        </PropertyNameText>
+                        <PropertyValueText>{value}</PropertyValueText>
+                      </PropertyContainer>
+                    </PropertyItem>
+                  ))}
+            </PropertiesList>
+            <PropertiesList>
+              {properties &&
+                properties
+                  .slice(Math.floor(properties.length / 2))
+                  .map(({ name, unit, value }, index) => (
+                    <PropertyItem key={index}>
+                      <PropertyContainer>
+                        <PropertyNameText>
+                          {name}
+                          {unit && ` [${unit}]`}:
+                        </PropertyNameText>
+                        <PropertyValueText>{value}</PropertyValueText>
+                      </PropertyContainer>
+                    </PropertyItem>
+                  ))}
+            </PropertiesList>
+          </PropertiesWrapper>
+        </SectionWrapper>
+        <SectionWrapper>
+          <SectionTitle>Pasuje do auta</SectionTitle>
+          {compatibleCarTypeIds.map((id) => (
+            <span key={id}>{id}</span>
+          ))}
+        </SectionWrapper>
+      </DescriptionContainer>
+    </SiteWrapper>
+  )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const productId = context.query.productId as string
+  let product: IProduct = null
+
+  try {
+    await dbConnect()
+
+    const resultProduct = await findProductById(productId)
+    resultProduct.applyOnRight((foundProduct) => {
+      product = foundProduct
+      console.log(product)
+    })
+  } catch (error) {
+    console.log('e', error)
+  }
+
+  return {
+    props: { ...product },
+  }
+}
+
+const Overview = tw.div`
+  flex
+  flex-row
+  justify-center
+  w-full
+  h-full
+  p-3
+
+  md:p-5
+`
+
+const BigThumbnailWrapper = tw.div`
+  hidden
+  w-5/12
+  
+  md:flex
+`
+
+const TitleWrapper = tw.div`
+  flex
+  flex-row
+  flex-grow
+  w-full
+`
+
+const Title = tw.div`
+  flex
+  flex-col
+  items-start
+  
+  w-full
+`
+
+const SmallThumbnailWrapper = tw.div`
+  flex
+  flex-row
+  justify-center
+  w-full
+  h-full
+  
+  md:hidden
+`
+
+const Container = tw.div`
+  flex
+  flex-col
+  items-center
+  justify-between
+  w-full
+  
+  md:p-3
+  md:w-7/12
+`
+
+const PropertiesWrapper = tw.div`
+  grid
+  
+  lg:grid-cols-2
+`
+
+const HeartFillIcon = tw(IoHeart)`
+  flex
+ 	self-start
+ 	text-3xl
+ 	cursor-pointer
+ 	text-primary-color
+`
+
+const HeartOutlineIcon = tw(IoHeartOutline)`
+  flex
+ 	self-start
+ 	text-3xl
+ 	cursor-pointer
+ 	text-primary-color
+`
+
+const TitleText = tw.span`
+  font-medium
+  text-primary-color
+  text-lg
+`
+
+const SubTitleText = tw.span`
+  py-1
+  text-sm
+  text-primary-color
+`
+
+const ThumbnailWrapper = tw.div`
+  grid
+  w-5/6
+  p-3
+
+  md:w-96
+`
+
+const PricesContainer = tw.div`
+  flex
+ 	flex-col
+  justify-start
+  w-full
+  my-3
+`
+
+const Prices = tw.div`
+  flex
+  flex-row
+  items-center
+  space-x-5
+`
+
+const AvailabilityContainer = tw.div`
+  flex
+  flex-row
+  items-center
+  w-full
+  space-x-4
+`
+
+const QuantityWrapper = tw.div`
+  max-w-none
+`
+
+const AddToCartButton = tw.button`
+  flex
+ 	flex-row
+ 	items-center
+ 	justify-center
+ 	w-full
+ 	my-3
+  py-2px
+ 	space-x-3
+ 	font-semibold
+ 	border-2
+ 	rounded-full
+   text-body-color
+  ${({ $quantity }: { $quantity: number }) =>
+    $quantity > 0
+      ? 'border-secondary-color bg-secondary-color cursor-pointer'
+      : 'border-gray-500 bg-gray-500 cursor-default'}
+`
+
+const CartIcon = tw(IoCartSharp)`
+  text-2xl
+ 	text-body-color
+
+ 	lg:text-3xl
+`
+
+const AddToCartText = tw.span`
+  flex
+ 	text-sm
+ 	uppercase
+`
+
+const PriceText = tw.span`
+  text-3xl
+ 	font-semibold
+ 	text-secondary-color
+ 	whitespace-nowrap
+`
+
+const OldPriceText = tw.span`
+  text-2xl
+  text-gray-500
+  line-through
+  whitespace-nowrap
+`
+
+const ApiecePriceText = tw.span`
+  text-gray-500
+  whitespace-nowrap
+`
+
+const DescriptionContainer = tw.div`
+  flex
+  flex-col
+  w-full
+  p-3
+
+  md:p-5
+`
+
+const SectionWrapper = tw.div`
+  flex
+ 	flex-col
+ 	py-3
+`
+
+const SectionTitle = tw.span`
+  mx-2
+  my-3
+  font-semibold
+  text-primary-color
+`
+
+const PropertiesList = tw.ul`
+ 	list-disc
+`
+
+const PropertyItem = tw.li`
+  flex
+  flex-row
+  items-center
+  py-2
+  px-2
+  space-x-2
+  border-t
+  border-gray-200
+`
+
+const PropertyContainer = tw.div`
+  flex
+  flex-row
+  space-x-3
+`
+
+const PropertyNameText = tw.span`
+  text-sm
+  font-semibold
+  text-gray-700
+`
+
+const PropertyValueText = tw.span`
+  text-sm
+  text-normal
+  text-gray-700
+`
+
+export default index
