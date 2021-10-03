@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import tw from 'tailwind-styled-components'
 import ProductCard from './ProductCard'
 import ProductCardGrid from './ProductCardGrid'
@@ -10,6 +11,8 @@ function ProductList({
   products: IProduct[]
   viewType: string
 }) {
+  const router = useRouter()
+
   return (
     <>
       {viewType === 'list' && (
@@ -35,7 +38,7 @@ function ProductList({
                 /** */
               }}
               onClickTitle={() => {
-                /** */
+                router.push('/product/' + product.id)
               }}
             />
           ))}
@@ -61,7 +64,7 @@ function ProductList({
                 /** */
               }}
               onClickTitle={() => {
-                /** */
+                router.push('/product/' + product.id)
               }}
             />
           ))}
