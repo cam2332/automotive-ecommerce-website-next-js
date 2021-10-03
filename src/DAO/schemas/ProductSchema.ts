@@ -64,6 +64,95 @@ ProductSchema.statics.createProduct = async (
   return createdProduct
 }
 
+ProductSchema.statics.findProductById = async (
+  productId: string,
+  userId?: string
+): Promise<ProductDocument | null> => {
+  if (userId) {
+    const product = await Product.aggregate([
+      {
+        $match: {
+          _id: productId,
+        },
+      },
+      {
+        $lookup: {
+          from: 'Users',
+          let: {
+            product_id: '$_id',
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $eq: ['$_id', userId],
+                    },
+                    {
+                      $in: [
+                        '$$product_id',
+                        {
+                          $ifNull: ['$wishList', []],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          as: 'Users',
+        },
+      },
+      {
+        $project: {
+          title: 1,
+          subTitle: 1,
+          identifier: 1,
+          price: 1,
+          oldPrice: 1,
+          currency: 1,
+          quantity: 1,
+          properties: 1,
+          manufacturer: 1,
+          categoryId: 1,
+          compatibleCarTypeIds: 1,
+          thumbnailUrl: 1,
+          inWishList: {
+            $eq: [
+              {
+                $size: '$Users',
+              },
+              1,
+            ],
+          },
+        },
+      },
+    ])
+
+    return Array.isArray(product) && product.length > 0
+      ? (product[0] as ProductDocument)
+      : null
+  } else {
+    const product = await Product.findById(productId, {
+      title: 1,
+      subTitle: 1,
+      identifier: 1,
+      price: 1,
+      oldPrice: 1,
+      currency: 1,
+      quantity: 1,
+      properties: 1,
+      manufacturer: 1,
+      categoryId: 1,
+      compatibleCarTypeIds: 1,
+      thumbnailUrl: 1,
+    })
+
+    return product
+  }
+}
 ProductSchema.statics.findProductsByCategoryHierarchy = async (
   categoryId: string,
   userId: string | undefined,

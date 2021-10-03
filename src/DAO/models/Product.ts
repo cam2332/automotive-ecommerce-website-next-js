@@ -6,6 +6,7 @@ import SortMethod from '../types/SortMethod'
 
 export interface ProductModel extends Model<ProductDocument> {
   createProduct(): Promise<ProductDocument>
+  findProductById(id: string, userId?: string): Promise<ProductDocument | null>
   findProductsByCategoryHierarchy(
     categoryId: string,
     userId: string | undefined,

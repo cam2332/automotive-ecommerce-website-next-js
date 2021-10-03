@@ -6,6 +6,40 @@ import { Either, left, right } from '../utils/Either'
 import { fromProductDocument } from '../utils/MongoConverter'
 import SortMethod from '../DAO/types/SortMethod'
 
+export const findProductById = async (
+  productId: string,
+  userId?: string
+): Promise<Either<ApplicationError, IProduct>> => {
+  if (productId === undefined) {
+    return left(
+      ApplicationError.MISSING_REQUIRED_PATH_PARAMETER.setDetail(
+        `The 'id' URL parameter must be provided in the request.`
+      ).setInstance('/products/:id')
+    )
+  }
+  if (typeof productId !== 'string' || productId.length < 1) {
+    return left(
+      ApplicationError.UNSUPPORTED_PATH_PARAMETER.setDetail(
+        `The 'id' path parameter must be a string.`
+      ).setInstance('/products/:id')
+    )
+  }
+
+  try {
+    const product = await Product.findProductById(productId, userId)
+
+    if (product) {
+      return right(fromProductDocument(product))
+    }
+  } catch (error) {
+    return left(
+      ApplicationError.INTERNAL_ERROR.setDetail(
+        `Cannot find products with id ${productId}.`
+      ).setInstance(`/products/:id`)
+    )
+  }
+}
+
 export const findProductsByCategoryId = async (
   userId: string | undefined,
   categoryId: string
