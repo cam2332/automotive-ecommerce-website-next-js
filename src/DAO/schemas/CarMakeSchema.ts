@@ -6,6 +6,7 @@ const CarMakeSchema: Schema = new Schema(
   {
     _id: { type: Schema.Types.String, required: true },
     name: { type: Schema.Types.String, required: true },
+    models: [{ type: String, ref: 'CarModels' }],
   },
   {
     collection: 'CarMakes',

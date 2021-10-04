@@ -9,7 +9,7 @@ const CarTypeSchema: Schema = new Schema(
     engineDisplacement: { type: String, required: true },
     type: { type: String, required: true },
     kW: { type: String, required: true },
-    KM: { type: String, required: true },
+    HP: { type: String, required: true },
     productionStartYear: { type: String, required: true },
     productionEndYear: { type: String, required: true },
     modelId: { type: String, ref: 'CarModels' },
@@ -32,7 +32,7 @@ CarTypeSchema.statics.findTypesByModelId = async (
       engineDisplacement: 1,
       type: 1,
       kW: 1,
-      KM: 1,
+      HP: 1,
       productionStartYear: 1,
       productionEndYear: 1,
       modelId: 1,
@@ -42,7 +42,7 @@ CarTypeSchema.statics.findTypesByModelId = async (
     group: 1,
     engineDisplacement: 1,
     kW: 1,
-    KM: 1,
+    HP: 1,
   })
 
   return types
@@ -60,7 +60,7 @@ CarTypeSchema.statics.findTypesByMakeId = async (
       engineDisplacement: 1,
       type: 1,
       kW: 1,
-      KM: 1,
+      HP: 1,
       productionStartYear: 1,
       productionEndYear: 1,
       modelId: 1,
@@ -70,7 +70,7 @@ CarTypeSchema.statics.findTypesByMakeId = async (
     group: 1,
     engineDisplacement: 1,
     kW: 1,
-    KM: 1,
+    HP: 1,
   })
 
   return types
@@ -88,7 +88,7 @@ CarTypeSchema.statics.findTypeById = async (
       engineDisplacement: 1,
       type: 1,
       kW: 1,
-      KM: 1,
+      HP: 1,
       productionStartYear: 1,
       productionEndYear: 1,
       modelId: 1,

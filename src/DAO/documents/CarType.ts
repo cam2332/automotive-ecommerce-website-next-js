@@ -8,7 +8,7 @@ export interface ICarType {
   engineDisplacement: string
   type: string
   kW: string
-  KM: string
+  HP: string
   productionStartYear: string
   productionEndYear: string
 }

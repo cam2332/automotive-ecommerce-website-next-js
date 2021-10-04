@@ -1,12 +1,44 @@
 import { CarMakeDocument, ICarMake } from '../DAO/documents/CarMake'
+import { CarModelDocument, ICarModel } from '../DAO/documents/CarModel'
+import { CarTypeDocument, ICarType } from '../DAO/documents/CarType'
 import { ICategory, CategoryDocument } from '../DAO/documents/Category'
 import { IProduct, ProductDocument } from '../DAO/documents/Product'
 import { IUser, UserDocument } from '../DAO/documents/User'
+
+export const fromCarTypeDocument = (carType: CarTypeDocument): ICarType => {
+  return {
+    id: carType._id || carType.id,
+    group: carType.group,
+    engineDisplacement: carType.engineDisplacement,
+    type: carType.type,
+    kW: carType.kW,
+    HP: carType.HP,
+    productionStartYear: carType.productionStartYear,
+    productionEndYear: carType.productionEndYear,
+  }
+}
+
+export const fromCarModelDocument = (carModel: CarModelDocument): ICarModel => {
+  return {
+    id: carModel._id || carModel.id,
+    group: carModel.group,
+    name: carModel.name,
+    productionStartYear: carModel.productionStartYear,
+    productionEndYear: carModel.productionEndYear,
+    makeId: carModel.makeId,
+    types: carModel.types
+      ? carModel.types.map((type) => fromCarTypeDocument(type))
+      : [],
+  }
+}
 
 export const fromCarMakeDocument = (carMake: CarMakeDocument): ICarMake => {
   return {
     id: carMake._id || carMake.id,
     name: carMake.name,
+    models: carMake.models
+      ? carMake.models.map((model) => fromCarModelDocument(model))
+      : [],
   }
 }
 

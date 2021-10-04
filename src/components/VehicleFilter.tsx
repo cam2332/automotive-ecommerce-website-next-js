@@ -14,9 +14,12 @@ const useCarMakes = (): {
   const { data, error } = useSWR('/api/cars/makes', fetcher)
 
   return {
-    makes: data?.map(({ id, name }) => {
-      return { id, value: name }
-    }),
+    makes:
+      data && Array.isArray(data)
+        ? data?.map(({ id, name }) => {
+            return { id, value: name }
+          })
+        : [],
     isLoading: !error && !data,
     isError: error,
   }
@@ -70,13 +73,13 @@ const useCarTypes = (
             engineDisplacement,
             type,
             kW,
-            KM,
+            HP,
             productionStartYear,
             productionEndYear,
           }) => {
             return {
               id,
-              value: `${engineDisplacement} ${type} ${kW}kW ${KM}KM (${productionStartYear} - ${productionEndYear})`,
+              value: `${engineDisplacement} ${type} ${kW}kW ${HP}KM (${productionStartYear} - ${productionEndYear})`,
               group: group,
             }
           }
