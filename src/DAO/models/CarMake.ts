@@ -7,6 +7,7 @@ export interface CarMakeModel extends Model<CarMakeDocument> {
   findAllMakes(): Promise<CarMakeDocument[]>
   findMakeById(makeId: string): Promise<CarMakeDocument | null>
   findMakeByName(name: string): Promise<CarMakeDocument | null>
+  findMakesByTypeIds(typeIds: string[]): Promise<CarMakeDocument[]>
 }
 
 let carMake: CarMakeModel

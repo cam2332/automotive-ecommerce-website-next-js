@@ -137,3 +137,18 @@ export const findCarMakeByName = async (
     )
   }
 }
+
+export const findCarMakesByTypeIds = async (
+  typeIds: string[]
+): Promise<Either<ApplicationError, ICarMake[]>> => {
+  try {
+    const makes = await CarMake.findMakesByTypeIds(typeIds)
+    return right(makes.map((carMake) => fromCarMakeDocument(carMake)))
+  } catch (error) {
+    return left(
+      ApplicationError.INTERNAL_ERROR.setDetail(
+        `Cannot find car makes with type ids [${typeIds.toString()}].`
+      ).setInstance('/cars/makes')
+    )
+  }
+}

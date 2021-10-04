@@ -48,4 +48,68 @@ CarMakeSchema.statics.findMakeByName = async (
   return make
 }
 
+CarMakeSchema.statics.findMakesByTypeIds = async (
+  typeIds: string[]
+): Promise<CarMakeDocument[]> => {
+  const makes = await CarMake.aggregate([
+    {
+      $sort: {
+        name: 1,
+      },
+    },
+    {
+      $lookup: {
+        from: 'CarModels',
+        localField: '_id',
+        foreignField: 'makeId',
+        as: 'models',
+      },
+    },
+    {
+      $unwind: {
+        path: '$models',
+      },
+    },
+    {
+      $lookup: {
+        from: 'CarTypes',
+        localField: 'models._id',
+        foreignField: 'modelId',
+        as: 'types',
+      },
+    },
+    {
+      $match: {
+        'types._id': {
+          $in: typeIds,
+        },
+      },
+    },
+    {
+      $addFields: {
+        'models.types': {
+          $concatArrays: ['$types', []],
+        },
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        models: 1,
+      },
+    },
+    {
+      $group: {
+        _id: '$_id',
+        name: { $first: '$name' },
+        models: {
+          $push: '$models',
+        },
+      },
+    },
+  ])
+
+  return makes
+}
+
 export default CarMakeSchema
