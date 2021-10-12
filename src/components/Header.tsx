@@ -95,7 +95,9 @@ function Header({
                 <CartIcon />
                 <CartCountPill>{cartCount}</CartCountPill>
               </CartSubContainer>
-              <CartTotal>{`${cartTotal.toFixed(2)} zł`}</CartTotal>
+              <CartTotal>{`${cartTotal
+                .toFixed(2)
+                .replace('.', ',')} zł`}</CartTotal>
             </CartContainer>
           )}
           {userIconVisible && <PersonCircleIcon onClick={onClickUser} />}
