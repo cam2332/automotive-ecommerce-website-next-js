@@ -15,19 +15,7 @@ import { IProduct } from '../../DAO/documents/Product'
 import dbConnect from '../../utils/dbConnect'
 import QuantitySelect from '../../components/select/QuantitySelect'
 
-function index({
-  thumbnailUrl,
-  title,
-  subTitle,
-  identifier,
-  price,
-  oldPrice,
-  currency,
-  quantity,
-  inWishList,
-  properties,
-  compatibleCarTypeIds,
-}: IProduct) {
+function index(props: IProduct & { compatibleCars: ICarMake[] }) {
   const [amount, setAmount] = useState<number>(1)
 
   return (
@@ -35,12 +23,12 @@ function index({
       <Overview>
         <BigThumbnailWrapper>
           <ThumbnailWrapper>
-            {thumbnailUrl && (
+            {props.thumbnailUrl && (
               <Image
                 width={200}
                 height={200}
                 layout='responsive'
-                src={thumbnailUrl}
+                src={props.thumbnailUrl}
               />
             )}
           </ThumbnailWrapper>
@@ -48,10 +36,10 @@ function index({
         <Container>
           <TitleWrapper>
             <Title>
-              <TitleText>{title}</TitleText>
-              <SubTitleText>{subTitle}</SubTitleText>
+              <TitleText>{props.title}</TitleText>
+              <SubTitleText>{props.subTitle}</SubTitleText>
             </Title>
-            {inWishList ? (
+            {props.inWishList ? (
               <HeartFillIcon onClick={toggleInWishList} />
             ) : (
               <HeartOutlineIcon onClick={toggleInWishList} />
@@ -59,12 +47,12 @@ function index({
           </TitleWrapper>
           <SmallThumbnailWrapper>
             <ThumbnailWrapper>
-              {thumbnailUrl && (
+              {props.thumbnailUrl && (
                 <Image
                   width={200}
                   height={200}
                   layout='responsive'
-                  src={thumbnailUrl}
+                  src={props.thumbnailUrl}
                 />
               )}
             </ThumbnailWrapper>
@@ -72,34 +60,37 @@ function index({
           <PricesContainer>
             <Prices>
               <PriceText>
-                {price && (price * amount).toFixed(2).replace('.', ',')}{' '}
-                {currency}
+                {props.price &&
+                  (props.price * amount).toFixed(2).replace('.', ',')}{' '}
+                {props.currency}
               </PriceText>
-              {oldPrice && (
+              {props.oldPrice && (
                 <OldPriceText>
-                  {(oldPrice * amount).toFixed(2).replace('.', ',')} {currency}
+                  {(props.oldPrice * amount).toFixed(2).replace('.', ',')}
+                  {props.currency}
                 </OldPriceText>
               )}
             </Prices>
             <ApiecePriceText>
-              Cena za sztukę: {price && price.toFixed(2).replace('.', ',')}{' '}
-              {currency}
+              Cena za sztukę:
+              {props.price && props.price.toFixed(2).replace('.', ',')}
+              {props.currency}
             </ApiecePriceText>
           </PricesContainer>
           <AvailabilityContainer>
-            {quantity > 0 && (
+            {props.quantity > 0 && (
               <QuantityWrapper>
                 <QuantitySelect
                   selectedValue={amount}
-                  numberOfOptions={quantity}
+                  numberOfOptions={props.quantity}
                   onClickItem={(amount: number) => setAmount(amount)}
                 />
               </QuantityWrapper>
             )}
             <AddToCartButton
               onClick={addToCart}
-              disabled={quantity < 0}
-              $quantity={quantity}>
+              disabled={props.quantity < 0}
+              $quantity={props.quantity}>
               <CartIcon />
               <AddToCartText>Dodaj do koszyka</AddToCartText>
             </AddToCartButton>
@@ -111,15 +102,15 @@ function index({
           <SectionTitle>Szczegóły produktu</SectionTitle>
           <PropertiesWrapper>
             <PropertiesList>
-              <PropertyItem key={identifier}>
+              <PropertyItem key={props.identifier}>
                 <PropertyContainer>
                   <PropertyNameText>Kod produktu:</PropertyNameText>
-                  <PropertyValueText>{identifier}</PropertyValueText>
+                  <PropertyValueText>{props.identifier}</PropertyValueText>
                 </PropertyContainer>
               </PropertyItem>
-              {properties &&
-                properties
-                  .slice(0, Math.floor(properties.length / 2))
+              {props.properties &&
+                props.properties
+                  .slice(0, Math.floor(props.properties.length / 2))
                   .map(({ name, unit, value }, index) => (
                     <PropertyItem key={index}>
                       <PropertyContainer>
@@ -133,9 +124,9 @@ function index({
                   ))}
             </PropertiesList>
             <PropertiesList>
-              {properties &&
-                properties
-                  .slice(Math.floor(properties.length / 2))
+              {props.properties &&
+                props.properties
+                  .slice(Math.floor(props.properties.length / 2))
                   .map(({ name, unit, value }, index) => (
                     <PropertyItem key={index}>
                       <PropertyContainer>
