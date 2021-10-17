@@ -14,9 +14,14 @@ import SiteWrapper from '../../components/SiteWrapper'
 import { IProduct } from '../../DAO/documents/Product'
 import dbConnect from '../../utils/dbConnect'
 import QuantitySelect from '../../components/select/QuantitySelect'
+import { useCartContext } from '../../context/CartContext'
 
 function index(props: IProduct & { compatibleCars: ICarMake[] }) {
+  const cartContext = useCartContext()
   const [amount, setAmount] = useState<number>(1)
+  const addToCart = () => {
+    cartContext.addToCart(props, amount)
+  }
 
   return (
     <SiteWrapper>

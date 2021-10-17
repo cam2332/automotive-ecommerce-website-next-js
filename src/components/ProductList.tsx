@@ -3,6 +3,7 @@ import tw from 'tailwind-styled-components'
 import ProductCard from './ProductCard'
 import ProductCardGrid from './ProductCardGrid'
 import { IProduct } from '../DAO/documents/Product'
+import { useCartContext } from '../context/CartContext'
 
 function ProductList({
   products,
@@ -12,6 +13,7 @@ function ProductList({
   viewType: string
 }) {
   const router = useRouter()
+  const cartContext = useCartContext()
 
   return (
     <>
@@ -34,8 +36,8 @@ function ProductList({
               onToggleInWishList={() => {
                 /** */
               }}
-              onAddToCart={() => {
-                /** */
+              onAddToCart={(amount) => {
+                cartContext.addToCart(product, amount)
               }}
               onClickTitle={() => {
                 router.push('/product/' + product.id)
@@ -61,7 +63,7 @@ function ProductList({
                 /** */
               }}
               onAddToCart={() => {
-                /** */
+                cartContext.addToCart(product, 1)
               }}
               onClickTitle={() => {
                 router.push('/product/' + product.id)
