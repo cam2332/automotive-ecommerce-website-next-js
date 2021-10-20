@@ -359,7 +359,133 @@ ProductSchema.statics.findProductsByCategoryHierarchy = async (
   products[0].totalPages = products[0].metadata[0]
     ? products[0].metadata[0].totalPages
     : 1
-  console.log(products)
+  return products[0]
+}
+
+ProductSchema.statics.findProductsByIds = async (
+  ids: string[],
+  userId: string | undefined,
+  page: number,
+  resultsPerPage: number,
+  sortMethod: SortMethod
+): Promise<ResultData<ProductDocument[]>> => {
+  let pipeline = []
+  pipeline = [
+    {
+      $match: {
+        $expr: {
+          $in: ['$_id', ids],
+        },
+      },
+    },
+  ]
+
+  const sort = {
+    $sort: {
+      ...(sortMethod.type === SortMethod.relevance.type && { _id: -1 }),
+      ...(sortMethod.type === SortMethod.nameAsc.type && { title: 1 }),
+      ...(sortMethod.type === SortMethod.nameDesc.type && { title: -1 }),
+      ...(sortMethod.type === SortMethod.priceAsc.type && { price: 1 }),
+      ...(sortMethod.type === SortMethod.priceDesc.type && { price: -1 }),
+    },
+  }
+  pipeline.push(sort)
+
+  const wishList = {
+    $lookup: {
+      from: 'Users',
+      let: {
+        product_id: '$_id',
+      },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: ['$_id', userId],
+                },
+                {
+                  $in: [
+                    '$$product_id',
+                    {
+                      $ifNull: ['$wishList', []],
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      ],
+      as: 'Users',
+    },
+  }
+
+  if (userId) {
+    pipeline.push(wishList)
+  }
+  const project = {
+    $project: {
+      title: 1,
+      subTitle: 1,
+      identifier: 1,
+      price: 1,
+      oldPrice: 1,
+      currency: 1,
+      quantity: 1,
+      properties: 1,
+      manufacturer: 1,
+      categoryId: 1,
+      compatibleCarTypeIds: 1,
+      thumbnailUrl: 1,
+      inWishList: {
+        $eq: [
+          {
+            $size: '$Users',
+          },
+          1,
+        ],
+      },
+    },
+  }
+  pipeline.push(project)
+
+  const pagination = {
+    $facet: {
+      metadata: [
+        {
+          $count: 'totalResults',
+        },
+        {
+          $addFields: {
+            totalPages: {
+              $ceil: {
+                $divide: ['$totalResults', resultsPerPage],
+              },
+            },
+          },
+        },
+      ],
+      results: [
+        {
+          $skip: (page - 1) * resultsPerPage,
+        },
+        {
+          $limit: resultsPerPage,
+        },
+      ],
+    },
+  }
+  pipeline.push(pagination)
+
+  const products = await Product.aggregate(pipeline)
+  products[0].totalResults = products[0].metadata[0]
+    ? products[0].metadata[0].totalResults
+    : 0
+  products[0].totalPages = products[0].metadata[0]
+    ? products[0].metadata[0].totalPages
+    : 1
   return products[0]
 }
 

@@ -84,3 +84,32 @@ export const findProductsByCategoryHierarchy = async (
     )
   }
 }
+
+export const findProductsByIds = async (
+  ids: string[],
+  userId: string | undefined,
+  page: number,
+  resultsPerPage: number,
+  sortMethod: SortMethod
+): Promise<Either<ApplicationError, ResultData<IProduct[]>>> => {
+  try {
+    const products = await Product.findProductsByIds(
+      ids,
+      userId,
+      page,
+      resultsPerPage,
+      sortMethod
+    )
+    return right({
+      ...products,
+      results: products.results.map((product) => fromProductDocument(product)),
+    })
+  } catch (error) {
+    console.log(error)
+    return left(
+      ApplicationError.INTERNAL_ERROR.setDetail(
+        `Cannot find products with ids ${ids.toString()}.`
+      ).setInstance('/products')
+    )
+  }
+}
