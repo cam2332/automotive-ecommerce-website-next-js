@@ -439,14 +439,16 @@ ProductSchema.statics.findProductsByIds = async (
       categoryId: 1,
       compatibleCarTypeIds: 1,
       thumbnailUrl: 1,
-      inWishList: {
-        $eq: [
-          {
-            $size: '$Users',
-          },
-          1,
-        ],
-      },
+      ...(userId && {
+        inWishList: {
+          $eq: [
+            {
+              $size: '$users',
+            },
+            1,
+          ],
+        },
+      }),
     },
   }
   pipeline.push(project)
