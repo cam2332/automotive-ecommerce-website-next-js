@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import { useAppContext } from '../context/AppContext'
+import { useCartContext } from '../context/CartContext'
 import Header from './Header'
 
 interface IMainHeaderProps {
@@ -17,6 +18,8 @@ function MainHeader({
 }: IMainHeaderProps) {
   const router = useRouter()
   const appContext = useAppContext()
+  const cartContext = useCartContext()
+
   return (
     <Header
       logoText={'Auto części'}
@@ -31,8 +34,8 @@ function MainHeader({
       wishListCount={appContext.wishListCount}
       onClickWishList={onClickWishList}
       wishListIconVisible={true}
-      cartCount={appContext.cartCount}
-      cartTotal={appContext.cartTotal}
+      cartCount={cartContext.numberOfProducts}
+      cartTotal={cartContext.total}
       onClickShoppingCart={onClickShoppingCart}
       cartIconVisible={true}
       onClickUser={onClickUser}
