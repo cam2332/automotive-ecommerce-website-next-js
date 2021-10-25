@@ -21,6 +21,17 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
   const toastContext = useToastContext()
   const [products, setProducts] = useState<IProduct[]>([])
 
+  const saveToLocalStorage = (products: IProduct[]) => {
+    localStorage.setItem(
+      'cart',
+      JSON.stringify(
+        products.map((product) => {
+          return { id: product.id, quantity: product.quantity }
+        })
+      )
+    )
+  }
+
   useEffect(() => {
     if (sessionContext.user) {
       // TODO: implement call to api
@@ -45,7 +56,6 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
     product: IProduct,
     quantity: number
   ): Promise<void> => {
-    console.log(product, quantity)
     if (sessionContext.user) {
       // TODO: implement call to api
     } else {
@@ -63,7 +73,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
         products[index].quantity = Math.min(newQuantity, product.quantity)
         setProducts((products) => {
           const newProductList = [...products]
-          localStorage.setItem('cart', JSON.stringify(newProductList))
+          saveToLocalStorage(newProductList)
           return newProductList
         })
       } else {
@@ -72,7 +82,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
             ...products,
             { ...product, quantity: quantity },
           ]
-          localStorage.setItem('cart', JSON.stringify(newProductList))
+          saveToLocalStorage(newProductList)
           return newProductList
         })
       }
@@ -86,10 +96,11 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
       const index = products.findIndex(({ id }) => {
         id === productId
       })
-      if (index !== -1) {
-        setProducts([...products.filter(({ id }) => id !== productId)])
-      }
-      localStorage.setItem('cart', JSON.stringify(products))
+      setProducts((products) => {
+        const newProducts = products.filter(({ id }) => id !== productId)
+        saveToLocalStorage(newProducts)
+        return newProducts
+      })
     }
   }
 
@@ -98,7 +109,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
       // TODO: implement call to api
     } else {
       setProducts([])
-      localStorage.setItem('cart', JSON.stringify([]))
+      saveToLocalStorage([])
     }
   }
 
