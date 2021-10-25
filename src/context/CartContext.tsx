@@ -7,6 +7,7 @@ import redaxios from 'redaxios'
 type CartContextProps = {
   products: IProduct[]
   numberOfProducts: number
+  numberOfUniqueProducts: number
   total: number
   addToCart: (product: IProduct, quantity: number) => Promise<void>
   removeFromCart: (productId: string) => Promise<void>
@@ -140,6 +141,9 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
           (prev, product) => prev + product.quantity,
           0
         ),
+        numberOfUniqueProducts: products.filter(
+          (product) => product.quantity > 0
+        ).length,
         total: products.reduce(
           (prev, product) => prev + product.price * product.quantity,
           0
