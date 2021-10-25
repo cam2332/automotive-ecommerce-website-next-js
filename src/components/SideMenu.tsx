@@ -42,12 +42,12 @@ const Wrapper = tw.div`
 const Container = tw.div`
   fixed
   top-0
-  w-70%
+  w-[70%]
   h-full
   z-100
-  duration-500
+  duration-300
   bg-white
-  shadow-2xl
+  shadow-lg
   ${({ $visible, $isRight }: { $visible: boolean; $isRight: boolean }) =>
     $visible
       ? $isRight
@@ -56,8 +56,7 @@ const Container = tw.div`
       : $isRight
       ? `-right-full sm:hidden`
       : `-left-full sm:hidden`}
-
-  sm:w-350px
+  sm:w-[350px]
   sm:top-14
   sm:right-2
   sm:h-auto
