@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { IProduct } from '../DAO/documents/Product'
 import { useSessionContext } from './SessionContext'
 import { useToastContext } from './ToastContext'
+import redaxios from 'redaxios'
 
 type CartContextProps = {
   products: IProduct[]
@@ -37,17 +38,35 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
       // TODO: implement call to api
     } else {
       try {
-        const localCart: IProduct[] = JSON.parse(localStorage.getItem('cart'))
-        if (Array.isArray(localCart)) {
-          setProducts(localCart)
-          console.log(localCart)
+        const localCart: { id: string; quantity: number }[] = JSON.parse(
+          localStorage.getItem('cart')
+        )
+        if (Array.isArray(localCart) && localCart.length > 0) {
+          redaxios
+            .get('/api/products', {
+              params: {
+                ids: localCart.map((product) => product.id),
+              },
+            })
+            .then(function (response) {
+              if (response.status === 200) {
+                setProducts(response.data.results)
+              } else {
+                setProducts([])
+                saveToLocalStorage([])
+              }
+            })
+            .catch(function (error) {
+              setProducts([])
+              saveToLocalStorage([])
+            })
         } else {
           setProducts([])
-          console.log('cart is not JSON array')
+          saveToLocalStorage([])
         }
       } catch (error) {
         setProducts([])
-        console.log('error parsing cart JSON')
+        saveToLocalStorage([])
       }
     }
   }, [])
