@@ -14,6 +14,13 @@ export interface ProductModel extends Model<ProductDocument> {
     resultsPerPage: number,
     sortMethod: SortMethod
   ): Promise<ResultData<ProductDocument[]>>
+  findProductsByIds(
+    ids: string[],
+    userId: string | undefined,
+    page: number,
+    resultsPerPage: number,
+    sortMethod: SortMethod
+  ): Promise<ResultData<ProductDocument[]>>
 }
 
 let product: ProductModel
