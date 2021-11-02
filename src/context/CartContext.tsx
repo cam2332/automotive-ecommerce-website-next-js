@@ -52,6 +52,12 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
         })
         .catch(function (error) {
           setProducts([])
+          toastContext.addToast({
+            text: 'Wystąpił błąd podczas pobierania produktów do koszyka.',
+            appearance: 'error',
+            autoDismiss: true,
+            dismissDelay: 5000,
+          })
         })
     } else {
       try {

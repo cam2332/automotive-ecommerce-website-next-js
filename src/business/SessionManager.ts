@@ -1,5 +1,5 @@
 import { IUser } from '../DAO/documents/User'
-import { authenticateUser, verifyToken } from '../services/Tokens'
+import { authenticateUser, clearUser, verifyToken } from '../services/Tokens'
 import ApplicationError from '../utils/ApplicationError'
 import { Either, left, right } from '../utils/Either'
 import { findUserById } from './UserManager'
@@ -29,6 +29,7 @@ export const authorize = async (
       const newToken = authenticateUser(res, user.value as IUser)
       return right({ user: user.value, token: newToken })
     } else {
+      clearUser(res)
       return left(WRONG_TOKEN)
     }
   } catch (err) {
