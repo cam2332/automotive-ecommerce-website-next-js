@@ -36,7 +36,23 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
 
   useEffect(() => {
     if (sessionContext.user) {
-      // TODO: implement call to api
+      redaxios
+        .get('/api/cart', {
+          body: {
+            userId: sessionContext.user.id,
+          },
+          headers: { authorization: sessionContext.token },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            setProducts(response.data || [])
+          } else {
+            setProducts([])
+          }
+        })
+        .catch(function (error) {
+          setProducts([])
+        })
     } else {
       try {
         const localCart: { id: string; quantity: number }[] = JSON.parse(
@@ -70,14 +86,51 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
         saveToLocalStorage([])
       }
     }
-  }, [])
+  }, [sessionContext.user])
 
   const addToCart = async (
     product: IProduct,
     quantity: number
   ): Promise<void> => {
     if (sessionContext.user) {
-      // TODO: implement call to api
+      redaxios
+        .put(
+          '/api/cart',
+          {
+            productId: product.id,
+            quantity: quantity,
+          },
+          {
+            params: {
+              setAddQuantity: false,
+            },
+            headers: { authorization: sessionContext.token },
+          }
+        )
+        .then((response) => {
+          if (response.status === 201) {
+            setProducts((products) =>
+              [...products, response.data].sort((a, b) =>
+                a.title > b.title ? 1 : -1
+              )
+            )
+          } else {
+            toastContext.addToast({
+              text: 'Wystąpił błąd podczas dodawania produktu do koszyka.',
+              appearance: 'error',
+              autoDismiss: true,
+              dismissDelay: 5000,
+            })
+          }
+        })
+        .catch(function (error) {
+          toastContext.addToast({
+            text: 'Wystąpił błąd podczas dodawania produktu do koszyka.',
+            appearance: 'error',
+            autoDismiss: true,
+            dismissDelay: 5000,
+          })
+        })
     } else {
       const index = products.findIndex((prod) => prod.id === product.id)
       if (index !== -1) {
@@ -111,11 +164,36 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
 
   const removeFromCart = async (productId: string): Promise<void> => {
     if (sessionContext.user) {
-      // TODO: implement call to api
+      redaxios
+        .delete('/api/cart', {
+          params: {
+            productId: productId,
+          },
+          headers: { authorization: sessionContext.token },
+        })
+        .then((response) => {
+          if (response.status === 204) {
+            setProducts((products) =>
+              products.filter((product) => product.id !== productId)
+            )
+          } else {
+            toastContext.addToast({
+              text: 'Wystąpił błąd podczas usuwania produktu z koszyka.',
+              appearance: 'error',
+              autoDismiss: true,
+              dismissDelay: 5000,
+            })
+          }
+        })
+        .catch(function (error) {
+          toastContext.addToast({
+            text: 'Wystąpił błąd podczas usuwania produktu z koszyka.',
+            appearance: 'error',
+            autoDismiss: true,
+            dismissDelay: 5000,
+          })
+        })
     } else {
-      const index = products.findIndex(({ id }) => {
-        id === productId
-      })
       setProducts((products) => {
         const newProducts = products.filter(({ id }) => id !== productId)
         saveToLocalStorage(newProducts)
@@ -126,7 +204,30 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
 
   const clearCart = async () => {
     if (sessionContext.user) {
-      // TODO: implement call to api
+      redaxios
+        .delete('/api/cart', {
+          headers: { authorization: sessionContext.token },
+        })
+        .then((response) => {
+          if (response.status === 204) {
+            setProducts([])
+          } else {
+            toastContext.addToast({
+              text: 'Wystąpił błąd podczas usuwania produktów z koszyka.',
+              appearance: 'error',
+              autoDismiss: true,
+              dismissDelay: 5000,
+            })
+          }
+        })
+        .catch(function (error) {
+          toastContext.addToast({
+            text: 'Wystąpił błąd podczas usuwania produktów z koszyka.',
+            appearance: 'error',
+            autoDismiss: true,
+            dismissDelay: 5000,
+          })
+        })
     } else {
       setProducts([])
       saveToLocalStorage([])
@@ -137,17 +238,20 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
     <CartContext.Provider
       value={{
         products,
-        numberOfProducts: products.reduce(
-          (prev, product) => prev + product.quantity,
-          0
-        ),
+        numberOfProducts:
+          products.length > 0
+            ? products.reduce((prev, product) => prev + product.quantity, 0)
+            : 0,
         numberOfUniqueProducts: products.filter(
           (product) => product.quantity > 0
         ).length,
-        total: products.reduce(
-          (prev, product) => prev + product.price * product.quantity,
-          0
-        ),
+        total:
+          products.length > 0
+            ? products.reduce(
+                (prev, product) => prev + product.price * product.quantity,
+                0
+              )
+            : 0,
         addToCart,
         removeFromCart,
         clearCart,
