@@ -1,10 +1,16 @@
 import { Document } from 'mongoose'
 
+export interface ICart {
+  productId: string
+  quantity: number
+}
+
 export interface IUser {
   id: string
   firstName: string
   lastName: string
   email: string
+  cart: ICart[]
 }
 
 export interface UserDocument extends Document {
@@ -13,4 +19,5 @@ export interface UserDocument extends Document {
   lastName: string
   email: string
   password: string
+  cart: ICart[]
 }

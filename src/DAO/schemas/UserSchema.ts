@@ -2,13 +2,19 @@ import { Schema, Types } from 'mongoose'
 import { UserDocument } from '../documents/User'
 import User from '../models/User'
 
-const UserSchema = new Schema(
+const CartSchema: Schema = new Schema({
+  productId: { type: Schema.Types.String, required: true },
+  quantity: { type: Schema.Types.Number, required: true },
+})
+
+const UserSchema: Schema = new Schema(
   {
     _id: { type: Schema.Types.String, required: true },
     firstName: { type: Schema.Types.String, required: true },
     lastName: { type: Schema.Types.String, required: true },
     email: { type: Schema.Types.String, required: true },
     password: { type: Schema.Types.String, required: true },
+    cart: [{ type: CartSchema }],
   },
   {
     collection: 'Users',
@@ -27,6 +33,7 @@ UserSchema.statics.createUser = async (
     lastName: lastName,
     email: email,
     password: password,
+    cart: [],
   })
   const createdUser = await user.save()
   return createdUser
