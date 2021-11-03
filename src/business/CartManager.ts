@@ -1,6 +1,5 @@
 import { IProduct } from '../DAO/documents/Product'
 import { ICart } from '../DAO/documents/User'
-import product from '../DAO/models/Product'
 import User from '../DAO/models/User'
 import ApplicationError from '../utils/ApplicationError'
 import { Either, left, right } from '../utils/Either'

@@ -149,7 +149,6 @@ function ProductCard({
             )}
           </CartWishListContainer>
         </DetailsContainer>
-
       </MainContainer>
       {inWishList ? (
         <SmallHeartFillIcon onClick={onToggleInWishList} />

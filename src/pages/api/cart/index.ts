@@ -46,10 +46,6 @@ const handler = defaultHandler<NextApiRequest, NextApiResponse>()
         SortMethod.nameAsc
       )
       if (productsResult.isRight()) {
-        const merge = (a, b, pa, pb) =>
-          a
-            .filter((aa) => !b.find((bb) => aa[pa] === bb[pb]))
-            .concat(b.map(({ quantity }) => quantity))
         res.status(200).json(
           productsResult.value.results.map((product) =>
             Object.assign(product, {
