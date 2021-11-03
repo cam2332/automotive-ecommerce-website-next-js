@@ -22,6 +22,7 @@ import { findProductsByCategoryHierarchy } from '../../business/ProductManager'
 import SortMethod from '../../DAO/types/SortMethod'
 import Pagination from '../../components/Pagination'
 import ProductList from '../../components/ProductList'
+import { authorize } from '../../business/SessionManager'
 
 function index({
   selectedCategory,
@@ -222,10 +223,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       category = result.category
       selectedCategory = result.selectedCategory
     })
-
+    const user = await authorize(context.req, context.res)
     const resultProducts = await findProductsByCategoryHierarchy(
       categoryId,
-      undefined,
+      user.isRight() ? user.value.user.id : undefined,
       page,
       resultsPerPage,
       sortMethod

@@ -4,15 +4,18 @@ import AppProvider from '../context/AppContext'
 import SessionProvider from '../context/SessionContext'
 import ToastProvider from '../context/ToastContext'
 import CartProvider from '../context/CartContext'
+import WishListProvider from '../context/WishListContext'
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <ToastProvider>
       <SessionProvider>
         <CartProvider>
-          <AppProvider>
-            <Component {...pageProps} />
-          </AppProvider>
+          <WishListProvider>
+            <AppProvider>
+              <Component {...pageProps} />
+            </AppProvider>
+          </WishListProvider>
         </CartProvider>
       </SessionProvider>
     </ToastProvider>

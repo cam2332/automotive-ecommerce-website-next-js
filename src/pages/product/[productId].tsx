@@ -15,12 +15,31 @@ import { IProduct } from '../../DAO/documents/Product'
 import dbConnect from '../../utils/dbConnect'
 import QuantitySelect from '../../components/select/QuantitySelect'
 import { useCartContext } from '../../context/CartContext'
+import { useWishListContext } from '../../context/WishListContext'
+import { authorize } from '../../business/SessionManager'
 
 function index(props: IProduct & { compatibleCars: ICarMake[] }) {
   const cartContext = useCartContext()
+  const wishListContext = useWishListContext()
+  const [localProduct, setLocalProduct] = useState({ ...props })
   const [amount, setAmount] = useState<number>(1)
   const addToCart = () => {
     cartContext.addToCart(props, amount)
+  }
+  const toggleInWishList = () => {
+    localProduct.inWishList
+      ? wishListContext.removeFromWishList(localProduct.id).then((success) => {
+          setLocalProduct((product) => {
+            product.inWishList = false
+            return product
+          })
+        })
+      : wishListContext.addToWishList(localProduct).then((success) => {
+          setLocalProduct((product) => {
+            product.inWishList = true
+            return product
+          })
+        })
   }
 
   return (
@@ -44,7 +63,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
               <TitleText>{props.title}</TitleText>
               <SubTitleText>{props.subTitle}</SubTitleText>
             </Title>
-            {props.inWishList ? (
+            {localProduct.inWishList ? (
               <HeartFillIcon onClick={toggleInWishList} />
             ) : (
               <HeartOutlineIcon onClick={toggleInWishList} />
@@ -164,11 +183,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     await dbConnect()
 
-    const resultProduct = await findProductById(productId)
-    resultProduct.applyOnRight((foundProduct) => {
-      product = foundProduct
-      console.log(product)
-    })
+    const user = await authorize(context.req, context.res)
+    const resultProduct = await findProductById(
+      productId,
+      user.isRight() ? user.value.user.id : undefined
+    )
+    if (resultProduct.isRight()) {
+      product = resultProduct.value
+    }
   } catch (error) {
     console.log('e', error)
   }

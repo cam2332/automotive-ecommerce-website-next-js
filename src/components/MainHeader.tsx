@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import { useAppContext } from '../context/AppContext'
 import { useCartContext } from '../context/CartContext'
+import { useWishListContext } from '../context/WishListContext'
 import Header from './Header'
 
 interface IMainHeaderProps {
@@ -19,6 +20,7 @@ function MainHeader({
   const router = useRouter()
   const appContext = useAppContext()
   const cartContext = useCartContext()
+  const wishListContext = useWishListContext()
 
   return (
     <Header
@@ -31,7 +33,7 @@ function MainHeader({
       searchIconVisible={false}
       onClickMenu={onClickMenu}
       menuIconVisible={true}
-      wishListCount={appContext.wishListCount}
+      wishListCount={wishListContext.numberOfProducts}
       onClickWishList={onClickWishList}
       wishListIconVisible={true}
       cartCount={cartContext.numberOfProducts}

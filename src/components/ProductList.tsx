@@ -4,6 +4,8 @@ import ProductCard from './ProductCard'
 import ProductCardGrid from './ProductCardGrid'
 import { IProduct } from '../DAO/documents/Product'
 import { useCartContext } from '../context/CartContext'
+import { useWishListContext } from '../context/WishListContext'
+import { useState } from 'react'
 
 function ProductList({
   products,
@@ -14,12 +16,14 @@ function ProductList({
 }) {
   const router = useRouter()
   const cartContext = useCartContext()
+  const wishListContext = useWishListContext()
+  const [localProducts, setLocalProducts] = useState(products)
 
   return (
     <>
       {viewType === 'list' && (
         <ProductListContainer>
-          {products.map((product) => (
+          {localProducts.map((product) => (
             <ProductCard
               key={product.id}
               thumbnailUrl={product.thumbnailUrl}
@@ -34,7 +38,25 @@ function ProductList({
               properties={product.properties}
               maxNumberOfPropertiesVisible={3}
               onToggleInWishList={() => {
-                /** */
+                product.inWishList
+                  ? wishListContext
+                      .removeFromWishList(product.id)
+                      .then((success) => {
+                        setLocalProducts((products) => {
+                          products.find(
+                            (prod) => prod.id === product.id
+                          ).inWishList = false
+                          return products
+                        })
+                      })
+                  : wishListContext.addToWishList(product).then((success) => {
+                      setLocalProducts((products) => {
+                        products.find(
+                          (prod) => prod.id === product.id
+                        ).inWishList = true
+                        return products
+                      })
+                    })
               }}
               onAddToCart={(amount) => {
                 cartContext.addToCart(product, amount)
@@ -48,7 +70,7 @@ function ProductList({
       )}
       {viewType === 'grid' && (
         <ProductGridContainer>
-          {products.map((product) => (
+          {localProducts.map((product) => (
             <ProductCardGrid
               key={product.id}
               thumbnailUrl={product.thumbnailUrl}
@@ -60,7 +82,25 @@ function ProductList({
               inWishList={product.inWishList}
               quantity={product.quantity}
               onToggleInWishList={() => {
-                /** */
+                product.inWishList
+                  ? wishListContext
+                      .removeFromWishList(product.id)
+                      .then((success) => {
+                        setLocalProducts((products) => {
+                          products.find(
+                            (prod) => prod.id === product.id
+                          ).inWishList = false
+                          return products
+                        })
+                      })
+                  : wishListContext.addToWishList(product).then((success) => {
+                      setLocalProducts((products) => {
+                        products.find(
+                          (prod) => prod.id === product.id
+                        ).inWishList = true
+                        return products
+                      })
+                    })
               }}
               onAddToCart={() => {
                 cartContext.addToCart(product, 1)
