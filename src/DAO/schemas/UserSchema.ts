@@ -15,6 +15,7 @@ const UserSchema: Schema = new Schema(
     email: { type: Schema.Types.String, required: true },
     password: { type: Schema.Types.String, required: true },
     cart: [{ type: CartSchema }],
+    wishList: [{ type: Schema.Types.String }],
   },
   {
     collection: 'Users',

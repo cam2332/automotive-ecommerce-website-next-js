@@ -113,5 +113,6 @@ export const fromUserDocument = (user: UserDocument): IUser => {
       user.cart.map(({ productId, quantity }) => {
         return { productId, quantity }
       }) || [],
+    wishList: user.wishList.map((productId) => productId) || [],
   }
 }

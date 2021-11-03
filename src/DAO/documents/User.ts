@@ -11,6 +11,7 @@ export interface IUser {
   lastName: string
   email: string
   cart: ICart[]
+  wishList: string[]
 }
 
 export interface UserDocument extends Document {
@@ -20,4 +21,5 @@ export interface UserDocument extends Document {
   email: string
   password: string
   cart: ICart[]
+  wishList: string[]
 }
