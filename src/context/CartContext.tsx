@@ -35,12 +35,9 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
   }
 
   useEffect(() => {
-    if (sessionContext.user) {
+    if (sessionContext.token) {
       redaxios
         .get('/api/cart', {
-          body: {
-            userId: sessionContext.user.id,
-          },
           headers: { authorization: sessionContext.token },
         })
         .then((response) => {
@@ -92,7 +89,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
         saveToLocalStorage([])
       }
     }
-  }, [sessionContext.user])
+  }, [sessionContext.token])
 
   const addToCart = async (
     product: IProduct,

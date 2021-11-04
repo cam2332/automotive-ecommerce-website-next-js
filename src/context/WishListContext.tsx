@@ -87,7 +87,7 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
   }, [sessionContext.token])
 
   const addToWishList = async (product: IProduct): Promise<boolean> => {
-    if (sessionContext.token) {
+    if (sessionContext.user) {
       redaxios
         .put(
           '/api/wishlist',
@@ -138,7 +138,7 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
   }
 
   const removeFromWishList = async (productId: string): Promise<boolean> => {
-    if (sessionContext.token) {
+    if (sessionContext.user) {
       redaxios
         .delete('/api/wishlist', {
           params: {
@@ -182,7 +182,7 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
   }
 
   const clearWishList = async (): Promise<void> => {
-    if (sessionContext.token) {
+    if (sessionContext.user) {
       redaxios
         .delete('/api/wishlist', {
           headers: { authorization: sessionContext.token },
