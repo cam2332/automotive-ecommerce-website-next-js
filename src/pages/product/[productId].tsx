@@ -43,7 +43,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
   }
 
   return (
-    <SiteWrapper>
+    <SiteWrapper title={props.title}>
       <Overview>
         <BigThumbnailWrapper>
           <ThumbnailWrapper>

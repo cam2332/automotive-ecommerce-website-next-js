@@ -76,7 +76,7 @@ function index({
   }
 
   return (
-    <SiteWrapper>
+    <SiteWrapper title={selectedCategory.name}>
       <Container>
         <Nav>
           {category && (

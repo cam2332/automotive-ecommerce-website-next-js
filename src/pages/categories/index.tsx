@@ -7,7 +7,7 @@ import dbConnect from '../../utils/dbConnect'
 
 function index({ categories }: { categories: ICategory[] }) {
   return (
-    <SiteWrapper>
+    <SiteWrapper title={'Kategorie'}>
       <CategoryList title='Wszystkie kategorie' categories={categories} />
     </SiteWrapper>
   )
