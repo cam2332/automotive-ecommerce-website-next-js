@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Head from 'next/head'
 import MainHeader from './MainHeader'
 import SideNavigation from '../components/SideNavigation'
+import SideWishList from './SideWishList'
 import SideShoppingList from '../components/SideShoppingList'
 import SideUser from '../components/SideUser'
 import Footer from '../components/Footer'
@@ -38,6 +39,10 @@ function SiteWrapper({ children }: { children: JSX.Element | JSX.Element[] }) {
           <SideNavigation
             visible={sideMenuVisible}
             onClose={() => setSideMenuVisible(false)}
+          />
+          <SideWishList
+            visible={sideWishListVisible}
+            onClose={() => setSideWishListVisible(false)}
           />
           <SideShoppingList
             visible={sideShoppingListVisible}
