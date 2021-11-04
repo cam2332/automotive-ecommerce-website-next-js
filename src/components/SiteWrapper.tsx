@@ -9,16 +9,23 @@ import Footer from '../components/Footer'
 import SearchField from './SearchField'
 import VehicleFilter from './VehicleFilter'
 
-function SiteWrapper({ children }: { children: JSX.Element | JSX.Element[] }) {
+function SiteWrapper({
+  children,
+  title,
+}: {
+  children: JSX.Element | JSX.Element[]
+  title?: string
+}) {
   const [sideMenuVisible, setSideMenuVisible] = useState(false)
   const [sideWishListVisible, setSideWishListVisible] = useState(false)
   const [sideShoppingListVisible, setSideShoppingListVisible] = useState(false)
   const [sideUserVisible, setSideUserVisible] = useState(false)
+  const LOCAL_TITLE = 'ECommerce Automotive Website'
 
   return (
     <div>
       <Head>
-        <title>ECommerce Automotive Website</title>
+        <title>{title ? `${title} - ${LOCAL_TITLE}` : LOCAL_TITLE}</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <MainHeader
