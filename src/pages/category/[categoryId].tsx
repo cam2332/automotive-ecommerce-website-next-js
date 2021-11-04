@@ -223,10 +223,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       category = result.category
       selectedCategory = result.selectedCategory
     })
-    const user = await authorize(context.req, context.res)
     const resultProducts = await findProductsByCategoryHierarchy(
       categoryId,
-      user.isRight() ? user.value.user.id : undefined,
+      undefined,
       page,
       resultsPerPage,
       sortMethod

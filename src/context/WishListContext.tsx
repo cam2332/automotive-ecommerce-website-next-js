@@ -10,6 +10,7 @@ type WishListContextProps = {
   addToWishList: (product: IProduct) => Promise<boolean>
   removeFromWishList: (productId: string) => Promise<boolean>
   clearWishList: () => Promise<void>
+  isInWishList: (productId: string) => boolean
 }
 
 export const WishListContext = createContext<WishListContextProps>(
@@ -212,6 +213,10 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
     }
   }
 
+  const isInWishList = (productId: string): boolean => {
+    return products.findIndex((product) => product.id === productId) >= 0
+  }
+
   return (
     <WishListContext.Provider
       value={{
@@ -220,6 +225,7 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
         addToWishList,
         removeFromWishList,
         clearWishList,
+        isInWishList,
       }}>
       {children}
     </WishListContext.Provider>

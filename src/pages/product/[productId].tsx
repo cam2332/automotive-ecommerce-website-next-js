@@ -27,7 +27,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
     cartContext.addToCart(props, amount)
   }
   const toggleInWishList = () => {
-    localProduct.inWishList
+    wishListContext.isInWishList(localProduct.id)
       ? wishListContext.removeFromWishList(localProduct.id).then((success) => {
           setLocalProduct((product) => {
             product.inWishList = false
@@ -63,7 +63,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
               <TitleText>{props.title}</TitleText>
               <SubTitleText>{props.subTitle}</SubTitleText>
             </Title>
-            {localProduct.inWishList ? (
+            {wishListContext.isInWishList(localProduct.id) ? (
               <HeartFillIcon onClick={toggleInWishList} />
             ) : (
               <HeartOutlineIcon onClick={toggleInWishList} />
@@ -183,11 +183,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     await dbConnect()
 
-    const user = await authorize(context.req, context.res)
-    const resultProduct = await findProductById(
-      productId,
-      user.isRight() ? user.value.user.id : undefined
-    )
     if (resultProduct.isRight()) {
       product = resultProduct.value
     }

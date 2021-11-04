@@ -34,11 +34,11 @@ function ProductList({
               currency={product.currency}
               oldPrice={product.oldPrice}
               quantity={product.quantity}
-              inWishList={product.inWishList}
+              inWishList={wishListContext.isInWishList(product.id)}
               properties={product.properties}
               maxNumberOfPropertiesVisible={3}
               onToggleInWishList={() => {
-                product.inWishList
+                wishListContext.isInWishList(product.id)
                   ? wishListContext
                       .removeFromWishList(product.id)
                       .then((success) => {
@@ -79,10 +79,10 @@ function ProductList({
               price={product.price}
               currency={product.currency}
               oldPrice={product.oldPrice}
-              inWishList={product.inWishList}
+              inWishList={wishListContext.isInWishList(product.id)}
               quantity={product.quantity}
               onToggleInWishList={() => {
-                product.inWishList
+                wishListContext.isInWishList(product.id)
                   ? wishListContext
                       .removeFromWishList(product.id)
                       .then((success) => {
