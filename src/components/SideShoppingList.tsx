@@ -50,14 +50,16 @@ function SideShoppingList({
               } więcej`}</PrimaryColorText>
             </Item>
           )}
-          <AdditionalItem key={'cart'}>
-            <Button
-              className='p-2'
-              isDisabled={false}
-              onClick={() => router.push(`/cart`)}>
-              <SmallText>PRZEJDŹ DO KOSZYKA</SmallText>
-            </Button>
-          </AdditionalItem>
+          {visible && (
+            <AdditionalItem key={'cart'}>
+              <Button
+                className='p-2'
+                isDisabled={false}
+                onClick={() => router.push(`/cart`)}>
+                <SmallText>PRZEJDŹ DO KOSZYKA</SmallText>
+              </Button>
+            </AdditionalItem>
+          )}
         </ul>
       ) : (
         <EmptyCartText>Twój koszyk jest pusty</EmptyCartText>
