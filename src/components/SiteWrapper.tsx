@@ -8,13 +8,18 @@ import SideUser from '../components/SideUser'
 import Footer from '../components/Footer'
 import SearchField from './SearchField'
 import VehicleFilter from './VehicleFilter'
+import EmptyHeader from './EmptyHeader'
+
+export type HeaderType = 'empty' | 'full'
 
 function SiteWrapper({
   children,
   title,
+  headerType,
 }: {
   children: JSX.Element | JSX.Element[]
   title?: string
+  headerType: HeaderType
 }) {
   const [sideMenuVisible, setSideMenuVisible] = useState(false)
   const [sideWishListVisible, setSideWishListVisible] = useState(false)
@@ -28,17 +33,25 @@ function SiteWrapper({
         <title>{title ? `${title} - ${LOCAL_TITLE}` : LOCAL_TITLE}</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <MainHeader
-        onClickMenu={() => setSideMenuVisible(!sideMenuVisible)}
-        onClickWishList={() => setSideWishListVisible(!sideWishListVisible)}
-        onClickShoppingCart={() =>
-          setSideShoppingListVisible(!sideShoppingListVisible)
-        }
-        onClickUser={() => setSideUserVisible(!sideUserVisible)}
-      />
+      {headerType === 'full' ? (
+        <MainHeader
+          onClickMenu={() => setSideMenuVisible(!sideMenuVisible)}
+          onClickWishList={() => setSideWishListVisible(!sideWishListVisible)}
+          onClickShoppingCart={() =>
+            setSideShoppingListVisible(!sideShoppingListVisible)
+          }
+          onClickUser={() => setSideUserVisible(!sideUserVisible)}
+        />
+      ) : (
+        <EmptyHeader />
+      )}
       <div className='flex flex-col items-stretch justify-start w-full pt-12 lg:pt-20 min-h-screen-96px lg:items-center'>
-        <SearchField />
-        <VehicleFilter />
+        {headerType === 'full' && (
+          <>
+            <SearchField />
+            <VehicleFilter />
+          </>
+        )}
         <div className='flex flex-col items-center lg:w-5xl lg:max-w-5xl'>
           {children}
         </div>
