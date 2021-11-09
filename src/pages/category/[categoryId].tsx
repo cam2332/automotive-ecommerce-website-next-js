@@ -76,7 +76,7 @@ function index({
   }
 
   return (
-    <SiteWrapper title={selectedCategory.name}>
+    <SiteWrapper title={selectedCategory.name} headerType={'full'}>
       <Container>
         <Nav>
           {category && (

@@ -11,7 +11,7 @@ export default function Home({
   categories: ICategory[]
 }): JSX.Element {
   return (
-    <SiteWrapper>
+    <SiteWrapper headerType={'full'}>
       <CategoryList title='Wybrane kategorie' categories={categories} />
     </SiteWrapper>
   )
