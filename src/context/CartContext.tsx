@@ -9,7 +9,11 @@ type CartContextProps = {
   numberOfProducts: number
   numberOfUniqueProducts: number
   total: number
-  addToCart: (product: IProduct, quantity: number) => Promise<void>
+  addToCart: (
+    product: IProduct,
+    quantity: number,
+    setAddQuantity?: boolean
+  ) => Promise<void>
   removeFromCart: (productId: string) => Promise<void>
   clearCart: () => Promise<void>
 }
@@ -93,7 +97,8 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
 
   const addToCart = async (
     product: IProduct,
-    quantity: number
+    quantity: number,
+    setAddQuantity?: boolean
   ): Promise<void> => {
     if (sessionContext.user) {
       redaxios
@@ -105,7 +110,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
           },
           {
             params: {
-              setAddQuantity: false,
+              setAddQuantity: setAddQuantity || false,
             },
             headers: { authorization: sessionContext.token },
           }
@@ -137,7 +142,9 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
     } else {
       const index = products.findIndex((prod) => prod.id === product.id)
       if (index !== -1) {
-        const newQuantity = products[index].quantity + quantity
+        const newQuantity = setAddQuantity
+          ? quantity
+          : products[index].quantity + quantity
         if (newQuantity > product.quantity) {
           toastContext.addToast({
             text: 'W koszyku jest już maksymalna ilość wybranego produktu.',
