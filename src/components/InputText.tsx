@@ -7,10 +7,18 @@ export interface InputTextProps {
   placeholder: string
   inputType: string
   autoComplete?: string
+  inputWrapperClassName?: string
 }
 
 const InputText = forwardRef(function (
-  { value, onChangeText, placeholder, inputType, autoComplete }: InputTextProps,
+  {
+    value,
+    onChangeText,
+    placeholder,
+    inputType,
+    autoComplete,
+    inputWrapperClassName,
+  }: InputTextProps,
   ref
 ) {
   const [error, setError] = useState<boolean>(false)
@@ -37,7 +45,7 @@ const InputText = forwardRef(function (
   return (
     <div className='relative flex flex-col w-full'>
       <div
-        className={`flex flex-col items-center w-full my-2 border-2 rounded-full py-2 ${
+        className={`flex flex-col items-center w-full my-2 border-2 rounded-full py-2 ${inputWrapperClassName} ${
           error && 'border-red-500'
         }`}>
         <input
