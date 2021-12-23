@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import useSWR from 'swr'
 import tw from 'tailwind-styled-components'
-import { useAppContext } from '../context/AppContext'
 import VehicleFilterSelect from './select/VehicleFilterSelect'
 
 const fetcher = (url) => fetch(url).then((res) => res.json())
@@ -90,7 +89,6 @@ const useCarTypes = (
 }
 
 function VehicleFilter() {
-  const appContext = useAppContext()
   const [selectedCarMake, setSelectedCarMake] = useState<{
     id: string
     value: string
