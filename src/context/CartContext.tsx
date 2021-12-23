@@ -117,11 +117,14 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
         )
         .then((response) => {
           if (response.status === 201) {
-            setProducts((products) =>
-              [...products, response.data].sort((a, b) =>
-                a.title > b.title ? 1 : -1
+            setProducts((products) => {
+              const otherProducts = products.filter(
+                (localProduct) => localProduct.id !== response.data.id
               )
-            )
+              return [...otherProducts, response.data].sort((a, b) => {
+                return a.title > b.title ? 1 : -1
+              })
+            })
           } else {
             toastContext.addToast({
               text: 'Wystąpił błąd podczas dodawania produktu do koszyka.',
