@@ -518,7 +518,7 @@ ProductSchema.statics.findProductsByIds = async (
           },
         },
       ],
-      as: 'Users',
+      as: 'users',
     },
   }
 
