@@ -40,9 +40,9 @@ function Login() {
       email: email,
       password: password,
     })
+    toastContext.removeAllToasts()
     if (result.isRight()) {
       router.push('/')
-      toastContext.removeAllToasts()
     } else {
       if (result.value[1] === 404) {
         emailInputRef.current.setErrorValue(true, result.value[0])
@@ -56,6 +56,7 @@ function Login() {
         dismissDelay: 5000,
         text: result.value[0],
       })
+      setIsFormValid(false)
     }
   }
 
