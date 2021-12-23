@@ -25,8 +25,19 @@ function Form({
       <FormHeader>
         <FormTitle>{title}</FormTitle>
       </FormHeader>
-      <FormInnerContainer>
-        <FormFieldsContainer>{fields}</FormFieldsContainer>
+      <FormInnerContainer
+        onSubmit={(e) => {
+          e.preventDefault()
+          onClickSubmit()
+        }}>
+        <FormFieldsContainer>
+          {Array.isArray(fields)
+            ? [
+                ...fields,
+                <input className='hidden' key='submit' type='button' />,
+              ]
+            : [fields, <input className='hidden' key='submit' type='button' />]}
+        </FormFieldsContainer>
         <LinksContainer>{links}</LinksContainer>
         <SubmitButton isFormValid={isFormValid} onClick={onClickSubmit}>
           {submitButtonText}
@@ -63,7 +74,7 @@ const FormTitle = tw.span`
   text-primary-color
 `
 
-const FormInnerContainer = tw.div`
+const FormInnerContainer = tw.form`
   flex
   flex-col
   items-center
