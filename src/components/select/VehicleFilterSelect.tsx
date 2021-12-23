@@ -27,6 +27,7 @@ function VehicleFilterSelect({
   onClickField,
   active,
   groupBy,
+  expanded,
 }: {
   value: string
   options: { id: string; value: string; group?: string }[]
@@ -35,6 +36,7 @@ function VehicleFilterSelect({
   onClickField?: () => void
   active: boolean
   groupBy?: string
+  expanded?: boolean
 }) {
   const [inputValue, setInputValue] = useState<string>('')
   const [filteredOptions, setFilteredOptions] = useState(
@@ -95,7 +97,8 @@ function VehicleFilterSelect({
           setInputValue(value)
         }
       }}
-      active={active}>
+      active={active}
+      expanded={expanded}>
       {groupBy &&
         Object.keys(filteredOptions)
           .map((key) => {

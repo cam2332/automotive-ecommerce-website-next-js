@@ -9,6 +9,7 @@ function InputSelect({
   onInputChange,
   onClickField,
   active,
+  expanded,
 }: {
   value: string
   children?: JSX.Element | JSX.Element[]
@@ -18,6 +19,7 @@ function InputSelect({
   onInputChange: (text: string) => void
   onClickField?: () => void
   active?: boolean
+  expanded?: boolean
 }) {
   return (
     <CustomSelect
@@ -27,7 +29,8 @@ function InputSelect({
       inputPlaceholder={inputPlaceholder}
       onInputChange={onInputChange}
       onClickField={() => onClickField && onClickField()}
-      active={active}>
+      disabled={!active}
+      expanded={expanded}>
       {children}
     </CustomSelect>
   )
