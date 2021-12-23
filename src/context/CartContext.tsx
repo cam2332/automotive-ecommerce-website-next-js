@@ -9,6 +9,7 @@ type CartContextProps = {
   numberOfProducts: number
   numberOfUniqueProducts: number
   total: number
+  currency: string
   addToCart: (
     product: IProduct,
     quantity: number,
@@ -26,6 +27,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
   const sessionContext = useSessionContext()
   const toastContext = useToastContext()
   const [products, setProducts] = useState<IProduct[]>([])
+  const [currency, setCurrency] = useState<string>('zł')
 
   const saveToLocalStorage = (products: IProduct[]) => {
     localStorage.setItem(
@@ -75,6 +77,8 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
             .then(function (response) {
               if (response.status === 200) {
                 setProducts(response.data.results)
+                response.data?.results[0]?.currency?.length > 0 &&
+                  setCurrency(response.data.results[0].currency)
               } else {
                 setProducts([])
                 saveToLocalStorage([])
@@ -265,6 +269,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
                 0
               )
             : 0,
+        currency,
         addToCart,
         removeFromCart,
         clearCart,
