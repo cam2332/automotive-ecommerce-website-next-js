@@ -2,7 +2,6 @@ import React from 'react'
 import { useRef, useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { userFromRequest } from '../../services/Tokens'
 import tw from 'tailwind-styled-components'
 import EmptyHeader from '../../components/EmptyHeader'
 import Footer from '../../components/Footer'
@@ -16,7 +15,6 @@ import {
   passwordsEqualValidator,
   passwordValidator,
 } from '../../services/FormValidation'
-import { GetServerSidePropsContext } from 'next'
 import { useSessionContext } from '../../context/SessionContext'
 import { useToastContext } from '../../context/ToastContext'
 
@@ -189,23 +187,6 @@ function Register() {
       <Footer />
     </div>
   )
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const user = await userFromRequest(context.req)
-
-  if (user) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
-
-  return {
-    props: {},
-  }
 }
 
 const PageContainer = tw.div`
