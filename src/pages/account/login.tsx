@@ -13,6 +13,8 @@ import {
 } from '../../services/FormValidation'
 import { useSessionContext } from '../../context/SessionContext'
 import { useToastContext } from '../../context/ToastContext'
+import { GetServerSidePropsContext } from 'next'
+import { userFromRequest } from '../../services/Tokens'
 
 function Login() {
   const router = useRouter()
@@ -124,6 +126,23 @@ function Login() {
       <Footer />
     </div>
   )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const user = await userFromRequest(context.req)
+
+  if (user) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {},
+  }
 }
 
 const PageContainer = tw.div`
