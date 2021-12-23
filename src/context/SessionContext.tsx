@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import redaxios from 'redaxios'
 import { IUser } from '../DAO/documents/User'
 import { Either, left, right } from '../utils/Either'
+import { useToastContext } from './ToastContext'
 
 type SessionContextProps = {
   user: IUser
@@ -24,6 +25,7 @@ export const SessionContext = createContext<SessionContextProps>(
 )
 
 const SessionProvider: React.FC = ({ children }): React.ReactElement => {
+  const toastContext = useToastContext()
   const [user, setUser] = useState<IUser | undefined>()
   const [token, setToken] = useState<string | undefined>()
 
@@ -50,10 +52,22 @@ const SessionProvider: React.FC = ({ children }): React.ReactElement => {
             sessionStorage.setItem('jwtToken', (response.data as any).token)
           } else {
             errorHandler()
+            toastContext.addToast({
+              text: 'Sesja wygasła.',
+              appearance: 'error',
+              autoDismiss: true,
+              dismissDelay: 5000,
+            })
           }
         })
         .catch(function (error) {
           errorHandler()
+          toastContext.addToast({
+            text: 'Sesja wygasła.',
+            appearance: 'error',
+            autoDismiss: true,
+            dismissDelay: 5000,
+          })
         })
     }
   }, [])
