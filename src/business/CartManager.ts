@@ -69,11 +69,13 @@ export const addProduct = async (
               )
             }
             user.cart[index].quantity = newQuantity
+            productResult.value.quantity = newQuantity
           } else {
             user.cart.push({
               productId: productId,
               quantity: quantity,
             })
+            productResult.value.quantity = quantity
           }
           await user.save()
           return right(productResult.value)
