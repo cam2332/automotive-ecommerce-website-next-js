@@ -14,7 +14,7 @@ function CategoryList({
 
   return (
     <MainContainer>
-      <TitleText>
+      <TitleText onClick={() => router.push('/categories')}>
         {!categories || categories.length === 0 ? 'Brak kategorii' : title}
       </TitleText>
       <CategoriesGrid>
@@ -54,6 +54,8 @@ const TitleText = tw.span`
   mt-8
  	text-2xl
  	text-center
+  cursor-pointer
+  hover:underline
 `
 const CategoriesGrid = tw.div`
   grid
