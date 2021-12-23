@@ -112,6 +112,15 @@ function VehicleFilter() {
     isLoading: typesLoading,
     isError: typesError,
   } = useCarTypes(selectedCarMake.id, selectedCarModel.id)
+  const [makeSelectExpanded, setMakeSelectExpanded] = useState<boolean>(false)
+  const [modelSelectExpanded, setModelSelectExpanded] = useState<boolean>(false)
+  const [typeSelectExpanded, setTypeSelectExpanded] = useState<boolean>(false)
+
+  const setSelectsExpanded = (expanded: boolean) => {
+    setMakeSelectExpanded(expanded)
+    setModelSelectExpanded(expanded)
+    setTypeSelectExpanded(expanded)
+  }
 
   return (
     <Container>
@@ -122,26 +131,36 @@ function VehicleFilter() {
         <VehicleFilterSelect
           value={selectedCarMake.value}
           options={makesLoading || makesError ? [] : makes}
-          onClickItem={(item) => setSelectedCarMake(item)}
+          onClickItem={(item) => {
+            setSelectedCarMake(item)
+            setTimeout(() => setModelSelectExpanded(true), 50)
+          }}
           inputPlaceholder={'Marka'}
           onClickField={() => {
             setSelectedCarMake({ id: '', value: '' })
             setSelectedCarModel({ id: '', value: '' })
             setSelectedCarType({ id: '', value: '' })
+            setSelectsExpanded(false)
           }}
           active={true}
+          expanded={makeSelectExpanded}
         />
         <VehicleFilterSelect
           value={selectedCarModel.value}
           options={modelsLoading || modelsError ? [] : models}
           groupBy={'group'}
-          onClickItem={(item) => setSelectedCarModel(item)}
+          onClickItem={(item) => {
+            setSelectedCarModel(item)
+            setTimeout(() => setTypeSelectExpanded(true), 50)
+          }}
           inputPlaceholder={'Model'}
           onClickField={() => {
             setSelectedCarModel({ id: '', value: '' })
             setSelectedCarType({ id: '', value: '' })
+            setSelectsExpanded(false)
           }}
           active={selectedCarMake.id !== ''}
+          expanded={modelSelectExpanded}
         />
         <VehicleFilterSelect
           value={selectedCarType.value}
@@ -149,8 +168,12 @@ function VehicleFilter() {
           groupBy={'group'}
           onClickItem={(item) => setSelectedCarType(item)}
           inputPlaceholder={'Typ'}
-          onClickField={() => setSelectedCarType({ id: '', value: '' })}
+          onClickField={() => {
+            setSelectedCarType({ id: '', value: '' })
+            setSelectsExpanded(false)
+          }}
           active={selectedCarModel.id !== ''}
+          expanded={typeSelectExpanded}
         />
         {/* <SearchButton>SZUKAJ</SearchButton> */}
       </FieldsContainer>
