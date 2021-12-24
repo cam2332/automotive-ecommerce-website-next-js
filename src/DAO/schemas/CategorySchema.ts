@@ -2,7 +2,7 @@ import { Schema, Types } from 'mongoose'
 import { CategoryDocument } from '../documents/Category'
 import Category from '../models/Category'
 
-const CategorySchema: Schema = new Schema<CategoryDocument>(
+const CategorySchema: Schema = new Schema(
   {
     _id: { type: Schema.Types.String, required: true },
     name: { type: Schema.Types.String, required: true },

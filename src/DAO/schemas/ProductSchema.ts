@@ -10,7 +10,7 @@ const PropertySchema: Schema = new Schema({
   value: { type: Schema.Types.String, required: true },
 })
 
-const ProductSchema: Schema = new Schema<ProductDocument>(
+const ProductSchema: Schema = new Schema(
   {
     _id: { type: Schema.Types.String, required: true },
     title: { type: Schema.Types.String, required: true },
