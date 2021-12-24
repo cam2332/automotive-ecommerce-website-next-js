@@ -1,5 +1,31 @@
+const nameValidator = (name: string): boolean => {
+  const regex = new RegExp(/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/)
+  if (name.length === 0 || !regex.test(name)) {
+    return false
+  }
+  return true
+}
+
+export const firstNameValidator = (name: string): [boolean, string] => {
+  const regex = new RegExp(/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/)
+  if (name.length === 0 || !nameValidator(name)) {
+    return [true, 'Wprowadź prawidłowe imię']
+  }
+  return [false, '']
+}
+
+export const lastNameValidator = (name: string): [boolean, string] => {
+  const regex = new RegExp(/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/)
+  if (name.length === 0 || !nameValidator(name)) {
+    return [true, 'Wprowadź prawidłowe nazwisko']
+  }
+  return [false, '']
+}
+
 export const emailValidator = (email: string): [boolean, string] => {
-  const regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+  const regex = new RegExp(
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  )
   if (email.length === 0 || !regex.test(email)) {
     return [true, 'Wprowadź prawidłowy email']
   }
