@@ -8,6 +8,7 @@ import SortMethod from '../types/SortMethod'
 export interface ProductModel extends Model<ProductDocument> {
   createProduct(): Promise<ProductDocument>
   findProductById(id: string, userId?: string): Promise<ProductDocument | null>
+  findAllProducts(userId?: string): Promise<ProductDocument[]>
   findProductsByCategoryId(
     userId?: string,
     categoryId?: string
