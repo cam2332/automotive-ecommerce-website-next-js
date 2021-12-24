@@ -23,7 +23,8 @@
         "react-ultimate-pagination": "^1.2.0",
         "redaxios": "^0.4.1",
         "styled-components": "^5.3.0",
-        "swr": "^0.5.6"
+        "swr": "^0.5.6",
+        "tailwind-styled-components": "^2.0.3"
     },
     "devDependencies": {
         "@tailwindcss/jit": "^0.1.10",
@@ -49,7 +50,6 @@
         "mongodb-memory-server": "^8.1.0",
         "postcss": "^8.3.5",
         "prettier": "2.3.2",
-        "tailwind-styled-components": "^2.0.3",
         "tailwindcss": "^2.2.4",
         "test-listen": "^1.1.0",
         "ts-jest": "^27.0.4",
