@@ -1,15 +1,11 @@
+import { GetServerSideProps } from 'next'
 import SiteWrapper from '../components/SiteWrapper'
 import CategoryList from '../components/CategoryList'
-import { GetServerSideProps } from 'next'
 import { ICategory } from '../DAO/documents/Category'
 import dbConnect from '../utils/dbConnect'
 import { findAllCategories } from '../business/CategoryManager'
 
-export default function Home({
-  categories,
-}: {
-  categories: ICategory[]
-}): JSX.Element {
+export default function Home({ categories }: { categories: ICategory[] }) {
   return (
     <SiteWrapper headerType={'full'}>
       <CategoryList title='Wybrane kategorie' categories={categories} />

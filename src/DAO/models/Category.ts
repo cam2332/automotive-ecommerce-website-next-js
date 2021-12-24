@@ -1,5 +1,6 @@
 import { Model, model } from 'mongoose'
 import { CategoryDocument } from '../documents/Category'
+// eslint-disable-next-line import/no-cycle
 import CategorySchema from '../schemas/CategorySchema'
 
 export interface CategoryModel extends Model<CategoryDocument> {

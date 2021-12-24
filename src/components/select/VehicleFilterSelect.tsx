@@ -45,9 +45,9 @@ function VehicleFilterSelect({
 
   useEffect(() => {
     if (groupBy) {
-      if (inputValue != '') {
+      if (inputValue !== '') {
         const groups = groupOptions(options, groupBy || '_group')
-        Object.keys(groups).map((key) => {
+        Object.keys(groups).forEach((key) => {
           const filteredGroup = groups[key].filter((value) =>
             value.value.toLowerCase().includes(inputValue.toLowerCase())
           )
@@ -63,7 +63,8 @@ function VehicleFilterSelect({
         setFilteredOptions(groupOptions(options, groupBy || '_group'))
       }
     } else {
-      if (inputValue != '') {
+      // eslint-disable-next-line no-lonely-if
+      if (inputValue !== '') {
         setFilteredOptions(
           options.filter((value) =>
             value.value.toLowerCase().includes(inputValue.toLowerCase())

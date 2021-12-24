@@ -153,13 +153,12 @@ export const loginUser = async (requestBody: {
     )
     if (passwordCorrect) {
       return right(fromUserDocument(user))
-    } else {
-      return left(
-        ApplicationError.UNAUTHORIZED.setDetail(
-          'Incorrect password.'
-        ).setInstance('/users')
-      )
     }
+    return left(
+      ApplicationError.UNAUTHORIZED.setDetail(
+        'Incorrect password.'
+      ).setInstance('/users')
+    )
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -192,13 +191,12 @@ export const findUserById = async (
 
     if (user) {
       return right(fromUserDocument(user))
-    } else {
-      return left(
-        ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-          `User with id ${id} does not exists.`
-        ).setInstance(`/users/${id}`)
-      )
     }
+    return left(
+      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+        `User with id ${id} does not exists.`
+      ).setInstance(`/users/${id}`)
+    )
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(

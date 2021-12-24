@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import tw from 'tailwind-styled-components'
 import { IoCloseSharp } from 'react-icons/io5'
+
 function Modal({
   title,
   onClose,
@@ -10,6 +11,7 @@ function Modal({
   title: string
   onClose: () => void
   visible: boolean
+  // eslint-disable-next-line no-undef
   children?: JSX.Element | JSX.Element[]
 }) {
   useEffect(() => {

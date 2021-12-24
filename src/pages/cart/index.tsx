@@ -1,14 +1,6 @@
 import { GetServerSideProps } from 'next'
 import tw from 'tailwind-styled-components'
-import { findProductsByIds } from '../../business/ProductManager'
-import { authorize } from '../../business/SessionManager'
-import CartProductCard from '../../components/cart/CartProductCard'
-import SiteWrapper from '../../components/SiteWrapper'
-import { IProduct } from '../../DAO/documents/Product'
-import SortMethod from '../../DAO/types/SortMethod'
-import dbConnect from '../../utils/dbConnect'
-import { useCartContext } from '../../context/CartContext'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import {
   IoCardOutline,
@@ -18,10 +10,17 @@ import {
   IoLogoGoogle,
 } from 'react-icons/io5'
 import { FaSms } from 'react-icons/fa'
+import { HiOutlineTruck } from 'react-icons/hi'
+import { findProductsByIds } from '../../business/ProductManager'
+import { authorize } from '../../business/SessionManager'
+import CartProductCard from '../../components/cart/CartProductCard'
+import SiteWrapper from '../../components/SiteWrapper'
+import { IProduct } from '../../DAO/documents/Product'
+import SortMethod from '../../DAO/types/SortMethod'
+import dbConnect from '../../utils/dbConnect'
+import { useCartContext } from '../../context/CartContext'
 import InputText from '../../components/InputText'
 import Button from '../../components/Button'
-import { HiOutlineTruck } from 'react-icons/hi'
-import React from 'react'
 import { useToastContext } from '../../context/ToastContext'
 import OptionBox from '../../components/cart/OptionBox'
 
@@ -400,25 +399,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           permanent: false,
         },
       }
-    } else {
-      const user = authorized.value.user
+    }
+    const user = authorized.value.user
 
-      const productsResult = await findProductsByIds(
-        user.cart.map(({ productId }) => productId),
-        user.id,
-        1,
-        user.cart.length > 0 ? user.cart.length : 1,
-        SortMethod.nameAsc
+    const productsResult = await findProductsByIds(
+      user.cart.map(({ productId }) => productId),
+      user.id,
+      1,
+      user.cart.length > 0 ? user.cart.length : 1,
+      SortMethod.nameAsc
+    )
+    if (productsResult.isRight()) {
+      products = productsResult.value.results.map((product) =>
+        Object.assign(product, {
+          selectedAmount: user.cart.find(
+            (prod) => prod.productId === product.id
+          ).quantity,
+        })
       )
-      if (productsResult.isRight()) {
-        products = productsResult.value.results.map((product) =>
-          Object.assign(product, {
-            selectedAmount: user.cart.find(
-              (prod) => prod.productId === product.id
-            ).quantity,
-          })
-        )
-      }
     }
   } catch (error) {
     console.log(error)

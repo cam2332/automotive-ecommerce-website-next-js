@@ -4,6 +4,7 @@ import tw from 'tailwind-styled-components'
 
 interface ICustomSelectProps {
   value: string
+  // eslint-disable-next-line no-undef
   children?: JSX.Element | JSX.Element[]
   input?: boolean
   inputValue?: string

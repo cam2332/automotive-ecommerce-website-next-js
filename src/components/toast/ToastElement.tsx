@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import * as IoIcons from 'react-icons/io5'
 import { IoCloseSharp } from 'react-icons/io5'
 import tw from 'tailwind-styled-components'
+// eslint-disable-next-line import/no-cycle
 import { useToastContext } from '../../context/ToastContext'
 import { appearances } from './types/AppearanceTypes'
 import Toast from './types/Toast'
@@ -30,6 +31,7 @@ function ToastElement(props: Toast) {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line no-undef
     let counter: NodeJS.Timeout
     if (props.autoDismiss) {
       counter = setInterval(() => {
@@ -39,6 +41,7 @@ function ToastElement(props: Toast) {
           if (counterMsLeft < 0) {
             clearInterval(counter)
             dismiss()
+            // eslint-disable-next-line no-useless-return
             return
           }
         }

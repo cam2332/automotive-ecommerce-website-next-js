@@ -119,13 +119,15 @@ export default class ApplicationError {
     '/internal-error'
   )
 
+  // eslint-disable-next-line no-useless-constructor
   constructor(
     public title: string,
     public status: number,
     public type: string = '/about:blank',
     public detail?: string,
     public instance?: string
-  ) {}
+  ) // eslint-disable-next-line no-empty-function
+  {}
 
   public setType(type: string): this {
     this.type = type

@@ -1,9 +1,9 @@
-import User from '../DAO/models/User'
 import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 import { NextApiResponse } from 'next'
 import { NextApiRequestCookies } from 'next/dist/server/api-utils'
 import { IncomingMessage } from 'http'
+import User from '../DAO/models/User'
 import { IUser } from '../DAO/documents/User'
 import { fromUserDocument } from '../utils/MongoConverter'
 
@@ -38,8 +38,6 @@ function generateToken(user: IUser): string {
 }
 
 export function authenticateUser(res: NextApiResponse, user: IUser): string {
-  if (!user) return
-
   const token = generateToken(user)
 
   setCookie(res, 'auth', token, cookieOptions)

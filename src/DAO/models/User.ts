@@ -1,5 +1,6 @@
 import { Model, model } from 'mongoose'
 import { UserDocument } from '../documents/User'
+// eslint-disable-next-line import/no-cycle
 import UserSchema from '../schemas/UserSchema'
 
 export interface UserModel extends Model<UserDocument> {

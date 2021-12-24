@@ -1,8 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import redaxios from 'redaxios'
 import { IProduct } from '../DAO/documents/Product'
 import { useSessionContext } from './SessionContext'
 import { useToastContext } from './ToastContext'
-import redaxios from 'redaxios'
 
 type WishListContextProps = {
   products: IProduct[]
@@ -17,6 +17,7 @@ export const WishListContext = createContext<WishListContextProps>(
   {} as WishListContextProps
 )
 
+// eslint-disable-next-line react/prop-types
 const WishListProvider: React.FC = ({ children }): React.ReactElement => {
   const sessionContext = useSessionContext()
   const toastContext = useToastContext()
@@ -86,6 +87,7 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
     }
   }, [sessionContext.token])
 
+  // eslint-disable-next-line consistent-return
   const addToWishList = async (product: IProduct): Promise<boolean> => {
     if (sessionContext.user) {
       redaxios
@@ -108,17 +110,16 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
               )
             )
             return true
-          } else {
-            toastContext.addToast({
-              text: 'Wystąpił błąd podczas dodawania produktu do listy życzeń.',
-              appearance: 'error',
-              autoDismiss: true,
-              dismissDelay: 5000,
-            })
-            return false
           }
+          toastContext.addToast({
+            text: 'Wystąpił błąd podczas dodawania produktu do listy życzeń.',
+            appearance: 'error',
+            autoDismiss: true,
+            dismissDelay: 5000,
+          })
+          return false
         })
-        .catch(function (error) {
+        .catch(() => {
           toastContext.addToast({
             text: 'Wystąpił błąd podczas dodawania produktu do listy życzeń.',
             appearance: 'error',
@@ -137,6 +138,7 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
     }
   }
 
+  // eslint-disable-next-line consistent-return
   const removeFromWishList = async (productId: string): Promise<boolean> => {
     if (sessionContext.user) {
       redaxios
@@ -152,17 +154,16 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
               products.filter((product) => product.id !== productId)
             )
             return true
-          } else {
-            toastContext.addToast({
-              text: 'Wystąpił błąd podczas usuwania produktu z listy życzeń.',
-              appearance: 'error',
-              autoDismiss: true,
-              dismissDelay: 5000,
-            })
-            return false
           }
+          toastContext.addToast({
+            text: 'Wystąpił błąd podczas usuwania produktu z listy życzeń.',
+            appearance: 'error',
+            autoDismiss: true,
+            dismissDelay: 5000,
+          })
+          return false
         })
-        .catch(function (error) {
+        .catch(() => {
           toastContext.addToast({
             text: 'Wystąpił błąd podczas usuwania produktu z listy życzeń.',
             appearance: 'error',
@@ -199,7 +200,7 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
             })
           }
         })
-        .catch(function (error) {
+        .catch(() => {
           toastContext.addToast({
             text: 'Wystąpił błąd podczas usuwania produktów z listy życzeń.',
             appearance: 'error',
@@ -213,9 +214,8 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
     }
   }
 
-  const isInWishList = (productId: string): boolean => {
-    return products.findIndex((product) => product.id === productId) >= 0
-  }
+  const isInWishList = (productId: string): boolean =>
+    products.findIndex((product) => product.id === productId) >= 0
 
   return (
     <WishListContext.Provider

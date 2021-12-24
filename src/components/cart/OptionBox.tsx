@@ -91,15 +91,6 @@ text-sm ${({ $isSelected }: { $isSelected: boolean }) =>
   $isSelected ? 'text-primary-color-400' : 'text-white'}
 `
 
-const CustomIcon = tw(IIcon)`
-  m-1
-  cursor-pointer
-  text-3xl
-
-  lg:text-4xl
-  ${({ $color }: { $color: string }) => $color}
-`
-
 const FirstText = tw.span`
   text-sm
   ${({ $textColor }: { $textColor: string }) => $textColor}

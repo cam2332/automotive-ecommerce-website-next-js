@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import tw from 'tailwind-styled-components'
+import { useState } from 'react'
 import ProductCard from './ProductCard'
 import ProductCardGrid from './ProductCardGrid'
 import { IProduct } from '../DAO/documents/Product'
 import { useCartContext } from '../context/CartContext'
 import { useWishListContext } from '../context/WishListContext'
-import { useState } from 'react'
 
 function ProductList({
   products,

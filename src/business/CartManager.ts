@@ -17,9 +17,8 @@ export const getProducts = async (
           `User with id ${userId} does not exists.`
         ).setInstance(`/users/${userId}`)
       )
-    } else {
-      return right(fromUserDocument(user).cart)
     }
+    return right(fromUserDocument(user).cart)
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -53,33 +52,32 @@ export const addProduct = async (
               `User with id ${userId} does not exists.`
             ).setInstance(`/users/${userId}`)
           )
-        } else {
-          const index = user.cart.findIndex(
-            (product) => product.productId === productId
-          )
-          if (index !== -1) {
-            const newQuantity = setAddQuantity
-              ? quantity
-              : user.cart[index].quantity + quantity
-            if (newQuantity > productResult.value.quantity) {
-              return left(
-                ApplicationError.OPERATION_INVALID_FOR_CURRENT_STATE.setDetail(
-                  'There is already the maximum quantity of the selected product in the cart.'
-                ).setInstance('/cart')
-              )
-            }
-            user.cart[index].quantity = newQuantity
-            productResult.value.quantity = newQuantity
-          } else {
-            user.cart.push({
-              productId: productId,
-              quantity: quantity,
-            })
-            productResult.value.quantity = quantity
-          }
-          await user.save()
-          return right(productResult.value)
         }
+        const index = user.cart.findIndex(
+          (product) => product.productId === productId
+        )
+        if (index !== -1) {
+          const newQuantity = setAddQuantity
+            ? quantity
+            : user.cart[index].quantity + quantity
+          if (newQuantity > productResult.value.quantity) {
+            return left(
+              ApplicationError.OPERATION_INVALID_FOR_CURRENT_STATE.setDetail(
+                'There is already the maximum quantity of the selected product in the cart.'
+              ).setInstance('/cart')
+            )
+          }
+          user.cart[index].quantity = newQuantity
+          productResult.value.quantity = newQuantity
+        } else {
+          user.cart.push({
+            productId,
+            quantity,
+          })
+          productResult.value.quantity = quantity
+        }
+        await user.save()
+        return right(productResult.value)
       } catch (error) {
         return left(
           ApplicationError.INTERNAL_ERROR.setDetail(
@@ -111,11 +109,10 @@ export const removeProduct = async (
           `User with id ${userId} does not exists.`
         ).setInstance(`/users/${userId}`)
       )
-    } else {
-      user.cart = user.cart.filter((product) => product.productId !== productId)
-      await user.save()
-      return right(fromUserDocument(user).cart)
     }
+    user.cart = user.cart.filter((product) => product.productId !== productId)
+    await user.save()
+    return right(fromUserDocument(user).cart)
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -136,11 +133,10 @@ export const removeAllProducts = async (
           `User with id ${userId} does not exists.`
         ).setInstance(`/users/${userId}`)
       )
-    } else {
-      user.cart = []
-      await user.save()
-      return right(fromUserDocument(user).cart)
     }
+    user.cart = []
+    await user.save()
+    return right(fromUserDocument(user).cart)
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(

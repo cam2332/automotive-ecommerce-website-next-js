@@ -1,11 +1,14 @@
+/* eslint-disable no-undef */
 import * as InMemoryMongo from '../../utils/InMemoryMongo'
 import CarMake from './CarMake'
 
 describe('CarMake model', () => {
-  let carMakeName = 'Audi'
+  const carMakeName = 'Audi'
   let carMakeId: string
 
+  // eslint-disable-next-line no-return-await
   beforeAll(async () => await InMemoryMongo.connect())
+  // eslint-disable-next-line no-return-await
   afterAll(async () => await InMemoryMongo.closeDatabase())
 
   it('should create a car make', async () => {

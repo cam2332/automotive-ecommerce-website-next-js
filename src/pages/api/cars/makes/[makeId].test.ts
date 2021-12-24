@@ -1,26 +1,20 @@
+/* eslint-disable no-undef */
+/* eslint-disable import/no-extraneous-dependencies */
 import http from 'http'
 import fetch from 'isomorphic-unfetch'
 import listen from 'test-listen'
-import { apiResolver } from 'next/dist/next-server/server/api-utils'
+import { apiResolver } from 'next/dist/server/api-utils'
 import * as InMemoryMongo from '../../../../utils/InMemoryMongo'
 import { createCarMake } from '../../../../business/CarMakeManager'
-import handler from '../../cars/makes/[makeId]'
+import handler from './[makeId]'
 
 describe('/api/cars/makes/:makeId', () => {
   let server: http.Server
   let url: string
   let makeId: string = 'makeId'
   beforeAll(async () => {
-    let requestHandler = async (req, res) => {
-      return apiResolver(
-        req,
-        res,
-        { makeId: makeId },
-        handler,
-        {} as any,
-        undefined
-      )
-    }
+    const requestHandler = async (req, res) =>
+      apiResolver(req, res, { makeId }, handler, {} as any, undefined)
     server = http.createServer(requestHandler)
     url = await listen(server)
   })
@@ -41,7 +35,7 @@ describe('/api/cars/makes/:makeId', () => {
 
     it('should return 405 "Method Not Allowed" when the request method is different than GET', async () => {
       expect.assertions(4)
-      let response = await fetch(url + '/api/cars/makes/' + makeId, {
+      const response = await fetch(url + '/api/cars/makes/' + makeId, {
         method: 'POST',
       })
 
@@ -57,7 +51,7 @@ describe('/api/cars/makes/:makeId', () => {
     it('should return 404 "Not found" when car make with given id does not exists', async () => {
       expect.assertions(4)
 
-      let response = await fetch(url + '/api/cars/makes/' + makeId)
+      const response = await fetch(url + '/api/cars/makes/' + makeId)
 
       expect(response.status).toBe(404)
       expect(response.headers.get('content-type')).toMatch(/json/)
@@ -74,7 +68,7 @@ describe('/api/cars/makes/:makeId', () => {
 
       if (createdCarMake.isRight()) {
         makeId = createdCarMake.value.id
-        let response = await fetch(url + '/api/cars/makes/' + makeId)
+        const response = await fetch(url + '/api/cars/makes/' + makeId)
 
         expect(response.status).toBe(200)
         expect(response.headers.get('content-type')).toMatch(/json/)

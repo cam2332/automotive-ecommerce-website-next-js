@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import Head from 'next/head'
 import MainHeader from './MainHeader'
-import SideNavigation from '../components/SideNavigation'
+import SideNavigation from './SideNavigation'
 import SideWishList from './SideWishList'
-import SideShoppingList from '../components/SideShoppingList'
-import SideUser from '../components/SideUser'
-import Footer from '../components/Footer'
+import SideShoppingList from './SideShoppingList'
+import SideUser from './SideUser'
+import Footer from './Footer'
 import SearchField from './SearchField'
 import VehicleFilter from './VehicleFilter'
 import EmptyHeader from './EmptyHeader'
@@ -17,7 +17,9 @@ function SiteWrapper({
   title,
   headerType,
 }: {
+  // eslint-disable-next-line no-undef
   children: JSX.Element | JSX.Element[]
+  // eslint-disable-next-line react/require-default-props
   title?: string
   headerType: HeaderType
 }) {

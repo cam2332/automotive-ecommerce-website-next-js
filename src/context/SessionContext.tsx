@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import redaxios from 'redaxios'
 import { IUser } from '../DAO/documents/User'
 import { Either, left, right } from '../utils/Either'
@@ -24,6 +24,7 @@ export const SessionContext = createContext<SessionContextProps>(
   {} as SessionContextProps
 )
 
+// eslint-disable-next-line react/prop-types
 const SessionProvider: React.FC = ({ children }): React.ReactElement => {
   const toastContext = useToastContext()
   const [user, setUser] = useState<IUser | undefined>()
@@ -45,7 +46,7 @@ const SessionProvider: React.FC = ({ children }): React.ReactElement => {
             authorization: token,
           },
         })
-        .then(function (response) {
+        .then((response) => {
           if (response.status === 200) {
             setUser((response.data as any).user)
             setToken((response.data as any).token)
@@ -60,7 +61,7 @@ const SessionProvider: React.FC = ({ children }): React.ReactElement => {
             })
           }
         })
-        .catch(function (error) {
+        .catch(() => {
           errorHandler()
           toastContext.addToast({
             text: 'Sesja wygasła.',
@@ -85,17 +86,15 @@ const SessionProvider: React.FC = ({ children }): React.ReactElement => {
         setToken(response.data.token)
         sessionStorage.setItem('jwtToken', response.data.token)
         return right(true)
-      } else {
-        errorHandler()
-        return left(['Rejestracja nieudana', -1])
       }
+      errorHandler()
+      return left(['Rejestracja nieudana', -1])
     } catch (error) {
       errorHandler()
       if (error.status === 409) {
         return left(['E-mail w użyciu.', 409])
-      } else {
-        return left(['Rejestracja nieudana', -1])
       }
+      return left(['Rejestracja nieudana', -1])
     }
   }
 
@@ -110,19 +109,18 @@ const SessionProvider: React.FC = ({ children }): React.ReactElement => {
         setToken(response.data.token)
         sessionStorage.setItem('jwtToken', response.data.token)
         return right(true)
-      } else {
-        errorHandler()
-        return left(['Logowanie nieudane.', -1])
       }
+      errorHandler()
+      return left(['Logowanie nieudane.', -1])
     } catch (error) {
       errorHandler()
       if (error.status === 404) {
         return left(['Nie znaleziono podanego adresu e-mail.', 404])
-      } else if (error.status === 401) {
-        return left(['Nieprawidłowe hasło.', 401])
-      } else {
-        return left(['Logowanie nieudane.', -1])
       }
+      if (error.status === 401) {
+        return left(['Nieprawidłowe hasło.', 401])
+      }
+      return left(['Logowanie nieudane.', -1])
     }
   }
 

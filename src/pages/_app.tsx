@@ -6,7 +6,7 @@ import ToastProvider from '../context/ToastContext'
 import CartProvider from '../context/CartContext'
 import WishListProvider from '../context/WishListContext'
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ToastProvider>
       <SessionProvider>

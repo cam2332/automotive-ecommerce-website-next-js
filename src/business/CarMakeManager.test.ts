@@ -1,3 +1,5 @@
+/* eslint-disable no-return-await */
+/* eslint-disable no-undef */
 import ApplicationError from '../utils/ApplicationError'
 import * as InMemoryMongo from '../utils/InMemoryMongo'
 import {
@@ -8,7 +10,7 @@ import {
 } from './CarMakeManager'
 
 describe('CarMakeManager', () => {
-  let carMakeName = 'Audi'
+  const carMakeName = 'Audi'
   let carMakeId: string
 
   describe('DB not connected', () => {

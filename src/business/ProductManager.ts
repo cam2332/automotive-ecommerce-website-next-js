@@ -9,6 +9,7 @@ import SortMethod from '../DAO/types/SortMethod'
 export const findProductById = async (
   productId: string,
   userId?: string
+  // eslint-disable-next-line consistent-return
 ): Promise<Either<ApplicationError, IProduct>> => {
   if (productId === undefined) {
     return left(

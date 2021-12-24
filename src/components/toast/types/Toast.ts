@@ -1,5 +1,4 @@
 import AppearanceTypes from './AppearanceTypes'
-import Placement from './Placement'
 
 export default interface Toast {
   id: string

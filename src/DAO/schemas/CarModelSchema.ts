@@ -1,5 +1,6 @@
 import { Schema } from 'mongoose'
 import { CarModelDocument } from '../documents/CarModel'
+// eslint-disable-next-line import/no-cycle
 import CarModel from '../models/CarModel'
 
 const CarModelSchema: Schema = new Schema(

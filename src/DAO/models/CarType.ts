@@ -1,5 +1,6 @@
 import { Model, model } from 'mongoose'
 import { CarTypeDocument } from '../documents/CarType'
+// eslint-disable-next-line import/no-cycle
 import CarTypeSchema from '../schemas/CarTypeSchema'
 
 export interface CarTypeModel extends Model<CarTypeDocument> {

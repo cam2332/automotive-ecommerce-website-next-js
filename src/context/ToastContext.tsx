@@ -1,12 +1,15 @@
-import { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react'
+// eslint-disable-next-line import/no-cycle
 import ToastContainer from '../components/toast/ToastContainer'
 import Placement from '../components/toast/types/Placement'
 import Toast, { ToastInput } from '../components/toast/types/Toast'
 
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == 'x' ? r : (r & 0x3) | 0x8
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    // eslint-disable-next-line no-bitwise
+    const r = (Math.random() * 16) | 0
+    // eslint-disable-next-line no-bitwise
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
     return v.toString(16)
   })
 }
@@ -22,6 +25,7 @@ type ToastContextProps = {
 
 export const ToastContext = createContext({} as ToastContextProps)
 
+// eslint-disable-next-line react/prop-types
 const ToastProvider: React.FC = ({ children }): React.ReactElement => {
   const [toasts, setToasts] = useState<Toast[]>([])
   const [placement, setPlacement] = useState<Placement>('bottom-left')

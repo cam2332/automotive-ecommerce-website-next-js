@@ -1,8 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import redaxios from 'redaxios'
 import { IProduct } from '../DAO/documents/Product'
 import { useSessionContext } from './SessionContext'
 import { useToastContext } from './ToastContext'
-import redaxios from 'redaxios'
 
 type CartContextProps = {
   products: IProduct[]
@@ -23,6 +23,7 @@ export const CartContext = createContext<CartContextProps>(
   {} as CartContextProps
 )
 
+// eslint-disable-next-line react/prop-types
 const CartProvider: React.FC = ({ children }): React.ReactElement => {
   const sessionContext = useSessionContext()
   const toastContext = useToastContext()
@@ -33,9 +34,10 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
     localStorage.setItem(
       'cart',
       JSON.stringify(
-        products.map((product) => {
-          return { id: product.id, quantity: product.quantity }
-        })
+        products.map((product) => ({
+          id: product.id,
+          quantity: product.quantity,
+        }))
       )
     )
   }
@@ -53,7 +55,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
             setProducts([])
           }
         })
-        .catch(function (error) {
+        .catch(() => {
           setProducts([])
           toastContext.addToast({
             text: 'Wystąpił błąd podczas pobierania produktów do koszyka.',
@@ -74,7 +76,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
                 ids: localCart.map((product) => product.id),
               },
             })
-            .then(function (response) {
+            .then((response) => {
               if (response.status === 200) {
                 setProducts(response.data.results)
                 response.data?.results[0]?.currency?.length > 0 &&
@@ -84,7 +86,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
                 saveToLocalStorage([])
               }
             })
-            .catch(function (error) {
+            .catch(() => {
               setProducts([])
               saveToLocalStorage([])
             })
@@ -125,9 +127,9 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
               const otherProducts = products.filter(
                 (localProduct) => localProduct.id !== response.data.id
               )
-              return [...otherProducts, response.data].sort((a, b) => {
-                return a.title > b.title ? 1 : -1
-              })
+              return [...otherProducts, response.data].sort((a, b) =>
+                a.title > b.title ? 1 : -1
+              )
             })
           } else {
             toastContext.addToast({
@@ -138,7 +140,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
             })
           }
         })
-        .catch(function (error) {
+        .catch(() => {
           toastContext.addToast({
             text: 'Wystąpił błąd podczas dodawania produktu do koszyka.',
             appearance: 'error',
@@ -202,7 +204,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
             })
           }
         })
-        .catch(function (error) {
+        .catch(() => {
           toastContext.addToast({
             text: 'Wystąpił błąd podczas usuwania produktu z koszyka.',
             appearance: 'error',
@@ -237,7 +239,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
             })
           }
         })
-        .catch(function (error) {
+        .catch(() => {
           toastContext.addToast({
             text: 'Wystąpił błąd podczas usuwania produktów z koszyka.',
             appearance: 'error',

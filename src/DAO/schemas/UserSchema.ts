@@ -1,5 +1,6 @@
 import { Schema, Types } from 'mongoose'
 import { UserDocument } from '../documents/User'
+// eslint-disable-next-line import/no-cycle
 import User from '../models/User'
 
 const CartSchema: Schema = new Schema({

@@ -1,5 +1,6 @@
 import { Schema, Types } from 'mongoose'
 import { ProductDocument, Property } from '../documents/Product'
+// eslint-disable-next-line import/no-cycle
 import Product from '../models/Product'
 import { ResultData } from '../types/ResultData'
 import SortMethod from '../types/SortMethod'
@@ -134,24 +135,28 @@ ProductSchema.statics.findProductById = async (
     return Array.isArray(product) && product.length > 0
       ? (product[0] as ProductDocument)
       : null
-  } else {
-    const product = await Product.findById(productId, {
-      title: 1,
-      subTitle: 1,
-      identifier: 1,
-      price: 1,
-      oldPrice: 1,
-      currency: 1,
-      quantity: 1,
-      properties: 1,
-      manufacturer: 1,
-      categoryId: 1,
-      compatibleCarTypeIds: 1,
-      thumbnailUrl: 1,
-    })
-
-    return product
   }
+  const product = await Product.findById(productId, {
+    title: 1,
+    subTitle: 1,
+    identifier: 1,
+    price: 1,
+    oldPrice: 1,
+    currency: 1,
+    quantity: 1,
+    properties: 1,
+    manufacturer: 1,
+    categoryId: 1,
+    compatibleCarTypeIds: 1,
+    thumbnailUrl: 1,
+  })
+
+  return product
+}
+
+  }
+
+  return products
 }
 
 ProductSchema.statics.findProductsByCategoryId = async (
@@ -247,7 +252,6 @@ ProductSchema.statics.findProductsByCategoryId = async (
         thumbnailUrl: 1,
       }
     )
-    //.sort({ title: 1 })
   }
 
   return products

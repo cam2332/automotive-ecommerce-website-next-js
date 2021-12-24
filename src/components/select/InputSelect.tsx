@@ -12,6 +12,7 @@ function InputSelect({
   expanded,
 }: {
   value: string
+  // eslint-disable-next-line no-undef
   children?: JSX.Element | JSX.Element[]
   onClickItem: ({ id, value }: { id: string; value: string }) => void
   inputValue: string
@@ -24,7 +25,7 @@ function InputSelect({
   return (
     <CustomSelect
       value={value}
-      input={true}
+      input
       inputValue={inputValue}
       inputPlaceholder={inputPlaceholder}
       onInputChange={onInputChange}

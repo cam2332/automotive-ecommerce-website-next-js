@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 import { ICategory } from '../DAO/documents/Category'
 import Category from '../DAO/models/Category'
 import ApplicationError from '../utils/ApplicationError'
@@ -33,15 +34,14 @@ export const createCategory = async (requestBody: {
           `Category with name '${requestBody.name}' already exists.`
         ).setInstance(`/categories/${category.id}`)
       )
-    } else {
-      const createdCategory = await Category.createCategory(
-        requestBody.name,
-        requestBody.thumbnailUrl,
-        requestBody.parentCategoryId
-      )
-
-      return right(fromCategoryDocument(createdCategory))
     }
+    const createdCategory = await Category.createCategory(
+      requestBody.name,
+      requestBody.thumbnailUrl,
+      requestBody.parentCategoryId
+    )
+
+    return right(fromCategoryDocument(createdCategory))
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -55,7 +55,7 @@ export const findAllCategories = async (
   makeTree: boolean
 ): Promise<Either<ApplicationError, ICategory[]>> => {
   try {
-    let categories = await Category.findAllCategories()
+    const categories = await Category.findAllCategories()
 
     if (makeTree) {
       return right(
@@ -65,9 +65,8 @@ export const findAllCategories = async (
           'parentCategoryId'
         )
       )
-    } else {
-      return right(categories.map((category) => fromCategoryDocument(category)))
     }
+    return right(categories.map((category) => fromCategoryDocument(category)))
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -80,19 +79,19 @@ export const findAllCategories = async (
 const searchCategoryInBranchById = (
   category: ICategory,
   id: string
+  // eslint-disable-next-line consistent-return
 ): ICategory | null => {
   if (id === category.id) {
     return category
-  } else {
-    if (category.categories) {
-      for (let i = 0; i < category.categories.length; i++) {
-        const result = searchCategoryInBranchById(category.categories[i], id)
-        if (result) {
-          return result
-        }
+  }
+  if (category.categories) {
+    for (let i = 0; i < category.categories.length; i++) {
+      const result = searchCategoryInBranchById(category.categories[i], id)
+      if (result) {
+        return result
       }
-      return null
     }
+    return null
   }
 }
 
@@ -127,20 +126,18 @@ export const findCategoryById = async (
 
     if (category) {
       return right(category)
-    } else {
-      return left(
-        ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-          `Category with id '${id}' does not exists.`
-        ).setInstance(`/categories/${id}`)
-      )
     }
-  } else {
     return left(
-      ApplicationError.INTERNAL_ERROR.setDetail(
-        `Cannot find category with id ${id}.`
+      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+        `Category with id '${id}' does not exists.`
       ).setInstance(`/categories/${id}`)
     )
   }
+  return left(
+    ApplicationError.INTERNAL_ERROR.setDetail(
+      `Cannot find category with id ${id}.`
+    ).setInstance(`/categories/${id}`)
+  )
 }
 
 export const findRootCategoryById = async (
@@ -176,41 +173,36 @@ export const findRootCategoryById = async (
 
     if (category) {
       return right({ category, selectedCategory })
-    } else {
-      return left(
-        ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-          `Category with id '${id}' does not exists.`
-        ).setInstance(`/categories/${id}`)
-      )
     }
-  } else {
     return left(
-      ApplicationError.INTERNAL_ERROR.setDetail(
-        `Cannot find category with id ${id}.`
+      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+        `Category with id '${id}' does not exists.`
       ).setInstance(`/categories/${id}`)
     )
   }
+  return left(
+    ApplicationError.INTERNAL_ERROR.setDetail(
+      `Cannot find category with id ${id}.`
+    ).setInstance(`/categories/${id}`)
+  )
 }
 
 const searchCategoryInBranchByName = (
   category: ICategory,
   name: string
+  // eslint-disable-next-line consistent-return
 ): ICategory | null => {
   if (name === category.name) {
     return category
-  } else {
-    if (category.categories) {
-      for (let i = 0; i < category.categories.length; i++) {
-        const result = searchCategoryInBranchByName(
-          category.categories[i],
-          name
-        )
-        if (result) {
-          return result
-        }
+  }
+  if (category.categories) {
+    for (let i = 0; i < category.categories.length; i++) {
+      const result = searchCategoryInBranchByName(category.categories[i], name)
+      if (result) {
+        return result
       }
-      return null
     }
+    return null
   }
 }
 
@@ -244,20 +236,18 @@ export const findCategoryByName = async (
 
     if (category) {
       return right(category)
-    } else {
-      return left(
-        ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-          `Category with name '${name}' does not exists.`
-        ).setInstance('/categories/')
-      )
     }
-  } else {
     return left(
-      ApplicationError.INTERNAL_ERROR.setDetail(
-        `Cannot find category with name ${name}.`
-      ).setInstance('/categories')
+      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+        `Category with name '${name}' does not exists.`
+      ).setInstance('/categories/')
     )
   }
+  return left(
+    ApplicationError.INTERNAL_ERROR.setDetail(
+      `Cannot find category with name ${name}.`
+    ).setInstance('/categories')
+  )
 }
 
 export const findRootCategoryByName = async (
@@ -289,18 +279,16 @@ export const findRootCategoryByName = async (
 
     if (category) {
       return right(category)
-    } else {
-      return left(
-        ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-          `Category with name '${name}' does not exists.`
-        ).setInstance('/categories')
-      )
     }
-  } else {
     return left(
-      ApplicationError.INTERNAL_ERROR.setDetail(
-        `Cannot find category with name ${name}.`
+      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+        `Category with name '${name}' does not exists.`
       ).setInstance('/categories')
     )
   }
+  return left(
+    ApplicationError.INTERNAL_ERROR.setDetail(
+      `Cannot find category with name ${name}.`
+    ).setInstance('/categories')
+  )
 }

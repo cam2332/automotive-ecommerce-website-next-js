@@ -15,9 +15,7 @@ const useCarMakes = (): {
   return {
     makes:
       data && Array.isArray(data)
-        ? data?.map(({ id, name }) => {
-            return { id, value: name }
-          })
+        ? data?.map(({ id, name }) => ({ id, value: name }))
         : [],
     isLoading: !error && !data,
     isError: error,
@@ -35,13 +33,11 @@ const useCarModels = (
   return {
     models:
       data?.data?.map(
-        ({ id, group, name, productionStartYear, productionEndYear }) => {
-          return {
-            id,
-            value: `${group} ${name} (${productionStartYear} - ${productionEndYear})`,
-            group: group,
-          }
-        }
+        ({ id, group, name, productionStartYear, productionEndYear }) => ({
+          id,
+          value: `${group} ${name} (${productionStartYear} - ${productionEndYear})`,
+          group,
+        })
       ) || [],
     isLoading: !error && !data,
     isError: error,
@@ -75,13 +71,11 @@ const useCarTypes = (
             HP,
             productionStartYear,
             productionEndYear,
-          }) => {
-            return {
-              id,
-              value: `${engineDisplacement} ${type} ${kW}kW ${HP}KM (${productionStartYear} - ${productionEndYear})`,
-              group: group,
-            }
-          }
+          }) => ({
+            id,
+            value: `${engineDisplacement} ${type} ${kW}kW ${HP}KM (${productionStartYear} - ${productionEndYear})`,
+            group,
+          })
         ) || [],
     isLoading: !error && !data,
     isError: error,
@@ -142,7 +136,7 @@ function VehicleFilter() {
             setSelectedCarType({ id: '', value: '' })
             setSelectsExpanded(false)
           }}
-          active={true}
+          active
           expanded={makeSelectExpanded}
         />
         <VehicleFilterSelect

@@ -1,4 +1,5 @@
-import { Either, Left, Right, left, right } from './Either'
+/* eslint-disable no-undef */
+import { Left, Right, left, right } from './Either'
 
 describe('Either', () => {
   it('should create instance of Left', () => {

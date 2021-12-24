@@ -13,9 +13,8 @@ export const getProducts = async (
     const userResult = await findUserById(userId)
     if (userResult.isRight()) {
       return right(userResult.value.wishList || [])
-    } else {
-      return left(userResult.value)
     }
+    return left(userResult.value)
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -39,14 +38,12 @@ export const addProduct = async (
             `User with id ${userId} does not exists.`
           ).setInstance(`/users/${userId}`)
         )
-      } else {
-        user.wishList = [...user.wishList, productId]
-        await user.save()
-        return right(productResult.value)
       }
-    } else {
-      return left(productResult.value)
+      user.wishList = [...user.wishList, productId]
+      await user.save()
+      return right(productResult.value)
     }
+    return left(productResult.value)
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -68,11 +65,10 @@ export const removeProduct = async (
           `User with id ${userId} does not exists.`
         ).setInstance(`/users/${userId}`)
       )
-    } else {
-      user.wishList = user.wishList.filter((id) => id !== productId)
-      await user.save()
-      return right(fromUserDocument(user).wishList)
     }
+    user.wishList = user.wishList.filter((id) => id !== productId)
+    await user.save()
+    return right(fromUserDocument(user).wishList)
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -93,11 +89,10 @@ export const removeAllProducts = async (
           `User with id ${userId} does not exists.`
         ).setInstance(`/users/${userId}`)
       )
-    } else {
-      user.wishList = []
-      await user.save()
-      return right(fromUserDocument(user).wishList)
     }
+    user.wishList = []
+    await user.save()
+    return right(fromUserDocument(user).wishList)
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(

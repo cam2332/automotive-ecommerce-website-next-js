@@ -1,5 +1,7 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+// eslint-disable-next-line import/no-cycle
 import { useToastContext } from '../../context/ToastContext'
+// eslint-disable-next-line import/no-cycle
 import ToastElement from './ToastElement'
 
 const placements = {

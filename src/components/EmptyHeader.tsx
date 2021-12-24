@@ -10,7 +10,7 @@ function EmptyHeader() {
       logoText={'Auto części'}
       onClickLogo={() => router.push('/')}
       contactPhoneNumber={'01 234 56 78'}
-      contactInfoVisible={true}
+      contactInfoVisible
     />
   )
 }

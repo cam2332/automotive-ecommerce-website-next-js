@@ -17,11 +17,7 @@ function SideShoppingList({
   const maxNumberOfVisibleProducts = 10
 
   return (
-    <SideMenu
-      title={'Koszyk'}
-      isRight={true}
-      onClose={onClose}
-      visible={visible}>
+    <SideMenu title={'Koszyk'} isRight onClose={onClose} visible={visible}>
       {cartContext.numberOfProducts > 0 ? (
         <ul>
           {cartContext.numberOfUniqueProducts > 0 &&

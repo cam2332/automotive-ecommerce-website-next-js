@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import tw from 'tailwind-styled-components'
+import { GetServerSidePropsContext } from 'next'
 import EmptyHeader from '../../components/EmptyHeader'
 import Footer from '../../components/Footer'
 import InputText from '../../components/InputText'
@@ -13,7 +14,6 @@ import {
 } from '../../services/FormValidation'
 import { useSessionContext } from '../../context/SessionContext'
 import { useToastContext } from '../../context/ToastContext'
-import { GetServerSidePropsContext } from 'next'
 import { userFromRequest } from '../../services/Tokens'
 
 function Login() {
@@ -108,11 +108,13 @@ function Login() {
             ]}
             submitButtonText='Zaloguj'
             links={[
+              // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <Link
                 key='register'
                 onClick={() => router.push('/account/register')}>
                 Rejestracja
               </Link>,
+              // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <Link
                 key='forgotPassword'
                 onClick={() => router.push('/account/reset')}>

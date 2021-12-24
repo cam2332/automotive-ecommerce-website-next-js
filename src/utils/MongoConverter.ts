@@ -5,52 +5,48 @@ import { ICategory, CategoryDocument } from '../DAO/documents/Category'
 import { IProduct, ProductDocument } from '../DAO/documents/Product'
 import { IUser, UserDocument } from '../DAO/documents/User'
 
-export const fromCarTypeDocument = (carType: CarTypeDocument): ICarType => {
-  return {
-    id: carType._id || carType.id,
-    group: carType.group,
-    engineDisplacement: carType.engineDisplacement,
-    type: carType.type,
-    kW: carType.kW,
-    HP: carType.HP,
-    productionStartYear: carType.productionStartYear,
-    productionEndYear: carType.productionEndYear,
-  }
-}
+export const fromCarTypeDocument = (carType: CarTypeDocument): ICarType => ({
+  id: carType._id || carType.id,
+  group: carType.group,
+  engineDisplacement: carType.engineDisplacement,
+  type: carType.type,
+  kW: carType.kW,
+  HP: carType.HP,
+  productionStartYear: carType.productionStartYear,
+  productionEndYear: carType.productionEndYear,
+})
 
-export const fromCarModelDocument = (carModel: CarModelDocument): ICarModel => {
-  return {
-    id: carModel._id || carModel.id,
-    group: carModel.group,
-    name: carModel.name,
-    productionStartYear: carModel.productionStartYear,
-    productionEndYear: carModel.productionEndYear,
-    makeId: carModel.makeId,
-    types: carModel.types
-      ? carModel.types.map((type) => fromCarTypeDocument(type))
-      : [],
-  }
-}
+export const fromCarModelDocument = (
+  carModel: CarModelDocument
+): ICarModel => ({
+  id: carModel._id || carModel.id,
+  group: carModel.group,
+  name: carModel.name,
+  productionStartYear: carModel.productionStartYear,
+  productionEndYear: carModel.productionEndYear,
+  makeId: carModel.makeId,
+  types: carModel.types
+    ? carModel.types.map((type) => fromCarTypeDocument(type))
+    : [],
+})
 
-export const fromCarMakeDocument = (carMake: CarMakeDocument): ICarMake => {
-  return {
-    id: carMake._id || carMake.id,
-    name: carMake.name,
-    models: carMake.models
-      ? carMake.models.map((model) => fromCarModelDocument(model))
-      : [],
-  }
-}
+export const fromCarMakeDocument = (carMake: CarMakeDocument): ICarMake => ({
+  id: carMake._id || carMake.id,
+  name: carMake.name,
+  models: carMake.models
+    ? carMake.models.map((model) => fromCarModelDocument(model))
+    : [],
+})
 
-export const fromCategoryDocument = (category: CategoryDocument): ICategory => {
-  return {
-    id: category._id || category.id,
-    name: category.name,
-    numberOfProducts: category.numberOfProducts || 0,
-    parentCategoryId: category.parentCategoryId || null,
-    thumbnailUrl: category.thumbnailUrl || null,
-  }
-}
+export const fromCategoryDocument = (
+  category: CategoryDocument
+): ICategory => ({
+  id: category._id || category.id,
+  name: category.name,
+  numberOfProducts: category.numberOfProducts || 0,
+  parentCategoryId: category.parentCategoryId || null,
+  thumbnailUrl: category.thumbnailUrl || null,
+})
 
 export const createDataTree = (dataset, id: string, parentId: string) => {
   const hashTable = Object.create(null)
@@ -75,44 +71,37 @@ export const createDataTree = (dataset, id: string, parentId: string) => {
 
   dataTree.forEach((aData) => {
     aData.numberOfProducts = aData.categories.reduce(
-      (accumulator, currentValue) => {
-        return accumulator + currentValue.numberOfProducts
-      },
+      (accumulator, currentValue) =>
+        accumulator + currentValue.numberOfProducts,
       0
     )
   })
   return dataTree
 }
 
-export const fromProductDocument = (product: ProductDocument): IProduct => {
-  return {
-    id: product._id || product.id,
-    title: product.title,
-    subTitle: product.subTitle || null,
-    identifier: product.identifier,
-    price: product.price,
-    oldPrice: product.oldPrice || null,
-    currency: product.currency,
-    quantity: product.quantity,
-    properties: JSON.parse(JSON.stringify(product.properties)) || null,
-    manufacturer: product.manufacturer,
-    categoryId: product.categoryId,
-    compatibleCarTypeIds: product.compatibleCarTypeIds || null,
-    thumbnailUrl: product.thumbnailUrl || null,
-    inWishList: product.inWishList || null,
-  }
-}
+export const fromProductDocument = (product: ProductDocument): IProduct => ({
+  id: product._id || product.id,
+  title: product.title,
+  subTitle: product.subTitle || null,
+  identifier: product.identifier,
+  price: product.price,
+  oldPrice: product.oldPrice || null,
+  currency: product.currency,
+  quantity: product.quantity,
+  properties: JSON.parse(JSON.stringify(product.properties)) || null,
+  manufacturer: product.manufacturer,
+  categoryId: product.categoryId,
+  compatibleCarTypeIds: product.compatibleCarTypeIds || null,
+  thumbnailUrl: product.thumbnailUrl || null,
+  inWishList: product.inWishList || null,
+})
 
-export const fromUserDocument = (user: UserDocument): IUser => {
-  return {
-    id: user._id || user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    cart:
-      user.cart.map(({ productId, quantity }) => {
-        return { productId, quantity }
-      }) || [],
-    wishList: user.wishList.map((productId) => productId) || [],
-  }
-}
+export const fromUserDocument = (user: UserDocument): IUser => ({
+  id: user._id || user.id,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  email: user.email,
+  cart:
+    user.cart.map(({ productId, quantity }) => ({ productId, quantity })) || [],
+  wishList: user.wishList.map((productId) => productId) || [],
+})

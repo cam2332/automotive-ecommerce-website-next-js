@@ -1,6 +1,7 @@
 import { Model, model } from 'mongoose'
 import { ProductDocument } from '../documents/Product'
 import { ResultData } from '../types/ResultData'
+// eslint-disable-next-line import/no-cycle
 import ProductSchema from '../schemas/ProductSchema'
 import SortMethod from '../types/SortMethod'
 

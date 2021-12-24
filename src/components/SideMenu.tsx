@@ -13,6 +13,7 @@ function SideMenu({
   isRight?: boolean
   onClose: () => void
   visible: boolean
+  // eslint-disable-next-line no-undef
   children?: JSX.Element | JSX.Element[] | undefined
   contentPaddingClass?: string
 }) {

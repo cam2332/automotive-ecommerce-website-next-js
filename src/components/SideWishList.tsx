@@ -18,11 +18,7 @@ function SideWishList({
   const maxNumberOfVisibleProducts = 10
 
   return (
-    <SideMenu
-      title={'Lista życzeń'}
-      isRight={true}
-      onClose={onClose}
-      visible={visible}>
+    <SideMenu title='Lista życzeń' isRight onClose={onClose} visible={visible}>
       {wishListContext.numberOfProducts > 0 ? (
         <ul>
           {wishListContext.products
@@ -43,7 +39,7 @@ function SideWishList({
               </Item>
             ))}
           {wishListContext.numberOfProducts > maxNumberOfVisibleProducts && (
-            <Item key={'more'}>
+            <Item key='more'>
               <PrimaryColorText>
                 {`+${(wishListContext.numberOfProducts =
                   maxNumberOfVisibleProducts)} więcej`}
@@ -51,7 +47,7 @@ function SideWishList({
             </Item>
           )}
           {visible && (
-            <AdditionalItem key={'wishlist'}>
+            <AdditionalItem key='wishlist'>
               <Button
                 className='p-2'
                 isDisabled={false}

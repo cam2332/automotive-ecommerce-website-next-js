@@ -4,7 +4,7 @@ import { findProductsByIds } from '../../../business/ProductManager'
 import SortMethod from '../../../DAO/types/SortMethod'
 import ApplicationError from '../../../utils/ApplicationError'
 
-//TODO: get user from DB using auth cookie from request
+// TODO: get user from DB using auth cookie from request
 export default async function handler(
   { method, query: { ids, page, resultsPerPage, sortMethod } }: NextApiRequest,
   res: NextApiResponse

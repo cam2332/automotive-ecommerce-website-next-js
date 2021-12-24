@@ -1,5 +1,4 @@
-import React from 'react'
-import { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import tw from 'tailwind-styled-components'
@@ -178,6 +177,7 @@ function Register() {
             ]}
             submitButtonText='Zarejestruj'
             links={
+              // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <Link onClick={() => router.push('/account/login')}>Zaloguj</Link>
             }
             isFormValid={isFormValid}

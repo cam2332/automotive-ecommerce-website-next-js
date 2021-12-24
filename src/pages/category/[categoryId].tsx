@@ -1,20 +1,20 @@
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import tw from 'tailwind-styled-components'
-import SiteWrapper from '../../components/SiteWrapper'
-import CategoryNav from '../../components/CategoryNav'
-import { IProduct } from '../../DAO/documents/Product'
 import React, { useState } from 'react'
-import { findRootCategoryById } from '../../business/CategoryManager'
-import { ICategory } from '../../DAO/documents/Category'
-import dbConnect from '../../utils/dbConnect'
 import {
   IoChevronBackSharp,
   IoChevronForwardSharp,
   IoListSharp,
 } from 'react-icons/io5'
-import QuantitySelect from '../../components/select/QuantitySelect'
 import { CgMenuGridO } from 'react-icons/cg'
+import SiteWrapper from '../../components/SiteWrapper'
+import CategoryNav from '../../components/CategoryNav'
+import { IProduct } from '../../DAO/documents/Product'
+import { findRootCategoryById } from '../../business/CategoryManager'
+import { ICategory } from '../../DAO/documents/Category'
+import dbConnect from '../../utils/dbConnect'
+import QuantitySelect from '../../components/select/QuantitySelect'
 import CustomSelect from '../../components/select/CustomSelect'
 import SimpleItem from '../../components/select/SimpleItem'
 import Modal from '../../components/Modal'
@@ -22,7 +22,6 @@ import { findProductsByCategoryHierarchy } from '../../business/ProductManager'
 import SortMethod from '../../DAO/types/SortMethod'
 import Pagination from '../../components/Pagination'
 import ProductList from '../../components/ProductList'
-import { authorize } from '../../business/SessionManager'
 
 function index({
   selectedCategory,
@@ -93,7 +92,11 @@ function index({
         <Main>
           <CategorySelect>
             <CustomSelect
-              value={selectedCategory.name}
+              value={
+                selectedCategory && selectedCategory.name
+                  ? selectedCategory.name
+                  : ''
+              }
               onClickField={() => setCategoryModalVisible(true)}
               expanded={categoryModalVisible}
             />

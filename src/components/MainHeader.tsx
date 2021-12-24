@@ -29,19 +29,19 @@ function MainHeader({
       searchBarInputPlaceholder='Wyszukaj w sklepie'
       searchText={appContext.searchText}
       onChangeSearchText={appContext.setSearchText}
-      searchBarVisible={true}
+      searchBarVisible
       searchIconVisible={false}
       onClickMenu={onClickMenu}
-      menuIconVisible={true}
+      menuIconVisible
       wishListCount={wishListContext.numberOfProducts}
       onClickWishList={onClickWishList}
-      wishListIconVisible={true}
+      wishListIconVisible
       cartCount={cartContext.numberOfProducts}
       cartTotal={cartContext.total}
       onClickShoppingCart={onClickShoppingCart}
-      cartIconVisible={true}
+      cartIconVisible
       onClickUser={onClickUser}
-      userIconVisible={true}
+      userIconVisible
     />
   )
 }

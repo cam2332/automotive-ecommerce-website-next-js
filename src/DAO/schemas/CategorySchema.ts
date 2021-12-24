@@ -1,5 +1,6 @@
 import { Schema, Types } from 'mongoose'
 import { CategoryDocument } from '../documents/Category'
+// eslint-disable-next-line import/no-cycle
 import Category from '../models/Category'
 
 const CategorySchema: Schema = new Schema(
@@ -37,7 +38,7 @@ CategorySchema.statics.createCategory = async (
 CategorySchema.statics.findAllCategories = async (): Promise<
   CategoryDocument[]
 > => {
-  let categories = await Category.find(
+  const categories = await Category.find(
     {},
     {
       name: 1,

@@ -52,9 +52,11 @@ function Reset() {
               />
             }
             links={[
+              // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <Link onClick={() => router.push('/account/register')}>
                 Rejestracja
               </Link>,
+              // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <Link onClick={() => router.push('/account/login')}>
                 Logowanie
               </Link>,

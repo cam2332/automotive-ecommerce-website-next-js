@@ -1,32 +1,65 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true
-    },
-    "extends": [
-        "next", 
-        "next/core-web-vitals",
-        "plugin:react/recommended",
-        "airbnb",
-        "prettier"
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "plugin:react/recommended",
+    "airbnb",
+    "prettier"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["react", "@typescript-eslint"],
+  "rules": {
+    "react/jsx-filename-extension": [
+      2,
+      { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
     ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react",
-        "@typescript-eslint"
+    "react/jsx-curly-brace-presence": "warn",
+    "react/self-closing-comp": "warn",
+    "react/no-array-index-key": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-props-no-spreading": "warn",
+    "react/require-default-props": "off",
+    "react/destructuring-assignment": "warn",
+    "react-hooks/rules-of-hooks": "warn",
+    "no-use-before-define": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
     ],
-    "rules": {
-        "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
-    }
+    "one-var": "warn",
+    "radix": "warn",
+    "object-shorthand": "warn",
+    "prefer-template": "warn",
+    "no-shadow": "warn",
+    "no-unused-vars": "warn",
+    "no-nested-ternary": "warn",
+    "no-unused-expressions": "warn",
+    "no-param-reassign": "warn",
+    "dot-notation": "warn",
+    "prefer-destructuring": "warn",
+    "no-case-declarations": "warn",
+    "no-underscore-dangle": "warn",
+    "no-return-assign": "warn",
+    "no-restricted-syntax": "warn",
+    "guard-for-in": "warn",
+    "no-await-in-loop": "warn",
+    "import/no-mutable-exports": "warn"
+  }
 }

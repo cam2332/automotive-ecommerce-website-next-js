@@ -31,11 +31,10 @@ export const createCarMake = async (requestBody: {
           `Car make with name '${requestBody.name}' already exists.`
         ).setInstance(`/cars/makes/${carMake.id}`)
       )
-    } else {
-      const createdCarMake = await CarMake.createMake(requestBody.name)
-
-      return right(fromCarMakeDocument(createdCarMake))
     }
+    const createdCarMake = await CarMake.createMake(requestBody.name)
+
+    return right(fromCarMakeDocument(createdCarMake))
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -83,13 +82,12 @@ export const findCarMakeById = async (
 
     if (carMake) {
       return right(fromCarMakeDocument(carMake))
-    } else {
-      return left(
-        ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-          `Car make with id ${id} does not exists.`
-        ).setInstance(`/cars/makes/${id}`)
-      )
     }
+    return left(
+      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+        `Car make with id ${id} does not exists.`
+      ).setInstance(`/cars/makes/${id}`)
+    )
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
@@ -122,13 +120,12 @@ export const findCarMakeByName = async (
 
     if (carMake) {
       return right(fromCarMakeDocument(carMake))
-    } else {
-      return left(
-        ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-          `Car make with name ${name} does not exists.`
-        ).setInstance('/cars/makes')
-      )
     }
+    return left(
+      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+        `Car make with name ${name} does not exists.`
+      ).setInstance('/cars/makes')
+    )
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(

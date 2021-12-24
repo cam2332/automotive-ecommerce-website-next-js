@@ -1,18 +1,19 @@
+/* eslint-disable no-undef */
+/* eslint-disable import/no-extraneous-dependencies */
 import http from 'http'
 import fetch from 'isomorphic-unfetch'
 import listen from 'test-listen'
-import { apiResolver } from 'next/dist/next-server/server/api-utils'
+import { apiResolver } from 'next/dist/server/api-utils'
 import * as InMemoryMongo from '../../../../utils/InMemoryMongo'
 import { createCarMake } from '../../../../business/CarMakeManager'
-import handler from '../../cars/makes/index'
+import handler from './index'
 
 describe('/api/cars/makes', () => {
   let server: http.Server
   let url: string
   beforeAll(async () => {
-    let requestHandler = async (req, res) => {
-      return apiResolver(req, res, undefined, handler, {} as any, undefined)
-    }
+    const requestHandler = async (req, res) =>
+      apiResolver(req, res, undefined, handler, {} as any, undefined)
     server = http.createServer(requestHandler)
     url = await listen(server)
   })
@@ -33,7 +34,7 @@ describe('/api/cars/makes', () => {
 
     it('should return 405 "Method Not Allowed" when the request method is different than GET', async () => {
       expect.assertions(4)
-      let response = await fetch(url + '/api/cars/makes', { method: 'POST' })
+      const response = await fetch(url + '/api/cars/makes', { method: 'POST' })
 
       expect(response.status).toBe(405)
       expect(response.headers.get('content-type')).toMatch(/json/)
@@ -47,7 +48,7 @@ describe('/api/cars/makes', () => {
     it('should return an empty array', async () => {
       expect.assertions(3)
 
-      let response = await fetch(url + '/api/cars/makes')
+      const response = await fetch(url + '/api/cars/makes')
 
       expect(response.status).toBe(200)
       expect(response.headers.get('content-type')).toMatch(/json/)
@@ -61,7 +62,7 @@ describe('/api/cars/makes', () => {
       const createdCarMake = await createCarMake({ name: 'Audi' })
 
       if (createdCarMake.isRight()) {
-        let response = await fetch(url + '/api/cars/makes')
+        const response = await fetch(url + '/api/cars/makes')
 
         expect(response.status).toBe(200)
         expect(response.headers.get('content-type')).toMatch(/json/)

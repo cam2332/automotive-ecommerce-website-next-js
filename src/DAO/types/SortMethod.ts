@@ -1,5 +1,12 @@
 export default class SortMethod {
-  constructor(public type: string, public value: string) {}
+  type: string
+
+  value: string
+
+  constructor(type: string, value: string) {
+    this.type = type
+    this.value = value
+  }
 
   public toString(): string {
     return this.value
@@ -9,15 +16,18 @@ export default class SortMethod {
     const index = SortMethod.types.indexOf(type)
     if (index >= 0) {
       return new SortMethod(type, SortMethod.values[index])
-    } else {
-      return undefined
     }
+    return undefined
   }
 
   static relevance = new SortMethod('relevance', 'Trafność')
+
   static nameAsc = new SortMethod('nameAsc', 'Nazwa A-Ż')
+
   static nameDesc = new SortMethod('nameDesc', 'Nazwa Ż-A')
+
   static priceAsc = new SortMethod('priceAsc', 'Cena - rosnąco')
+
   static priceDesc = new SortMethod('priceDesc', 'Cena - malejąco')
 
   static types: string[] = [

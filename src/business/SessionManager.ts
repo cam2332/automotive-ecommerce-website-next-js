@@ -13,6 +13,7 @@ const NO_TOKEN =
     '/sessions'
   )
 
+// eslint-disable-next-line import/prefer-default-export
 export const authorize = async (
   req,
   res
@@ -28,10 +29,9 @@ export const authorize = async (
     if (user.isRight()) {
       const newToken = authenticateUser(res, user.value as IUser)
       return right({ user: user.value, token: newToken })
-    } else {
-      clearUser(res)
-      return left(WRONG_TOKEN)
     }
+    clearUser(res)
+    return left(WRONG_TOKEN)
   } catch (err) {
     return left(WRONG_TOKEN)
   }

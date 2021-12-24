@@ -1,5 +1,6 @@
 import { Schema, Types } from 'mongoose'
 import { CarMakeDocument } from '../documents/CarMake'
+// eslint-disable-next-line import/no-cycle
 import CarMake from '../models/CarMake'
 
 const CarMakeSchema: Schema = new Schema(
@@ -34,7 +35,7 @@ CarMakeSchema.statics.findMakeById = async (
 ): Promise<CarMakeDocument | null> => {
   const make = await CarMake.findOne({
     _id: makeId,
-  }) //.populate({ path: 'models', model: CarModel })
+  })
 
   return make
 }

@@ -1,3 +1,6 @@
+/* eslint-disable no-return-await */
+/* eslint-disable no-undef */
+import { Types } from 'mongoose'
 import {
   fromCategoryDocument,
   createDataTree,
@@ -6,7 +9,6 @@ import {
 import * as InMemoryMongo from './InMemoryMongo'
 import Category from '../DAO/models/Category'
 import CarMake from '../DAO/models/CarMake'
-import { Types } from 'mongoose'
 
 describe('Mongo converter', () => {
   beforeAll(async () => await InMemoryMongo.connect())

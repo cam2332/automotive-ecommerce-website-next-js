@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useRouter } from 'next/router'
 import { useSessionContext } from '../context/SessionContext'
 import SideMenu from './SideMenu'
@@ -13,11 +15,7 @@ function SideUser({
   const sessionContext = useSessionContext()
 
   return (
-    <SideMenu
-      title={'Moje konto'}
-      isRight={true}
-      onClose={onClose}
-      visible={visible}>
+    <SideMenu title={'Moje konto'} isRight onClose={onClose} visible={visible}>
       {sessionContext.user ? (
         <ul className='flex flex-col justify-between space-y-4'>
           <li

@@ -1,6 +1,7 @@
+import React from 'react'
 import tw from 'tailwind-styled-components'
-import InputText, { InputTextProps } from '../InputText'
-import Link, { LinkProps } from './Link'
+import { InputTextProps } from '../InputText'
+import { LinkProps } from './Link'
 import SubmitButton from './SubmitButton'
 
 function Form({

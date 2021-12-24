@@ -15,6 +15,7 @@ function Pagination({
   page?: number
   totalPages?: number
   onChange: (page: number) => void
+  // eslint-disable-next-line no-undef
 }): JSX.Element {
   const UltimatePagination = createUltimatePagination({
     itemTypeToComponent: itemTypeToComponent,
