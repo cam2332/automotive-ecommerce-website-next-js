@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 @layer base {
+    input {
+        outline: none;
+    }
      ::-webkit-scrollbar {
         width: 0.6rem;
         background-color: #d8e1eb;

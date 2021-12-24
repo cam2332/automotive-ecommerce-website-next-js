@@ -20,6 +20,42 @@ module.exports = {
                 },
                 'secondary-color': '#ff0000',
                 'secondary-color-hover': '#b30000',
+            },
+            inset: {
+                '50%-512px': 'calc(50% - 512px)'
+            },
+            minHeight: {
+                '8': '32px',
+                'screen-96px': 'calc(100vh - 96px)'
+            },
+            width: {
+                '70%': '70%',
+                '90%': '90%',
+                '350px': '350px',
+                '5xl': '1024px'
+            },
+            minWidth: {
+                '70px': '70px',
+                '200px': '200px',
+                '225px': '225px',
+                '250px': '250px'
+            },
+            maxWidth: {
+                '160px': '160px',
+                'full-96px': 'calc(100% - 96px)'
+            },
+            margin: {
+                '-21': '-5.25rem'
+            },
+            padding: {
+                '2px': '2px'
+            },
+            zIndex: {
+                '100': '100'
+            },
+            scale: {
+                '200': '2'
+            }
         },
     },
     variants: {

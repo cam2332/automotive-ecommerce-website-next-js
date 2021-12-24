@@ -339,7 +339,7 @@ const AddToCartButton = tw.button`
   flex-row
   items-center
   justify-center
-  w-50%
+  w-1/2
   min-w-225px
   py-2px
   my-3
