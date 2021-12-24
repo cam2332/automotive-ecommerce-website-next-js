@@ -7,12 +7,14 @@ function SideMenu({
   onClose,
   visible,
   children,
+  contentPaddingClass,
 }: {
   title?: string
   isRight?: boolean
   onClose: () => void
   visible: boolean
   children?: JSX.Element | JSX.Element[] | undefined
+  contentPaddingClass?: string
 }) {
   return (
     <Wrapper onClick={onClose} $visible={visible}>
@@ -24,7 +26,7 @@ function SideMenu({
           <CloseIcon onClick={onClose} $isRight={isRight} />
           {title && <TitleText>{title}</TitleText>}
         </Header>
-        <Content>{children}</Content>
+        <Content $paddingClass={contentPaddingClass}>{children}</Content>
       </Container>
     </Wrapper>
   )
@@ -60,6 +62,7 @@ const Container = tw.div`
   sm:top-14
   sm:right-2
   sm:h-auto
+  max-h-screen
 
   lg:top-20
   lg:right-50%-512px
@@ -91,7 +94,7 @@ const Content = tw.div`
   flex
   flex-col
   items-stretch
-  p-5
+  ${({ $paddingClass }: { $paddingClass?: string }) => $paddingClass || 'p-5'}
 `
 
 export default SideMenu
