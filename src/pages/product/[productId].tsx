@@ -14,17 +14,20 @@ import SiteWrapper from '../../components/SiteWrapper'
 import { IProduct } from '../../DAO/documents/Product'
 import dbConnect from '../../utils/dbConnect'
 import QuantitySelect from '../../components/select/QuantitySelect'
+import Button from '../../components/Button'
 import { findCarMakesByTypeIds } from '../../business/CarMakeManager'
 import { ICarMake } from '../../DAO/documents/CarMake'
 import { useCartContext } from '../../context/CartContext'
 import { useWishListContext } from '../../context/WishListContext'
-import { authorize } from '../../business/SessionManager'
 
 function index(props: IProduct & { compatibleCars: ICarMake[] }) {
   const cartContext = useCartContext()
   const wishListContext = useWishListContext()
   const [localProduct, setLocalProduct] = useState({ ...props })
   const [amount, setAmount] = useState<number>(1)
+  const [reviewScore, setReviewScore] = useState<number>(5)
+  const [reviewMessage, setReviewMessage] = useState<string>('')
+
   const addToCart = () => {
     cartContext.addToCart(props, amount)
   }
@@ -42,6 +45,13 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
             return product
           })
         })
+  }
+  const addReview = () => {
+    // TODO: implement submiting review to server
+
+    // Revert review to initial state
+    setReviewScore(5)
+    setReviewMessage('')
   }
 
   return (
@@ -238,6 +248,53 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
               ))}
           </PropertiesList>
         </SectionWrapper>
+        <SectionWrapper>
+          <SectionTitle>Opinie</SectionTitle>
+          <ReviewContainer>
+            <ReviewContainerHeader>
+              <ReviewQuestionText>
+                Co sądzisz o produkcie{' '}
+                <ReviewQuestionInnerText>{props.title}</ReviewQuestionInnerText>
+                ?
+              </ReviewQuestionText>
+            </ReviewContainerHeader>
+            <ReviewContent>
+              <ReviewScore>
+                <ReviewScoreFirstText>Ocena produktu</ReviewScoreFirstText>
+                {Array.from({ length: reviewScore }, (_, i) => i + 1).map(
+                  (item) => (
+                    <ReviewStar
+                      key={item}
+                      onClick={() => setReviewScore(item)}
+                    />
+                  )
+                )}
+                {Array.from({ length: 5 - reviewScore }, (_, i) => i + 1).map(
+                  (item) => (
+                    <ReviewStarOutline
+                      key={item}
+                      onClick={() => setReviewScore(reviewScore + item)}
+                    />
+                  )
+                )}
+              </ReviewScore>
+              <ReviewTextArea
+                value={reviewMessage}
+                onChange={(e) => {
+                  if (e.target.value.length <= 250) {
+                    setReviewMessage(e.target.value)
+                  } else {
+                    setReviewMessage(reviewMessage)
+                  }
+                }}
+                placeholder='Treść opinii (Minimum 5 znaków, maximum 250 znaków)'></ReviewTextArea>
+              <SubmitReviewButton
+                onClick={addReview}
+                isDisabled={reviewMessage.length < 5}>
+                <AddToCartText>Dodaj opinię</AddToCartText>
+              </SubmitReviewButton>
+            </ReviewContent>
+          </ReviewContainer>
         </SectionWrapper>
       </DescriptionContainer>
     </SiteWrapper>
@@ -504,6 +561,68 @@ const PropertyValueText = tw.span`
   text-sm
   text-normal
   text-gray-700
+`
+
+const ReviewContainer = tw.div`
+  border 
+  border-gray-200 
+`
+
+const ReviewContainerHeader = tw.div`
+  flex 
+  p-2 
+  bg-gray-100
+`
+
+const ReviewQuestionText = tw.span`
+  mx-2 
+  my-3 
+  text-primary-color
+`
+
+const ReviewQuestionInnerText = tw.span`
+  font-semibold
+`
+
+const ReviewContent = tw.div`
+  p-4 
+  space-y-2 
+  bg-white
+`
+
+const ReviewScore = tw.div`
+  flex 
+  flex-row 
+  items-center 
+  space-x-1
+`
+
+const ReviewScoreFirstText = tw.span`
+  block
+`
+
+const ReviewStar = tw(IoStarSharp)`
+  cursor-pointer 
+  text-primary-color
+`
+
+const ReviewStarOutline = tw(IoStarOutline)`
+  cursor-pointer 
+  text-primary-color
+`
+
+const ReviewTextArea = tw.textarea`
+  w-full 
+  p-2 
+  border 
+  border-gray-100 
+  outline-none 
+  resize-none 
+  h-40
+`
+
+const SubmitReviewButton = tw(Button)`
+  p-2
 `
 
 export default index
