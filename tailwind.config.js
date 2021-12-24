@@ -20,6 +20,7 @@ module.exports = {
                 },
                 'secondary-color': '#ff0000',
                 'secondary-color-hover': '#b30000',
+                'body-color': '#f1faee',
             },
             inset: {
                 '50%-512px': 'calc(50% - 512px)'
