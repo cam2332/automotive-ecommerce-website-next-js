@@ -14,6 +14,8 @@ async function dbConnect() {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
+    heartbeatFrequencyMS: 4000,
+    serverSelectionTimeoutMS: 3000,
   })
 
   connection.isConnected = db.connections[0].readyState
