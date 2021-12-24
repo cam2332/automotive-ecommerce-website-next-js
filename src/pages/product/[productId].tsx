@@ -14,6 +14,8 @@ import SiteWrapper from '../../components/SiteWrapper'
 import { IProduct } from '../../DAO/documents/Product'
 import dbConnect from '../../utils/dbConnect'
 import QuantitySelect from '../../components/select/QuantitySelect'
+import { findCarMakesByTypeIds } from '../../business/CarMakeManager'
+import { ICarMake } from '../../DAO/documents/CarMake'
 import { useCartContext } from '../../context/CartContext'
 import { useWishListContext } from '../../context/WishListContext'
 import { authorize } from '../../business/SessionManager'
@@ -167,9 +169,75 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
         </SectionWrapper>
         <SectionWrapper>
           <SectionTitle>Pasuje do auta</SectionTitle>
-          {compatibleCarTypeIds.map((id) => (
-            <span key={id}>{id}</span>
-          ))}
+          <PropertiesList>
+            {props.compatibleCars &&
+              props.compatibleCars.map((carMake) => (
+                <PropertyItem
+                  key={carMake.id}
+                  className='border-t-0 border-t-white'>
+                  <PropertyContainer className='flex-col'>
+                    <span className='text-base font-semibold text-primary-color'>
+                      {carMake.name}:
+                    </span>
+                    <PropertiesList>
+                      {carMake.models &&
+                        carMake.models.map((model) => (
+                          <PropertyItem
+                            key={model.id}
+                            className='border-t-0 border-t-white'>
+                            <PropertyContainer className='flex-col'>
+                              <span className='text-base font-semibold text-primary-color'>
+                                {`${model.group} ${model.name}`}
+                                <PropertyNameText className='font-normal'>
+                                  {` od ${model.productionStartYear}${
+                                    model.productionEndYear !== '...'
+                                      ? ` do ${model.productionEndYear}`
+                                      : ''
+                                  }`}
+                                  :
+                                </PropertyNameText>
+                              </span>
+                              <PropertiesList>
+                                {model.types &&
+                                  model.types.map((type) => (
+                                    <PropertyItem
+                                      key={type.id}
+                                      className='border-t-0 border-t-white'>
+                                      <PropertyContainer className='flex-col'>
+                                        <span className='font-semibold cursor-pointer hover:underline text-primary-color'>
+                                          {`${type.engineDisplacement} ${type.type}`}
+                                          <span className='font-normal text-primary-color'>
+                                            {` ${type.kW}kW / ${type.HP}KM ${
+                                              type.group === 'petrol'
+                                                ? 'benzyna'
+                                                : type.group === 'diesel'
+                                                ? 'olej napędowy'
+                                                : ''
+                                            }`}
+                                            <PropertyNameText className='font-normal text-gray-500'>
+                                              {`, od ${
+                                                type.productionStartYear
+                                              }${
+                                                type.productionEndYear !== '...'
+                                                  ? ` do ${type.productionEndYear}`
+                                                  : ''
+                                              }`}
+                                            </PropertyNameText>
+                                          </span>
+                                        </span>
+                                      </PropertyContainer>
+                                    </PropertyItem>
+                                  ))}
+                              </PropertiesList>
+                            </PropertyContainer>
+                          </PropertyItem>
+                        ))}
+                    </PropertiesList>
+                  </PropertyContainer>
+                </PropertyItem>
+              ))}
+          </PropertiesList>
+        </SectionWrapper>
         </SectionWrapper>
       </DescriptionContainer>
     </SiteWrapper>
@@ -179,19 +247,33 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const productId = context.query.productId as string
   let product: IProduct = null
+  let compatibleCars = []
 
   try {
     await dbConnect()
 
+    const resultProduct = await findProductById(productId, undefined)
     if (resultProduct.isRight()) {
       product = resultProduct.value
+
+      if (resultProduct.value.compatibleCarTypeIds) {
+        const resultCompatibleCars = await findCarMakesByTypeIds(
+          resultProduct.value.compatibleCarTypeIds
+        )
+        if (resultCompatibleCars.isRight()) {
+          compatibleCars = resultCompatibleCars.value
+        }
+      }
     }
   } catch (error) {
     console.log('e', error)
   }
 
   return {
-    props: { ...product },
+    props: {
+      ...product,
+      compatibleCars: JSON.parse(JSON.stringify(compatibleCars)),
+    },
   }
 }
 
