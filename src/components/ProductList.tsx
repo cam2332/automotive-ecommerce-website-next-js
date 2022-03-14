@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import tw from 'tailwind-styled-components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
 import ProductCardGrid from './ProductCardGrid'
 import { IProduct } from '../DAO/documents/Product'
@@ -18,6 +18,10 @@ function ProductList({
   const cartContext = useCartContext()
   const wishListContext = useWishListContext()
   const [localProducts, setLocalProducts] = useState(products)
+
+  useEffect(() => {
+    setLocalProducts(products)
+  }, [products])
 
   return (
     <>
