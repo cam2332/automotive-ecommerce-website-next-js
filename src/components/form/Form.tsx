@@ -1,7 +1,6 @@
 import React from 'react'
 import tw from 'tailwind-styled-components'
 import { InputTextProps } from '../InputText'
-import { LinkProps } from './Link'
 import SubmitButton from './SubmitButton'
 
 function Form({
@@ -17,7 +16,7 @@ function Form({
     | React.ReactElement<InputTextProps>
     | React.ReactElement<InputTextProps>[]
   submitButtonText: string
-  links?: React.ReactElement<LinkProps> | React.ReactElement<LinkProps>[]
+  links?: React.ReactElement | React.ReactElement[]
   isFormValid: boolean
   onClickSubmit: () => void
 }) {

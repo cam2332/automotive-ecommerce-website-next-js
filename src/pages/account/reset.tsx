@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import tw from 'tailwind-styled-components'
 import EmptyHeader from '../../components/EmptyHeader'
 import Footer from '../../components/Footer'
 import InputText from '../../components/InputText'
 import Form from '../../components/form/Form'
-import Link from '../../components/form/Link'
 import { emailValidator } from '../../services/FormValidation'
 
 function Reset() {
@@ -35,6 +35,7 @@ function Reset() {
             title='Zmiana hasła'
             fields={
               <InputText
+                key='email'
                 ref={emailInputRef}
                 value={email}
                 onChangeText={(text) => {
@@ -52,13 +53,13 @@ function Reset() {
               />
             }
             links={[
-              // eslint-disable-next-line jsx-a11y/anchor-is-valid
-              <Link onClick={() => router.push('/account/register')}>
-                Rejestracja
+              <Link key='register' href='/account/register'>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                <a className='text-sm underline'>Rejestracja</a>
               </Link>,
-              // eslint-disable-next-line jsx-a11y/anchor-is-valid
-              <Link onClick={() => router.push('/account/login')}>
-                Logowanie
+              <Link key='login' href='/account/login'>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                <a className='text-sm underline'>Logowanie</a>
               </Link>,
             ]}
             isFormValid={isFormValid}

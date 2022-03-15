@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import tw from 'tailwind-styled-components'
 import EmptyHeader from '../../components/EmptyHeader'
 import Footer from '../../components/Footer'
 import InputText from '../../components/InputText'
-import Link from '../../components/form/Link'
 import Form from '../../components/form/Form'
 import {
   firstNameValidator,
@@ -177,8 +177,10 @@ function Register() {
             ]}
             submitButtonText='Zarejestruj'
             links={
-              // eslint-disable-next-line jsx-a11y/anchor-is-valid
-              <Link onClick={() => router.push('/account/login')}>Zaloguj</Link>
+              <Link key='login' href='/account/login'>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                <a className='text-sm underline'>Logowanie</a>
+              </Link>
             }
             isFormValid={isFormValid}
             onClickSubmit={() => register()}

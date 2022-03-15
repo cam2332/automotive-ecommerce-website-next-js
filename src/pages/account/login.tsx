@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import tw from 'tailwind-styled-components'
 import { GetServerSidePropsContext } from 'next'
 import EmptyHeader from '../../components/EmptyHeader'
 import Footer from '../../components/Footer'
 import InputText from '../../components/InputText'
 import Form from '../../components/form/Form'
-import Link from '../../components/form/Link'
 import {
   emailValidator,
   passwordValidator,
@@ -108,17 +108,13 @@ function Login() {
             ]}
             submitButtonText='Zaloguj'
             links={[
-              // eslint-disable-next-line jsx-a11y/anchor-is-valid
-              <Link
-                key='register'
-                onClick={() => router.push('/account/register')}>
-                Rejestracja
+              <Link key='register' href='/account/register'>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                <a className='text-sm underline'>Rejestracja</a>
               </Link>,
-              // eslint-disable-next-line jsx-a11y/anchor-is-valid
-              <Link
-                key='forgotPassword'
-                onClick={() => router.push('/account/reset')}>
-                Nie pamiętasz hasła?
+              <Link key='forgotPassword' href='/account/reset'>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                <a className='text-sm underline'>Nie pamiętasz hasła?</a>
               </Link>,
             ]}
             isFormValid={isFormValid}
