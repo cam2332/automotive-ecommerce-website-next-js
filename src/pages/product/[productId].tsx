@@ -55,7 +55,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
   }
 
   return (
-    <SiteWrapper title={props.title} headerType={'full'}>
+    <SiteWrapper title={props.title} headerType='full'>
       <Overview>
         <BigThumbnailWrapper>
           <ThumbnailWrapper>
@@ -119,7 +119,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
                 <QuantitySelect
                   selectedValue={amount}
                   numberOfOptions={props.quantity}
-                  onClickItem={(amount: number) => setAmount(amount)}
+                  onClickItem={(lAmount: number) => setAmount(lAmount)}
                 />
               </QuantityWrapper>
             )}
@@ -287,7 +287,8 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
                     setReviewMessage(reviewMessage)
                   }
                 }}
-                placeholder='Treść opinii (Minimum 5 znaków, maximum 250 znaków)'></ReviewTextArea>
+                placeholder='Treść opinii (Minimum 5 znaków, maximum 250 znaków)'
+              />
               <SubmitReviewButton
                 onClick={addReview}
                 isDisabled={reviewMessage.length < 5}>

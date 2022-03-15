@@ -46,14 +46,14 @@ function Register() {
         !passwordInputRef.current.hasError() &&
         !confirmPasswordInputRef.current.hasError()
     )
-  }, [email, password, confirmPassword])
+  }, [firstName, lastName, email, password, confirmPassword])
 
   const register = async () => {
     const result = await sessionContext.signUp({
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
+      firstName,
+      lastName,
+      email,
+      password,
     })
     toastContext.removeAllToasts()
     if (result.isRight()) {

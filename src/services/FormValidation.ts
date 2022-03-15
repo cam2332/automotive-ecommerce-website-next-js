@@ -7,7 +7,6 @@ const nameValidator = (name: string): boolean => {
 }
 
 export const firstNameValidator = (name: string): [boolean, string] => {
-  const regex = new RegExp(/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/)
   if (name.length === 0 || !nameValidator(name)) {
     return [true, 'Wprowadź prawidłowe imię']
   }
@@ -15,7 +14,6 @@ export const firstNameValidator = (name: string): [boolean, string] => {
 }
 
 export const lastNameValidator = (name: string): [boolean, string] => {
-  const regex = new RegExp(/^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/)
   if (name.length === 0 || !nameValidator(name)) {
     return [true, 'Wprowadź prawidłowe nazwisko']
   }

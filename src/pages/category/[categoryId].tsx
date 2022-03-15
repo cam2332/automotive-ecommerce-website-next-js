@@ -44,10 +44,10 @@ function index({
   const [viewType, setViewType] = useState('list')
   const [categoryModalVisible, setCategoryModalVisible] = useState(false)
 
-  const setCurrentPage = (page: number) => {
+  const setCurrentPage = (lPage: number) => {
     router.push({
       pathname: router.pathname,
-      query: { ...router.query, page: page.toString() },
+      query: { ...router.query, page: lPage.toString() },
     })
   }
 
@@ -69,13 +69,13 @@ function index({
     delete router.query.page
     delete router.query.categoryId
     router.push({
-      pathname: '/category/' + categoryId,
+      pathname: `/category/${categoryId}`,
       query: { ...router.query },
     })
   }
 
   return (
-    <SiteWrapper title={selectedCategory.name} headerType={'full'}>
+    <SiteWrapper title={selectedCategory.name} headerType='full'>
       <Container>
         <Nav>
           {category && (
@@ -105,16 +105,16 @@ function index({
             <SortSettings>
               <CustomSelect
                 value={SortMethod.fromType(sortMethodType).toString()}>
-                {SortMethod.values.map((option, index) => (
+                {SortMethod.values.map((option, lIndex) => (
                   <SimpleItem
-                    key={SortMethod.types[index]}
+                    key={SortMethod.types[lIndex]}
                     value={option}
                     selected={
                       SortMethod.fromType(sortMethodType).toString() === option
                     }
                     onClick={() => {
                       setSortMethod(
-                        new SortMethod(SortMethod.types[index], option)
+                        new SortMethod(SortMethod.types[lIndex], option)
                       )
                     }}
                   />
@@ -122,11 +122,11 @@ function index({
               </CustomSelect>
             </SortSettings>
             <SortSettings>
-              <CustomSelect value={resultsPerPage.toString() + ' produktów'}>
+              <CustomSelect value={`${resultsPerPage.toString()} produktów`}>
                 {Array.from([5, 10, 15, 20, 30, 50]).map((option) => (
                   <SimpleItem
                     key={option.toString()}
-                    value={option.toString() + ' produktów'}
+                    value={`${option.toString()} produktów`}
                     selected={resultsPerPage === option}
                     onClick={() => {
                       setItemsPerPage(option)
@@ -170,7 +170,7 @@ function index({
               </PagesSettings>
             </VisibilitySettings>
           </SettingsContainer>
-          <Spacer></Spacer>
+          <Spacer />
           <ProductList products={products} viewType={viewType} />
           {totalPages > 1 && (
             <PaginationWrapper>
@@ -183,7 +183,7 @@ function index({
           )}
         </Main>
         <Modal
-          title={'Wybierz kategorię'}
+          title='Wybierz kategorię'
           visible={categoryModalVisible}
           onClose={() => setCategoryModalVisible(false)}>
           {category && (
@@ -197,7 +197,7 @@ function index({
                 setCategoryId(categoryId)
                 setCategoryModalVisible(false)
               }}
-              heightClass={'h-screen sm:h-[50vh]'}
+              heightClass='h-screen sm:h-[50vh]'
             />
           )}
         </Modal>
@@ -207,20 +207,21 @@ function index({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const page = parseInt(context.query.page as string) || 1,
-    sortMethod =
-      SortMethod.fromType(context.query.sort as string) || SortMethod.relevance,
-    categoryId = context.query.categoryId as string,
-    resultsPerPage = parseInt(context.query.limit as string) || 20
-  let category: ICategory = null,
-    selectedCategory: ICategory = null,
-    products: IProduct[] = [],
-    totalPages: number = 0
+  const page = parseInt(context.query.page as string, 10) || 1
+  const sortMethod =
+    SortMethod.fromType(context.query.sort as string) || SortMethod.relevance
+  const categoryId = context.query.categoryId as string
+  const resultsPerPage = parseInt(context.query.limit as string, 10) || 20
+  let category: ICategory = null
+  let selectedCategory: ICategory = null
+  let products: IProduct[] = []
+  let totalPages: number = 0
 
   try {
     await dbConnect()
 
     const resultCategories = await findRootCategoryById(categoryId)
+    // eslint-disable-next-line no-console
     resultCategories.applyOnLeft((error) => console.log(error))
     resultCategories.applyOnRight((result) => {
       category = result.category
@@ -233,24 +234,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       resultsPerPage,
       sortMethod
     )
+    // eslint-disable-next-line no-console
     resultProducts.applyOnLeft((error) => console.log(error))
     resultProducts.applyOnRight((foundProducts) => {
       products = foundProducts.results
       totalPages = foundProducts.totalPages
     })
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(error)
   }
 
   return {
     props: {
-      selectedCategory: selectedCategory,
-      category: category,
-      products: products,
-      page: page,
-      totalPages: totalPages,
+      selectedCategory,
+      category,
+      products,
+      page,
+      totalPages,
       sortMethodType: sortMethod.type,
-      resultsPerPage: resultsPerPage,
+      resultsPerPage,
     },
   }
 }
@@ -366,17 +369,6 @@ const Spacer = tw.div`
  	lg:max-w-5xl
   my-5
   sm:my-0
-`
-const ProductListContainer = tw.div`
-  flex-col w-full ${({ $viewType }: { $viewType: string }) =>
-    $viewType === 'list' ? 'flex' : 'hidden'}
-`
-const ProductGridContainer = tw.div`
-  sm:grid-cols-2
-  md:grid-cols-3
-  lg:grid-cols-2
-  lg:max-w-5xl ${({ $viewType }: { $viewType: string }) =>
-    $viewType === 'grid' ? 'grid' : 'hidden'}
 `
 
 const PaginationWrapper = tw.div`

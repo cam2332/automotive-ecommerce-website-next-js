@@ -37,8 +37,8 @@ function Login() {
 
   const login = async () => {
     const result = await sessionContext.signIn({
-      email: email,
-      password: password,
+      email,
+      password,
     })
     toastContext.removeAllToasts()
     if (result.isRight()) {
