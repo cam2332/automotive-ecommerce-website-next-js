@@ -78,7 +78,7 @@ const PageContainer = tw.div`
   flex-col
   w-full
   h-screen
-  -mb-21
+  -mb-24
 
   lg:items-center
   

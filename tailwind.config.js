@@ -45,9 +45,6 @@ module.exports = {
                 '160px': '160px',
                 'full-96px': 'calc(100% - 96px)'
             },
-            margin: {
-                '-21': '-5.25rem'
-            },
             padding: {
                 '2px': '2px'
             },
