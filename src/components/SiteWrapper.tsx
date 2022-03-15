@@ -16,12 +16,16 @@ function SiteWrapper({
   children,
   title,
   headerType,
+  vehicleFilterHidden,
+  bigSearchBarHidden,
 }: {
   // eslint-disable-next-line no-undef
   children: JSX.Element | JSX.Element[]
   // eslint-disable-next-line react/require-default-props
   title?: string
   headerType: HeaderType
+  vehicleFilterHidden?: boolean
+  bigSearchBarHidden?: boolean
 }) {
   const [sideMenuVisible, setSideMenuVisible] = useState(false)
   const [sideWishListVisible, setSideWishListVisible] = useState(false)
@@ -50,8 +54,8 @@ function SiteWrapper({
       <div className='flex flex-col items-stretch justify-start w-full pt-12 lg:pt-20 min-h-screen-96px lg:items-center'>
         {headerType === 'full' && (
           <>
-            <SearchField />
-            <VehicleFilter />
+            {!bigSearchBarHidden && <SearchField />}
+            {!vehicleFilterHidden && <VehicleFilter />}
           </>
         )}
         <div className='flex flex-col items-center lg:w-5xl lg:max-w-5xl'>
