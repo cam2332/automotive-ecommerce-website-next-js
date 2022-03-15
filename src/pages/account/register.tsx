@@ -116,7 +116,7 @@ function Register() {
                 }}
                 placeholder='Nazwisko'
                 inputType='text'
-                autoComplete='given-name'
+                autoComplete='family-name'
               />,
               <InputText
                 key='email'
