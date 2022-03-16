@@ -30,7 +30,7 @@ function MainHeader({
       searchText={appContext.searchText}
       onChangeSearchText={appContext.setSearchText}
       searchBarVisible
-      searchIconVisible={false}
+      searchIconVisible
       onClickMenu={onClickMenu}
       menuIconVisible
       wishListCount={wishListContext.numberOfProducts}

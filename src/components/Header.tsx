@@ -65,13 +65,13 @@ function Header({
           <LogoTextLarge onClick={onClickLogo}>{logoText}</LogoTextLarge>
           {searchBarVisible && (
             <SearchBar>
-              <SearchBarIcon />
               <SearchBarInput
                 type='text'
                 placeholder={searchBarInputPlaceholder}
                 value={searchText}
                 onChange={(e) => onChangeSearchText(e.target.value)}
               />
+              <SearchBarIcon />
             </SearchBar>
           )}
           {contactInfoVisible && contactPhoneNumber && (
@@ -144,8 +144,7 @@ const MenuIcon = tw(IoMenuSharp)`
   text-2xl
   cursor-pointer
   text-primary-color
-
-  lg:text-3xl
+  
   lg:hidden
 `
 
@@ -180,25 +179,34 @@ const SearchBar = tw.div`
   border-2
   rounded-full
 
-  lg:flex
+  md:flex
+  md:ml-3
 `
 
 const SearchBarIcon = tw(IoSearchSharp)`
-  my-2
-  ml-3
+  my-1
   mr-1
+  
   text-2xl
   cursor-pointer
   text-primary-color
-  max-h-5
-  max-w-5
+  max-h-4
+  max-w-4
+
+  lg:max-h-5
+  lg:max-w-5
+  lg:my-2
+  lg:mr-3
+  lg:ml-1
 `
 
 const SearchBarInput = tw.input`
-  ml-1
-  mr-3
+  mr-1
+  ml-3
   w-90%
   text-primary-color
+  text-sm
+  lg:text-base
 `
 
 const ContactInfoWrapper = tw.div`
