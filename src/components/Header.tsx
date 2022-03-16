@@ -235,7 +235,7 @@ const SearchIcon = tw(IoSearchSharp)`
   cursor-pointer
   text-primary-color
   
-  lg:hidden
+  md:hidden
 `
 
 const WishListContainer = tw.div`
