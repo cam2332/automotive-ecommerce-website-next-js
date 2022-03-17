@@ -8,8 +8,6 @@ type SearchContextProps = {
   search: (value: string) => void
   resultProducts: IProduct[]
   resultCategories: ICategory[]
-  modalVisible: boolean
-  setModalVisible: (value: boolean) => void
 }
 
 export const SearchContext = createContext<SearchContextProps>(
@@ -21,7 +19,6 @@ const SearchProvider: React.FC = ({ children }): React.ReactElement => {
   const [searchText, setSearchText] = useState('')
   const [resultProducts, setResultProducts] = useState([])
   const [resultCategories, setResultCategories] = useState([])
-  const [modalVisible, setModalVisible] = useState(false)
 
   const search = async (value: string) => {
     setSearchText(value)
@@ -79,8 +76,6 @@ const SearchProvider: React.FC = ({ children }): React.ReactElement => {
         },
         resultProducts,
         resultCategories,
-        modalVisible,
-        setModalVisible,
       }}>
       {children}
     </SearchContext.Provider>

@@ -5,15 +5,11 @@ import { IoChevronForwardSharp } from 'react-icons/io5'
 import redaxios from 'redaxios'
 import SideMenu from './SideMenu'
 import { ICategory } from '../DAO/documents/Category'
+import { useAppContext } from '../context/AppContext'
 
-function SideNavigation({
-  onClose,
-  visible,
-}: {
-  onClose: () => void
-  visible: boolean
-}) {
+function SideNavigation() {
   const router = useRouter()
+  const appContext = useAppContext()
   const [categories, setCategories] = useState<ICategory[]>([])
   const divRef = useRef<HTMLDivElement>(null)
 
@@ -40,17 +36,21 @@ function SideNavigation({
           setCategories([])
         }
       })
-      .catch((error) => {
+      .catch(() => {
         setCategories([])
       })
   }, [])
 
+  const onClose = () => {
+    appContext.setSideMenuVisible(false)
+  }
+
   return (
     <SideMenu
-      title={'Kategorie'}
+      title='Kategorie'
       isRight={false}
       onClose={onClose}
-      visible={visible}
+      visible={appContext.sideMenuVisible}
       contentPaddingClass='p-5 pt-0 pr-0 pb-0'>
       <ListWrapper ref={divRef} style={{ height: computedHeight }}>
         <List>
@@ -60,7 +60,8 @@ function SideNavigation({
               <ListElement
                 key={category.id}
                 onClick={() => {
-                  router.push('/category/' + category.id)
+                  router.push(`/category/${category.id}`)
+                  appContext.setSideMenuVisible(false)
                 }}>
                 <span>{category.name}</span>
                 <IoChevronForwardSharp />

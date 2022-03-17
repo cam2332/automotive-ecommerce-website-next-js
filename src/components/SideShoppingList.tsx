@@ -5,24 +5,24 @@ import Image from 'next/image'
 import SideMenu from './SideMenu'
 import { useCartContext } from '../context/CartContext'
 import Button from './Button'
+import { useAppContext } from '../context/AppContext'
 
-function SideShoppingList({
-  onClose,
-  visible,
-}: {
-  onClose: () => void
-  visible: boolean
-}) {
+function SideShoppingList() {
   const router = useRouter()
+  const appContext = useAppContext()
   const cartContext = useCartContext()
   const maxNumberOfVisibleProducts = 10
+
+  const onClose = () => {
+    appContext.setSideShoppingListVisible(false)
+  }
 
   return (
     <SideMenu
       title='Koszyk'
       isRight
       onClose={onClose}
-      visible={visible}
+      visible={appContext.sideShoppingListVisible}
       containerClassName='w-[85%] sm:w-[490px]'>
       {cartContext.numberOfProducts > 0 ? (
         <ul>
@@ -44,6 +44,7 @@ function SideShoppingList({
                   <ProductNameText
                     onClick={() => {
                       router.push(`/product/${id}`)
+                      appContext.setSideShoppingListVisible(false)
                     }}>
                     {title}
                   </ProductNameText>
@@ -63,12 +64,15 @@ function SideShoppingList({
               } więcej`}</PrimaryColorText>
             </Item>
           )}
-          {visible && (
+          {appContext.sideShoppingListVisible && (
             <AdditionalItem key='cart'>
               <Button
                 className='p-2'
                 isDisabled={false}
-                onClick={() => router.push(`/cart`)}>
+                onClick={() => {
+                  router.push(`/cart`)
+                  appContext.setSideShoppingListVisible(false)
+                }}>
                 <SmallText>PRZEJDŹ DO KOSZYKA</SmallText>
               </Button>
             </AdditionalItem>

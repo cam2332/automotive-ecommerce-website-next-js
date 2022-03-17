@@ -27,6 +27,17 @@ type AppContextProps = {
   setCarModels: (values: string[]) => void
   carTypes: string[]
   setCarTypes: (values: string[]) => void
+
+  searchResultModalVisible: boolean
+  setSearchResultModalVisible: (value: boolean) => void
+  sideMenuVisible: boolean
+  setSideMenuVisible: (value: boolean) => void
+  sideShoppingListVisible: boolean
+  setSideShoppingListVisible: (value: boolean) => void
+  sideWishListVisible: boolean
+  setSideWishListVisible: (value: boolean) => void
+  sideUserVisible: boolean
+  setSideUserVisible: (value: boolean) => void
 }
 
 export const AppContext = createContext<AppContextProps>({} as AppContextProps)
@@ -48,6 +59,13 @@ const AppProvider: React.FC = ({ children }): React.ReactElement => {
   const [carModels, setCarModels] = useState([])
   const [carTypes, setCarTypes] = useState([])
 
+  const [searchResultModalVisible, setSearchResultModalVisible] =
+    useState(false)
+  const [sideMenuVisible, setSideMenuVisible] = useState(false)
+  const [sideShoppingListVisible, setSideShoppingListVisible] = useState(false)
+  const [sideWishListVisible, setSideWishListVisible] = useState(false)
+  const [sideUserVisible, setSideUserVisible] = useState(false)
+
   return (
     <AppContext.Provider
       value={{
@@ -68,6 +86,17 @@ const AppProvider: React.FC = ({ children }): React.ReactElement => {
         setCarMakes,
         setCarModels,
         setCarTypes,
+
+        searchResultModalVisible,
+        setSearchResultModalVisible,
+        sideMenuVisible,
+        setSideMenuVisible,
+        sideShoppingListVisible,
+        setSideShoppingListVisible,
+        sideWishListVisible,
+        setSideWishListVisible,
+        sideUserVisible,
+        setSideUserVisible,
       }}>
       {children}
     </AppContext.Provider>

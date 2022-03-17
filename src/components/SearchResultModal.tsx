@@ -4,9 +4,11 @@ import { IoCloseSharp, IoSearchSharp } from 'react-icons/io5'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useSearchContext } from '../context/SearchContext'
+import { useAppContext } from '../context/AppContext'
 
 function SearchResultModal() {
   const router = useRouter()
+  const appContext = useAppContext()
   const searchContext = useSearchContext()
   const [bigScreen, setBigScreen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -19,24 +21,24 @@ function SearchResultModal() {
 
   useEffect(() => {
     document.body.style.overflow =
-      searchContext.modalVisible &&
+      appContext.searchResultModalVisible &&
       window.matchMedia('(max-width: 640px)').matches
         ? 'hidden'
         : 'unset'
-    if (searchContext.modalVisible && inputRef.current) {
+    if (appContext.searchResultModalVisible && inputRef.current) {
       inputRef.current.focus()
     }
-  }, [searchContext.modalVisible])
+  }, [appContext.searchResultModalVisible])
 
   const onClose = () => {
-    searchContext.setModalVisible(false)
+    appContext.setSearchResultModalVisible(false)
   }
 
   return (
-    <Wrapper onClick={onClose} $visible={searchContext.modalVisible}>
+    <Wrapper onClick={onClose} $visible={appContext.searchResultModalVisible}>
       <Container
         onClick={(e) => e.stopPropagation()}
-        $visible={searchContext.modalVisible}>
+        $visible={appContext.searchResultModalVisible}>
         <Header>
           <CloseIcon onClick={onClose} />
           <SearchBar>
@@ -62,7 +64,7 @@ function SearchResultModal() {
                       key={id}
                       onClick={() => {
                         router.push(`/product/${id}`)
-                        searchContext.setModalVisible(false)
+                        appContext.setSearchResultModalVisible(false)
                       }}>
                       <ThumbnailWrapper>
                         {thumbnailUrl && (
@@ -95,7 +97,7 @@ function SearchResultModal() {
                       key={id}
                       onClick={() => {
                         router.push(`/category/${id}`)
-                        searchContext.setModalVisible(false)
+                        appContext.setSearchResultModalVisible(false)
                       }}>
                       <ProductNameText>{name}</ProductNameText>
                     </ProductResultItem>

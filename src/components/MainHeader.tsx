@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { useAppContext } from '../context/AppContext'
 import { useCartContext } from '../context/CartContext'
 import { useSearchContext } from '../context/SearchContext'
 import { useWishListContext } from '../context/WishListContext'
@@ -23,15 +24,16 @@ function MainHeader({
   const cartContext = useCartContext()
   const wishListContext = useWishListContext()
   const searchContext = useSearchContext()
+  const appContext = useAppContext()
 
   return (
     <Header
-      logoText={'Auto części'}
+      logoText='Auto części'
       onClickLogo={() => router.push('/')}
       searchBarInputPlaceholder='Wyszukaj w sklepie'
       searchText={searchContext.searchText}
       onChangeSearchText={searchContext.search}
-      onSearchBarFocus={() => searchContext.setModalVisible(true)}
+      onSearchBarFocus={() => appContext.setSearchResultModalVisible(true)}
       searchBarVisible
       searchIconVisible
       onClickSearchIcon={onClickSearchIcon}

@@ -3,27 +3,27 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { IoTrashOutline } from 'react-icons/io5'
 import tw from 'tailwind-styled-components'
+import { useAppContext } from '../context/AppContext'
 import { useWishListContext } from '../context/WishListContext'
 import Button from './Button'
 import SideMenu from './SideMenu'
 
-function SideWishList({
-  onClose,
-  visible,
-}: {
-  onClose: () => void
-  visible: boolean
-}) {
+function SideWishList() {
   const router = useRouter()
+  const appContext = useAppContext()
   const wishListContext = useWishListContext()
   const maxNumberOfVisibleProducts = 10
+
+  const onClose = () => {
+    appContext.setSideWishListVisible(false)
+  }
 
   return (
     <SideMenu
       title='Lista życzeń'
       isRight
       onClose={onClose}
-      visible={visible}
+      visible={appContext.sideWishListVisible}
       containerClassName='w-[85%] sm:w-[490px]'>
       {wishListContext.numberOfProducts > 0 ? (
         <ul>
@@ -34,6 +34,7 @@ function SideWishList({
                 key={id}
                 onClick={() => {
                   router.push(`/product/${id}`)
+                  appContext.setSideWishListVisible(false)
                 }}>
                 <ThumbnailWrapper>
                   {thumbnailUrl && (
@@ -65,12 +66,15 @@ function SideWishList({
               </PrimaryColorText>
             </Item>
           )}
-          {visible && (
+          {appContext.sideWishListVisible && (
             <AdditionalItem key='wishlist'>
               <Button
                 className='p-2'
                 isDisabled={false}
-                onClick={() => router.push(`/wishlist`)}>
+                onClick={() => {
+                  router.push(`/wishlist`)
+                  appContext.setSideWishListVisible(false)
+                }}>
                 <SmallText>PRZEJDŹ DO LISTY ŻYCZEŃ</SmallText>
               </Button>
             </AdditionalItem>

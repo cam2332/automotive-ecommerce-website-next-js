@@ -10,6 +10,7 @@ import VehicleFilter from './VehicleFilter'
 import EmptyHeader from './EmptyHeader'
 import SearchResultModal from './SearchResultModal'
 import { useSearchContext } from '../context/SearchContext'
+import { useAppContext } from '../context/AppContext'
 
 export type HeaderType = 'empty' | 'full'
 
@@ -26,7 +27,7 @@ function SiteWrapper({
   headerType: HeaderType
   vehicleFilterHidden?: boolean
 }) {
-  const searchContext = useSearchContext()
+  const appContext = useAppContext()
   const [sideMenuVisible, setSideMenuVisible] = useState(false)
   const [sideWishListVisible, setSideWishListVisible] = useState(false)
   const [sideShoppingListVisible, setSideShoppingListVisible] = useState(false)
@@ -41,14 +42,24 @@ function SiteWrapper({
       </Head>
       {headerType === 'full' ? (
         <MainHeader
-          onClickMenu={() => setSideMenuVisible(!sideMenuVisible)}
-          onClickWishList={() => setSideWishListVisible(!sideWishListVisible)}
-          onClickShoppingCart={() =>
-            setSideShoppingListVisible(!sideShoppingListVisible)
+          onClickMenu={() =>
+            appContext.setSideMenuVisible(!appContext.sideMenuVisible)
           }
-          onClickUser={() => setSideUserVisible(!sideUserVisible)}
+          onClickWishList={() =>
+            appContext.setSideWishListVisible(!appContext.sideWishListVisible)
+          }
+          onClickShoppingCart={() =>
+            appContext.setSideShoppingListVisible(
+              !appContext.sideShoppingListVisible
+            )
+          }
+          onClickUser={() =>
+            appContext.setSideUserVisible(!appContext.sideUserVisible)
+          }
           onClickSearchIcon={() =>
-            searchContext.setModalVisible(!searchContext.modalVisible)
+            appContext.setSearchResultModalVisible(
+              !appContext.searchResultModalVisible
+            )
           }
         />
       ) : (
@@ -62,22 +73,10 @@ function SiteWrapper({
           {children}
         </div>
         <div>
-          <SideNavigation
-            visible={sideMenuVisible}
-            onClose={() => setSideMenuVisible(false)}
-          />
-          <SideWishList
-            visible={sideWishListVisible}
-            onClose={() => setSideWishListVisible(false)}
-          />
-          <SideShoppingList
-            visible={sideShoppingListVisible}
-            onClose={() => setSideShoppingListVisible(false)}
-          />
-          <SideUser
-            visible={sideUserVisible}
-            onClose={() => setSideUserVisible(false)}
-          />
+          <SideNavigation />
+          <SideWishList />
+          <SideShoppingList />
+          <SideUser />
           <SearchResultModal />
         </div>
       </div>
