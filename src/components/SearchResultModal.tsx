@@ -60,7 +60,10 @@ function SearchResultModal() {
                   .map(({ id, title, price, thumbnailUrl }) => (
                     <ProductResultItem
                       key={id}
-                      onClick={() => router.push(`/product/${id}`)}>
+                      onClick={() => {
+                        router.push(`/product/${id}`)
+                        searchContext.setModalVisible(false)
+                      }}>
                       <ThumbnailWrapper>
                         {thumbnailUrl && (
                           <Image
@@ -90,7 +93,10 @@ function SearchResultModal() {
                   .map(({ id, name }) => (
                     <ProductResultItem
                       key={id}
-                      onClick={() => router.push(`/category/${id}`)}>
+                      onClick={() => {
+                        router.push(`/category/${id}`)
+                        searchContext.setModalVisible(false)
+                      }}>
                       <ProductNameText>{name}</ProductNameText>
                     </ProductResultItem>
                   ))}
