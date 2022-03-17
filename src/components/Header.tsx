@@ -16,6 +16,7 @@ interface IHeaderProps {
   searchBarInputPlaceholder?: string
   searchText?: string
   onChangeSearchText?: (text: string) => void
+  onSearchBarFocus?: () => void
   contactPhoneNumber?: string
   menuIconVisible?: boolean
   onClickMenu?: () => void
@@ -40,6 +41,7 @@ function Header({
   searchBarInputPlaceholder,
   searchText,
   onChangeSearchText,
+  onSearchBarFocus,
   contactPhoneNumber,
   menuIconVisible,
   onClickMenu,
@@ -70,6 +72,7 @@ function Header({
                 placeholder={searchBarInputPlaceholder}
                 value={searchText}
                 onChange={(e) => onChangeSearchText(e.target.value)}
+                onFocus={() => onSearchBarFocus()}
               />
               <SearchBarIcon />
             </SearchBar>

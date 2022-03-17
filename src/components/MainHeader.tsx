@@ -29,6 +29,7 @@ function MainHeader({
       searchBarInputPlaceholder='Wyszukaj w sklepie'
       searchText={appContext.searchText}
       onChangeSearchText={appContext.setSearchText}
+      onSearchBarFocus={() => searchContext.setModalVisible(true)}
       searchBarVisible
       searchIconVisible
       onClickMenu={onClickMenu}
