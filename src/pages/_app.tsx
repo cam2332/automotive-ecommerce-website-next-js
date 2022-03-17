@@ -5,6 +5,7 @@ import SessionProvider from '../context/SessionContext'
 import ToastProvider from '../context/ToastContext'
 import CartProvider from '../context/CartContext'
 import WishListProvider from '../context/WishListContext'
+import SearchProvider from '../context/SearchContext'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -12,9 +13,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <SessionProvider>
         <CartProvider>
           <WishListProvider>
-            <AppProvider>
-              <Component {...pageProps} />
-            </AppProvider>
+            <SearchProvider>
+              <AppProvider>
+                <Component {...pageProps} />
+              </AppProvider>
+            </SearchProvider>
           </WishListProvider>
         </CartProvider>
       </SessionProvider>
