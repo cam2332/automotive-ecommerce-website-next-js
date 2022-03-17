@@ -8,6 +8,7 @@ function SideMenu({
   visible,
   children,
   contentPaddingClass,
+  containerClassName,
 }: {
   title?: string
   isRight?: boolean
@@ -16,10 +17,12 @@ function SideMenu({
   // eslint-disable-next-line no-undef
   children?: JSX.Element | JSX.Element[] | undefined
   contentPaddingClass?: string
+  containerClassName?: string
 }) {
   return (
     <Wrapper onClick={onClose} $visible={visible}>
       <Container
+        className={containerClassName}
         onClick={(e) => e.stopPropagation()}
         $visible={visible}
         $isRight={isRight}>
