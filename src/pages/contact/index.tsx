@@ -35,11 +35,7 @@ export default function index() {
   const sendMessage = async () => {}
 
   return (
-    <SiteWrapper
-      title='Kontakt'
-      headerType='full'
-      bigSearchBarHidden
-      vehicleFilterHidden>
+    <SiteWrapper title='Kontakt' headerType='full' vehicleFilterHidden>
       <MainContainer>
         <SectionWrapper>
           <SectionTitle>Podziel się opinią</SectionTitle>
