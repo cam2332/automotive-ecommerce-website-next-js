@@ -9,6 +9,8 @@ import Footer from './Footer'
 import SearchField from './SearchField'
 import VehicleFilter from './VehicleFilter'
 import EmptyHeader from './EmptyHeader'
+import SearchResultModal from './SearchResultModal'
+import { useSearchContext } from '../context/SearchContext'
 
 export type HeaderType = 'empty' | 'full'
 
@@ -27,6 +29,7 @@ function SiteWrapper({
   vehicleFilterHidden?: boolean
   bigSearchBarHidden?: boolean
 }) {
+  const searchContext = useSearchContext()
   const [sideMenuVisible, setSideMenuVisible] = useState(false)
   const [sideWishListVisible, setSideWishListVisible] = useState(false)
   const [sideShoppingListVisible, setSideShoppingListVisible] = useState(false)
@@ -47,6 +50,9 @@ function SiteWrapper({
             setSideShoppingListVisible(!sideShoppingListVisible)
           }
           onClickUser={() => setSideUserVisible(!sideUserVisible)}
+          onClickSearchIcon={() =>
+            searchContext.setModalVisible(!searchContext.modalVisible)
+          }
         />
       ) : (
         <EmptyHeader />
@@ -78,6 +84,7 @@ function SiteWrapper({
             visible={sideUserVisible}
             onClose={() => setSideUserVisible(false)}
           />
+          <SearchResultModal />
         </div>
       </div>
       <Footer />
