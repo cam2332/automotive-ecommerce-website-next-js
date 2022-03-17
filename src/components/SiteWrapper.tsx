@@ -6,7 +6,6 @@ import SideWishList from './SideWishList'
 import SideShoppingList from './SideShoppingList'
 import SideUser from './SideUser'
 import Footer from './Footer'
-import SearchField from './SearchField'
 import VehicleFilter from './VehicleFilter'
 import EmptyHeader from './EmptyHeader'
 import SearchResultModal from './SearchResultModal'
@@ -19,7 +18,6 @@ function SiteWrapper({
   title,
   headerType,
   vehicleFilterHidden,
-  bigSearchBarHidden,
 }: {
   // eslint-disable-next-line no-undef
   children: JSX.Element | JSX.Element[]
@@ -27,7 +25,6 @@ function SiteWrapper({
   title?: string
   headerType: HeaderType
   vehicleFilterHidden?: boolean
-  bigSearchBarHidden?: boolean
 }) {
   const searchContext = useSearchContext()
   const [sideMenuVisible, setSideMenuVisible] = useState(false)
@@ -59,10 +56,7 @@ function SiteWrapper({
       )}
       <div className='flex flex-col items-stretch justify-start w-full pt-12 lg:pt-20 min-h-screen-96px lg:items-center'>
         {headerType === 'full' && (
-          <>
-            {!bigSearchBarHidden && <SearchField />}
-            {!vehicleFilterHidden && <VehicleFilter />}
-          </>
+          <>{!vehicleFilterHidden && <VehicleFilter />}</>
         )}
         <div className='flex flex-col items-center lg:w-5xl lg:max-w-5xl'>
           {children}
