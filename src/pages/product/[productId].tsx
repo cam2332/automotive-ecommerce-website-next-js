@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
 import tw from 'tailwind-styled-components'
@@ -27,6 +27,13 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
   const [amount, setAmount] = useState<number>(1)
   const [reviewScore, setReviewScore] = useState<number>(5)
   const [reviewMessage, setReviewMessage] = useState<string>('')
+  const [bigScreen, setBigScreen] = useState(false)
+
+  useEffect(() => {
+    setBigScreen(window.matchMedia('(min-width: 1024px)').matches)
+    const handler = (e: { matches: boolean }) => setBigScreen(e.matches)
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', handler)
+  }, [])
 
   const addToCart = () => {
     cartContext.addToCart(props, amount)
@@ -137,17 +144,16 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
         <SectionWrapper>
           <SectionTitle>Szczegóły produktu</SectionTitle>
           <PropertiesWrapper>
-            <PropertiesList>
-              <PropertyItem key={props.identifier}>
-                <PropertyContainer>
-                  <PropertyNameText>Kod produktu:</PropertyNameText>
-                  <PropertyValueText>{props.identifier}</PropertyValueText>
-                </PropertyContainer>
-              </PropertyItem>
-              {props.properties &&
-                props.properties
-                  .slice(0, Math.floor(props.properties.length / 2))
-                  .map(({ name, unit, value }, index) => (
+            {!bigScreen && (
+              <PropertiesList>
+                <PropertyItem key={props.identifier}>
+                  <PropertyContainer>
+                    <PropertyNameText>Kod produktu:</PropertyNameText>
+                    <PropertyValueText>{props.identifier}</PropertyValueText>
+                  </PropertyContainer>
+                </PropertyItem>
+                {props.properties &&
+                  props.properties.map(({ name, unit, value }, index) => (
                     <PropertyItem key={index}>
                       <PropertyContainer>
                         <PropertyNameText>
@@ -158,23 +164,50 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
                       </PropertyContainer>
                     </PropertyItem>
                   ))}
-            </PropertiesList>
-            <PropertiesList>
-              {props.properties &&
-                props.properties
-                  .slice(Math.floor(props.properties.length / 2))
-                  .map(({ name, unit, value }, index) => (
-                    <PropertyItem key={index}>
-                      <PropertyContainer>
-                        <PropertyNameText>
-                          {name}
-                          {unit && ` [${unit}]`}:
-                        </PropertyNameText>
-                        <PropertyValueText>{value}</PropertyValueText>
-                      </PropertyContainer>
-                    </PropertyItem>
-                  ))}
-            </PropertiesList>
+              </PropertiesList>
+            )}
+            {bigScreen && (
+              <>
+                <PropertiesList>
+                  <PropertyItem key={props.identifier}>
+                    <PropertyContainer>
+                      <PropertyNameText>Kod produktu:</PropertyNameText>
+                      <PropertyValueText>{props.identifier}</PropertyValueText>
+                    </PropertyContainer>
+                  </PropertyItem>
+                  {props.properties &&
+                    props.properties
+                      .slice(0, Math.floor(props.properties.length / 2))
+                      .map(({ name, unit, value }, index) => (
+                        <PropertyItem key={index}>
+                          <PropertyContainer>
+                            <PropertyNameText>
+                              {name}
+                              {unit && ` [${unit}]`}:
+                            </PropertyNameText>
+                            <PropertyValueText>{value}</PropertyValueText>
+                          </PropertyContainer>
+                        </PropertyItem>
+                      ))}
+                </PropertiesList>
+                <PropertiesList>
+                  {props.properties &&
+                    props.properties
+                      .slice(Math.floor(props.properties.length / 2))
+                      .map(({ name, unit, value }, index) => (
+                        <PropertyItem key={index}>
+                          <PropertyContainer>
+                            <PropertyNameText>
+                              {name}
+                              {unit && ` [${unit}]`}:
+                            </PropertyNameText>
+                            <PropertyValueText>{value}</PropertyValueText>
+                          </PropertyContainer>
+                        </PropertyItem>
+                      ))}
+                </PropertiesList>
+              </>
+            )}
           </PropertiesWrapper>
         </SectionWrapper>
         <SectionWrapper>
@@ -546,6 +579,8 @@ const PropertyItem = tw.li`
   space-x-2
   border-t
   border-gray-200
+  
+  first:border-t-0
 `
 
 const PropertyContainer = tw.div`
