@@ -1,6 +1,8 @@
 /* eslint-disable no-plusplus */
 import { ICategory } from '../DAO/documents/Category'
 import Category from '../DAO/models/Category'
+import { ResultData } from '../DAO/types/ResultData'
+import SortMethod from '../DAO/types/SortMethod'
 import ApplicationError from '../utils/ApplicationError'
 import { Either, left, right } from '../utils/Either'
 import { createDataTree, fromCategoryDocument } from '../utils/MongoConverter'
@@ -291,4 +293,30 @@ export const findRootCategoryByName = async (
       `Cannot find category with name ${name}.`
     ).setInstance('/categories')
   )
+}
+
+export const findAllByName = async (
+  name: string,
+  page: number,
+  resultsPerPage: number,
+  sortMethod: SortMethod
+): Promise<ResultData<ICategory[]>> => {
+  try {
+    const result = await Category.findAllByName(
+      name,
+      page,
+      resultsPerPage,
+      sortMethod
+    )
+    return {
+      ...result,
+      results: result.results.map((category) => fromCategoryDocument(category)),
+    }
+  } catch (error) {
+    return {
+      totalResults: 0,
+      totalPages: 1,
+      results: [],
+    }
+  }
 }

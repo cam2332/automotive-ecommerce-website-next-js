@@ -2,6 +2,8 @@ import { Schema, Types } from 'mongoose'
 import { CategoryDocument } from '../documents/Category'
 // eslint-disable-next-line import/no-cycle
 import Category from '../models/Category'
+import SortMethod from '../types/SortMethod'
+import { ResultData } from '../types/ResultData'
 
 const CategorySchema: Schema = new Schema(
   {
@@ -68,4 +70,71 @@ CategorySchema.statics.findCategoryById = async (
   const category = await Category.findById(id)
 
   return category
+}
+
+CategorySchema.statics.findAllByName = async (
+  name: string,
+  page: number,
+  resultsPerPage: number,
+  sortMethod: SortMethod
+): Promise<ResultData<CategoryDocument[]>> => {
+  const pipeline = []
+  pipeline.push({
+    $match: {
+      name: {
+        $regex: new RegExp(name, 'i'),
+      },
+    },
+  })
+
+  const sort = {
+    $sort: {
+      ...(sortMethod.type === SortMethod.relevance.type && { _id: -1 }),
+      ...(sortMethod.type === SortMethod.nameAsc.type && { title: 1 }),
+      ...(sortMethod.type === SortMethod.nameDesc.type && { title: -1 }),
+      ...(sortMethod.type === SortMethod.priceAsc.type && { price: 1 }),
+      ...(sortMethod.type === SortMethod.priceDesc.type && { price: -1 }),
+    },
+  }
+  pipeline.push(sort)
+
+  const pagination = {
+    $facet: {
+      metadata: [
+        {
+          $count: 'totalResults',
+        },
+        {
+          $addFields: {
+            totalPages: {
+              $ceil: {
+                $divide: ['$totalResults', resultsPerPage],
+              },
+            },
+          },
+        },
+      ],
+      results: [
+        {
+          $skip: (page - 1) * resultsPerPage,
+        },
+        {
+          $limit: resultsPerPage,
+        },
+      ],
+    },
+  }
+  pipeline.push(pagination)
+
+  const categories = await Category.aggregate(pipeline)
+
+  return {
+    totalPages: categories[0].metadata[0]
+      ? categories[0].metadata[0].totalPages
+      : 1,
+    totalResults: categories[0].metadata[0]
+      ? categories[0].metadata[0].totalResults
+      : 0,
+    results: categories[0].results,
+  }
 }

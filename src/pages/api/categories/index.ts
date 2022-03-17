@@ -1,18 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from '../../../utils/dbConnect'
-import Category from '../../../DAO/models/Category'
-import {
-  createDataTree,
-  fromCategoryDocument,
-} from '../../../utils/MongoConverter'
 import {
   createCategory,
+  findAllByName,
   findAllCategories,
 } from '../../../business/CategoryManager'
 import ApplicationError from '../../../utils/ApplicationError'
+import SortMethod from '../../../DAO/types/SortMethod'
 
 export default async function handler(
-  { method, query: { tree }, body }: NextApiRequest,
+  {
+    method,
+    query: { name, page, resultsPerPage, sortMethod, tree },
+    body,
+  }: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
@@ -28,10 +29,20 @@ export default async function handler(
   switch (method) {
     case 'GET':
       try {
-        const categories = await findAllCategories(
-          tree && tree.toString() === 'true'
-        )
-        res.status(200).json(categories)
+        if (name) {
+          const categories = await findAllByName(
+            name as string,
+            parseInt(page as string, 10) || 1,
+            parseInt(resultsPerPage as string, 10) || 999,
+            SortMethod.fromType(sortMethod as string) || SortMethod.relevance
+          )
+          res.status(200).json(categories)
+        } else {
+          const categories = await findAllCategories(
+            tree && tree.toString() === 'true'
+          )
+          res.status(200).json(categories)
+        }
       } catch (err) {
         const error = ApplicationError.INTERNAL_ERROR.setDetail(
           'Cannot find categories'

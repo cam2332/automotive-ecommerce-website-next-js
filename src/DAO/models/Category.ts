@@ -2,6 +2,8 @@ import { Model, model } from 'mongoose'
 import { CategoryDocument } from '../documents/Category'
 // eslint-disable-next-line import/no-cycle
 import CategorySchema from '../schemas/CategorySchema'
+import { ResultData } from '../types/ResultData'
+import SortMethod from '../types/SortMethod'
 
 export interface CategoryModel extends Model<CategoryDocument> {
   createCategory(
@@ -12,6 +14,12 @@ export interface CategoryModel extends Model<CategoryDocument> {
   findAllCategories(): Promise<CategoryDocument[]>
   findCategoryById(id: string): Promise<CategoryDocument | null>
   findCategoryByName(name: string): Promise<CategoryDocument | null>
+  findAllByName(
+    name: string,
+    page: number,
+    resultsPerPage: number,
+    sortMethod: SortMethod
+  ): Promise<ResultData<CategoryDocument[]>>
 }
 
 let category: CategoryModel
