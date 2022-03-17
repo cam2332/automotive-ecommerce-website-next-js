@@ -7,9 +7,9 @@ function EmptyHeader() {
 
   return (
     <Header
-      logoText={'Auto części'}
+      logoText='Auto części'
       onClickLogo={() => router.push('/')}
-      contactPhoneNumber={'01 234 56 78'}
+      contactPhoneNumber='01 234 56 78'
       contactInfoVisible
     />
   )
