@@ -200,6 +200,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
                                 {`${model.group} ${model.name}`}
                                 <PropertyNameText className='font-normal'>
                                   {` od ${model.productionStartYear}${
+                                    model.productionEndYear &&
                                     model.productionEndYear !== '...'
                                       ? ` do ${model.productionEndYear}`
                                       : ''
@@ -228,6 +229,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
                                               {`, od ${
                                                 type.productionStartYear
                                               }${
+                                                type.productionEndYear &&
                                                 type.productionEndYear !== '...'
                                                   ? ` do ${type.productionEndYear}`
                                                   : ''
