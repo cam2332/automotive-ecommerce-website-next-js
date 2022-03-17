@@ -12,6 +12,7 @@ function SearchResultModal() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    setBigScreen(window.matchMedia('(min-width: 1024px)').matches)
     const handler = (e: { matches: boolean }) => setBigScreen(e.matches)
     window.matchMedia('(min-width: 1024px)').addEventListener('change', handler)
   }, [])
