@@ -7,7 +7,7 @@ import { findAllCategories } from '../business/CategoryManager'
 
 export default function Home({ categories }: { categories: ICategory[] }) {
   return (
-    <SiteWrapper headerType={'full'}>
+    <SiteWrapper headerType='full'>
       <CategoryList title='Wybrane kategorie' categories={categories} />
     </SiteWrapper>
   )

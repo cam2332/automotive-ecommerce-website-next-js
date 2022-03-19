@@ -75,7 +75,10 @@ function index({
   }
 
   return (
-    <SiteWrapper title={selectedCategory.name} headerType='full'>
+    <SiteWrapper
+      title={selectedCategory.name}
+      headerType='full'
+      metaDescription={selectedCategory.name}>
       <Container>
         <Nav>
           {category && (

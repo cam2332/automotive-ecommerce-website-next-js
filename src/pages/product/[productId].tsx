@@ -62,7 +62,11 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
   }
 
   return (
-    <SiteWrapper title={props.title} headerType='full' vehicleFilterHidden>
+    <SiteWrapper
+      title={props.title}
+      headerType='full'
+      vehicleFilterHidden
+      metaDescription={props.title}>
       <Overview>
         <BigThumbnailWrapper>
           <ThumbnailWrapper>
@@ -72,6 +76,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
                 height={200}
                 layout='responsive'
                 src={props.thumbnailUrl}
+                alt={props.title}
               />
             )}
           </ThumbnailWrapper>
@@ -96,6 +101,7 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
                   height={200}
                   layout='responsive'
                   src={props.thumbnailUrl}
+                  alt={props.title}
                 />
               )}
             </ThumbnailWrapper>
@@ -446,7 +452,7 @@ const HeartOutlineIcon = tw(IoHeartOutline)`
  	text-primary-color
 `
 
-const TitleText = tw.span`
+const TitleText = tw.h1`
   font-medium
   text-primary-color
   text-lg

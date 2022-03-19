@@ -28,6 +28,7 @@ function CartProductCard({
             height={100}
             layout='responsive'
             src={product.thumbnailUrl}
+            alt={product.title}
           />
         )}
       </ThumbnailWrapper>

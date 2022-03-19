@@ -75,8 +75,9 @@ function Register() {
   return (
     <div>
       <Head>
-        <title>ECommerce Automotive Website</title>
+        <title>Rejestracja - ECommerce Automotive Website</title>
         <link rel='icon' href='/favicon.ico' />
+        <meta key='description' name='description' content='Rejestracja' />
       </Head>
       <EmptyHeader />
       <PageContainer>

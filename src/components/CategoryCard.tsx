@@ -31,6 +31,7 @@ function CategoryCard({
               height={160}
               layout='responsive'
               src={thumbnailUrl}
+              alt={name}
             />
           )}
         </div>
@@ -61,7 +62,9 @@ function CategoryCard({
           {categories &&
             categories.length > 2 &&
             maxNumberOfSubCategoriesVisible < categories.length && (
-              <span>...</span>
+              <li>
+                <span>...</span>
+              </li>
             )}
         </ul>
       </div>

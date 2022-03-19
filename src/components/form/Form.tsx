@@ -68,7 +68,7 @@ const FormHeader = tw.div`
   bg-gray-100
 `
 
-const FormTitle = tw.span`
+const FormTitle = tw.h1`
   text-lg
   font-semibold
   text-primary-color

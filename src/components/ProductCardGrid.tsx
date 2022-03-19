@@ -41,6 +41,7 @@ function ProductCardGrid({
             height={200}
             layout='responsive'
             src={thumbnailUrl}
+            alt={title}
           />
         )}
       </ThumbnailWrapper>

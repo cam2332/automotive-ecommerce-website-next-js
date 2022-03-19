@@ -38,6 +38,7 @@ function SideShoppingList() {
                         height={40}
                         layout='responsive'
                         src={thumbnailUrl}
+                        alt={title}
                       />
                     )}
                   </ThumbnailWrapper>

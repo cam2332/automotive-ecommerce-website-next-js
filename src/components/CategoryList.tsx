@@ -50,7 +50,7 @@ const MainContainer = tw.div`
  	items-center
  	w-full
 `
-const TitleText = tw.span`
+const TitleText = tw.h1`
   mt-8
  	text-2xl
  	text-center

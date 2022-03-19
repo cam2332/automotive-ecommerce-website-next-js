@@ -35,7 +35,11 @@ export default function index() {
   const sendMessage = async () => {}
 
   return (
-    <SiteWrapper title='Kontakt' headerType='full' vehicleFilterHidden>
+    <SiteWrapper
+      title='Kontakt'
+      headerType='full'
+      vehicleFilterHidden
+      metaDescription='Kontakt i wysyłanie opinii'>
       <MainContainer>
         <SectionWrapper>
           <SectionTitle>Podziel się opinią</SectionTitle>
@@ -158,7 +162,7 @@ const RowWrapper = tw.div`
   space-y-5
 `
 
-const SectionTitle = tw.span`
+const SectionTitle = tw.h1`
   h-12
   px-5
   py-3

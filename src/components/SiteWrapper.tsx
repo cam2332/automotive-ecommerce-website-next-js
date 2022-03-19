@@ -18,6 +18,7 @@ function SiteWrapper({
   title,
   headerType,
   vehicleFilterHidden,
+  metaDescription,
 }: {
   // eslint-disable-next-line no-undef
   children: JSX.Element | JSX.Element[]
@@ -25,6 +26,7 @@ function SiteWrapper({
   title?: string
   headerType: HeaderType
   vehicleFilterHidden?: boolean
+  metaDescription?: string
 }) {
   const appContext = useAppContext()
   const LOCAL_TITLE = 'ECommerce Automotive Website'
@@ -34,6 +36,11 @@ function SiteWrapper({
       <Head>
         <title>{title ? `${title} - ${LOCAL_TITLE}` : LOCAL_TITLE}</title>
         <link rel='icon' href='/favicon.ico' />
+        <meta
+          key='description'
+          name='description'
+          content={metaDescription || LOCAL_TITLE}
+        />
       </Head>
       {headerType === 'full' ? (
         <MainHeader

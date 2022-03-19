@@ -58,7 +58,7 @@ export default function index({ products }: { products: CartProduct[] }) {
     totalDiscount
 
   return (
-    <SiteWrapper title={'Koszyk'} headerType={'empty'}>
+    <SiteWrapper title='Koszyk' headerType='empty' metaDescription='Koszyk'>
       {cartContext.numberOfUniqueProducts > 0 ? (
         <>
           <SectionWrapper>

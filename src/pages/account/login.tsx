@@ -63,8 +63,9 @@ function Login() {
   return (
     <div>
       <Head>
-        <title>ECommerce Automotive Website</title>
+        <title>Logowanie - ECommerce Automotive Website</title>
         <link rel='icon' href='/favicon.ico' />
+        <meta key='description' name='description' content='Logowanie' />
       </Head>
       <EmptyHeader />
       <PageContainer>

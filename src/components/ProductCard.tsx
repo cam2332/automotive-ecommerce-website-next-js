@@ -59,6 +59,7 @@ function ProductCard({
             height={100}
             layout='responsive'
             src={thumbnailUrl}
+            alt={title}
           />
         )}
       </ThumbnailWrapper>

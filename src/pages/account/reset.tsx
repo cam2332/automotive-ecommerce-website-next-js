@@ -25,8 +25,9 @@ function Reset() {
   return (
     <div>
       <Head>
-        <title>ECommerce Automotive Website</title>
+        <title>Zmiana hasła - ECommerce Automotive Website</title>
         <link rel='icon' href='/favicon.ico' />
+        <meta key='description' name='description' content='Zmiana hasła' />
       </Head>
       <EmptyHeader />
       <PageContainer>
