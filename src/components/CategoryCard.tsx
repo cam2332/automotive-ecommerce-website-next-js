@@ -2,11 +2,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import Image from 'next/image'
+import Link from 'next/link'
 import { ICategory } from '../DAO/documents/Category'
 
 interface CategoryCardProps extends ICategory {
-  onClickMainCategory: () => void
-  onClickSubCategory: (id: string, name: string) => void
   maxNumberOfSubCategoriesVisible: number
 }
 
@@ -15,15 +14,11 @@ function CategoryCard({
   name,
   categories,
   thumbnailUrl,
-  onClickMainCategory,
-  onClickSubCategory,
   maxNumberOfSubCategoriesVisible,
 }: CategoryCardProps) {
   return (
     <div className='flex flex-col items-center p-4 md:p-6'>
-      <div
-        className='flex flex-row items-center justify-between w-full space-x-1 cursor-pointer hover:underline'
-        onClick={() => onClickMainCategory()}>
+      <div className='flex flex-row items-center justify-between w-full space-x-1 cursor-pointer hover:underline'>
         <div className='grid w-24 h-24'>
           {thumbnailUrl && (
             <Image
@@ -35,9 +30,12 @@ function CategoryCard({
             />
           )}
         </div>
-        <span className='flex pr-3 text-lg font-medium text-right truncate whitespace-normal text-primary-color max-w-full-96px'>
-          {name}
-        </span>
+        <Link href={`/category/${id}`}>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a className='flex pr-3 text-lg font-medium text-right truncate whitespace-normal text-primary-color max-w-full-96px'>
+            {name}
+          </a>
+        </Link>
       </div>
       <div className='flex flex-col w-full p-4'>
         <ul className='space-y-2'>
@@ -45,14 +43,14 @@ function CategoryCard({
             categories
               .slice(0, maxNumberOfSubCategoriesVisible)
               .map(({ id, name, numberOfProducts }) => (
-                <li
-                  key={id}
-                  className='flex flex-row items-center'
-                  onClick={() => onClickSubCategory(id, name)}>
+                <li key={id} className='flex flex-row items-center'>
                   <div className='flex flex-row justify-between w-full space-x-3 cursor-pointer hover:underline'>
-                    <span className='text-sm font-semibold truncate whitespace-normal max-w-160px text-primary-color'>
-                      {name}
-                    </span>
+                    <Link href={`/category/${id}`}>
+                      {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                      <a className='text-sm font-semibold truncate whitespace-normal max-w-160px text-primary-color'>
+                        {name}
+                      </a>
+                    </Link>
                     <span className='text-sm font-semibold text-gray-400'>
                       {numberOfProducts}
                     </span>

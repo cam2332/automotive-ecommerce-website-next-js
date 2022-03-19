@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/router'
 import tw from 'tailwind-styled-components'
 import { IoChevronForwardSharp } from 'react-icons/io5'
 import redaxios from 'redaxios'
+import Link from 'next/link'
 import SideMenu from './SideMenu'
 import { ICategory } from '../DAO/documents/Category'
 import { useAppContext } from '../context/AppContext'
 
 function SideNavigation() {
-  const router = useRouter()
   const appContext = useAppContext()
   const [categories, setCategories] = useState<ICategory[]>([])
   const divRef = useRef<HTMLDivElement>(null)
@@ -60,10 +59,12 @@ function SideNavigation() {
               <ListElement
                 key={category.id}
                 onClick={() => {
-                  router.push(`/category/${category.id}`)
                   appContext.setSideMenuVisible(false)
                 }}>
-                <span>{category.name}</span>
+                <Link href={`/category/${category.id}`}>
+                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                  <a>{category.name}</a>
+                </Link>
                 <IoChevronForwardSharp />
               </ListElement>
             ))}

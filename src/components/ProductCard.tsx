@@ -9,9 +9,11 @@ import {
 } from 'react-icons/io5'
 import { GoPrimitiveDot } from 'react-icons/go'
 import tw from 'tailwind-styled-components'
+import Link from 'next/link'
 import QuantitySelect from './select/QuantitySelect'
 
 function ProductCard({
+  id,
   thumbnailUrl,
   title,
   subTitle,
@@ -26,8 +28,8 @@ function ProductCard({
   maxNumberOfPropertiesVisible,
   onToggleInWishList,
   onAddToCart,
-  onClickTitle,
 }: {
+  id: string
   thumbnailUrl: string
   title: string
   subTitle: string
@@ -46,7 +48,6 @@ function ProductCard({
   maxNumberOfPropertiesVisible: number
   onToggleInWishList: () => void
   onAddToCart: (amount: number) => void
-  onClickTitle: () => void
 }) {
   const [amount, setAmount] = useState<number>(1)
 
@@ -66,7 +67,9 @@ function ProductCard({
 
       <MainContainer>
         <DescriptionContainer>
-          <TitleText onClick={onClickTitle}>{title}</TitleText>
+          <Link href={`/product/${id}`} passHref>
+            <TitleText>{title}</TitleText>
+          </Link>
           <SubTitleText>{subTitle}</SubTitleText>
           <ArticleId>Nr artykułu: {identifier}</ArticleId>
           <PropertiesWrapper>
@@ -192,7 +195,7 @@ const DescriptionContainer = tw.div`
   flex-col
 `
 
-const TitleText = tw.span`
+const TitleText = tw.a`
   mr-5
   font-medium
   cursor-pointer

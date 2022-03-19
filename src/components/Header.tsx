@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import Link from 'next/link'
 import tw from 'tailwind-styled-components'
 import {
   IoMenuSharp,
@@ -11,7 +11,6 @@ import { FaPhoneAlt } from 'react-icons/fa'
 
 interface IHeaderProps {
   logoText?: string
-  onClickLogo?: () => void
   searchBarVisible?: boolean
   searchBarInputPlaceholder?: string
   searchText?: string
@@ -36,7 +35,6 @@ interface IHeaderProps {
 
 function Header({
   logoText,
-  onClickLogo,
   searchBarVisible,
   searchBarInputPlaceholder,
   searchText,
@@ -63,8 +61,12 @@ function Header({
       <Navigation>
         <LeftSide>
           {menuIconVisible && <MenuIcon onClick={onClickMenu} />}
-          <LogoTextSmall onClick={onClickLogo}>{logoText}</LogoTextSmall>
-          <LogoTextLarge onClick={onClickLogo}>{logoText}</LogoTextLarge>
+          <Link key='smallLogoText' href='/' passHref>
+            <LogoTextSmall>{logoText}</LogoTextSmall>
+          </Link>
+          <Link key='LargeLogoText' href='/' passHref>
+            <LogoTextLarge>{logoText}</LogoTextLarge>
+          </Link>
           {searchBarVisible && (
             <SearchBar>
               <SearchBarInput

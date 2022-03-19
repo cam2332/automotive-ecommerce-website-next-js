@@ -28,14 +28,6 @@ function CategoryList({
               numberOfProducts={category.numberOfProducts}
               categories={category.categories}
               thumbnailUrl={category.thumbnailUrl}
-              onClickMainCategory={() => {
-                /** move to category page */
-                router.push('/category/' + category.id)
-              }}
-              onClickSubCategory={(id, name) => {
-                /** move to category page */
-                router.push('/category/' + id)
-              }}
               maxNumberOfSubCategoriesVisible={5}
             />
           ))}

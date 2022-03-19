@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import { useAppContext } from '../context/AppContext'
 import { useCartContext } from '../context/CartContext'
 import { useSearchContext } from '../context/SearchContext'
@@ -20,7 +19,6 @@ function MainHeader({
   onClickUser,
   onClickSearchIcon,
 }: IMainHeaderProps) {
-  const router = useRouter()
   const cartContext = useCartContext()
   const wishListContext = useWishListContext()
   const searchContext = useSearchContext()
@@ -29,7 +27,6 @@ function MainHeader({
   return (
     <Header
       logoText='Auto części'
-      onClickLogo={() => router.push('/')}
       searchBarInputPlaceholder='Wyszukaj w sklepie'
       searchText={searchContext.searchText}
       onChangeSearchText={searchContext.search}

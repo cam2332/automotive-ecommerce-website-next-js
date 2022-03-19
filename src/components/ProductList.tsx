@@ -30,6 +30,7 @@ function ProductList({
           {localProducts.map((product) => (
             <ProductCard
               key={product.id}
+              id={product.id}
               thumbnailUrl={product.thumbnailUrl}
               title={product.title}
               subTitle={product.subTitle}
@@ -64,9 +65,6 @@ function ProductList({
               }}
               onAddToCart={(amount) => {
                 cartContext.addToCart(product, amount)
-              }}
-              onClickTitle={() => {
-                router.push('/product/' + product.id)
               }}
             />
           ))}
