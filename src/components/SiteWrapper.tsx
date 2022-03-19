@@ -9,7 +9,6 @@ import Footer from './Footer'
 import VehicleFilter from './VehicleFilter'
 import EmptyHeader from './EmptyHeader'
 import SearchResultModal from './SearchResultModal'
-import { useSearchContext } from '../context/SearchContext'
 import { useAppContext } from '../context/AppContext'
 
 export type HeaderType = 'empty' | 'full'
@@ -28,10 +27,6 @@ function SiteWrapper({
   vehicleFilterHidden?: boolean
 }) {
   const appContext = useAppContext()
-  const [sideMenuVisible, setSideMenuVisible] = useState(false)
-  const [sideWishListVisible, setSideWishListVisible] = useState(false)
-  const [sideShoppingListVisible, setSideShoppingListVisible] = useState(false)
-  const [sideUserVisible, setSideUserVisible] = useState(false)
   const LOCAL_TITLE = 'ECommerce Automotive Website'
 
   return (
