@@ -32,6 +32,7 @@ function SearchResultModal() {
 
   const onClose = () => {
     appContext.setSearchResultModalVisible(false)
+    searchContext.search('')
   }
 
   return (
@@ -64,7 +65,7 @@ function SearchResultModal() {
                       key={id}
                       onClick={() => {
                         router.push(`/product/${id}`)
-                        appContext.setSearchResultModalVisible(false)
+                        onClose()
                       }}>
                       <ThumbnailWrapper>
                         {thumbnailUrl && (
@@ -98,7 +99,7 @@ function SearchResultModal() {
                       key={id}
                       onClick={() => {
                         router.push(`/category/${id}`)
-                        appContext.setSearchResultModalVisible(false)
+                        onClose()
                       }}>
                       <ProductNameText>{name}</ProductNameText>
                     </ProductResultItem>
