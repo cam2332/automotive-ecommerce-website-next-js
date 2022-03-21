@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import Image from 'next/image'
 import Link from 'next/link'
 import { ICategory } from '../DAO/documents/Category'
@@ -38,7 +35,7 @@ function CategoryCard({
         </Link>
       </div>
       <div className='flex flex-col w-full p-4'>
-        <ul className='space-y-2'>
+        <ul>
           {categories &&
             categories
               .slice(0, maxNumberOfSubCategoriesVisible)
@@ -47,7 +44,7 @@ function CategoryCard({
                   <div className='flex flex-row justify-between w-full space-x-3 cursor-pointer hover:underline'>
                     <Link href={`/category/${id}`}>
                       {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                      <a className='text-sm font-semibold truncate whitespace-normal max-w-160px text-primary-color'>
+                      <a className='my-2 font-semibold truncate whitespace-normal md:text-sm md:my-1 max-w-160px text-primary-color'>
                         {name}
                       </a>
                     </Link>
