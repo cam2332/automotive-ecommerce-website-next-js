@@ -49,6 +49,31 @@ export const fromCategoryDocument = (
   thumbnailUrl: category.thumbnailUrl || null,
 })
 
+const compareCategory = (
+  category1: ICategory,
+  category2: ICategory,
+  criteria: ICategoryCriteria
+) => {
+  if (criteria.sort.attribute === 'name') {
+    if (criteria.sort.order === 'ASC') {
+      return category1.name.localeCompare(category2.name)
+    }
+    return category2.name.localeCompare(category1.name)
+  }
+  if (criteria.sort.attribute === 'numberOfProducts') {
+    if (criteria.sort.order === 'ASC') {
+      return category1.numberOfProducts - category2.numberOfProducts
+    }
+    return category2.numberOfProducts - category1.numberOfProducts
+  }
+  if (criteria.sort.order === 'ASC') {
+    return (
+      category1[criteria.sort.attribute] - category2[criteria.sort.attribute]
+    )
+  }
+  return category2[criteria.sort.attribute] - category1[criteria.sort.attribute]
+}
+
 export const createCategoryDataTree = (
   dataset: ICategory[],
   id: string,
@@ -81,18 +106,9 @@ export const createCategoryDataTree = (
       0
     )
     if (aData.categories) {
-      aData.categories.sort((subCategory1, subCategory2) => {
-        if (criteria.sort.order === 'DESC') {
-          return (
-            subCategory1[criteria.sort.attribute] -
-            subCategory2[criteria.sort.attribute]
-          )
-        }
-        return (
-          subCategory2[criteria.sort.attribute] -
-          subCategory1[criteria.sort.attribute]
-        )
-      })
+      aData.categories.sort((category1, category2) =>
+        compareCategory(category1, category2, criteria)
+      )
     }
   })
   return dataTree
@@ -102,18 +118,9 @@ export const createCategoryDataTree = (
       (criteria.pagination.page - 1) * criteria.pagination.size +
         criteria.pagination.size
     )
-    .sort((subCategory1, subCategory2) => {
-      if (criteria.sort.order === 'DESC') {
-        return (
-          subCategory1[criteria.sort.attribute] -
-          subCategory2[criteria.sort.attribute]
-        )
-      }
-      return (
-        subCategory2[criteria.sort.attribute] -
-        subCategory1[criteria.sort.attribute]
-      )
-    })
+    .sort((category1, category2) =>
+      compareCategory(category1, category2, criteria)
+    )
 }
 
 export const fromProductDocument = (product: ProductDocument): IProduct => ({
