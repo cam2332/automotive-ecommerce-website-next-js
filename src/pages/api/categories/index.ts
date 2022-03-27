@@ -1,19 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from '../../../utils/dbConnect'
-import {
-  createCategory,
-  findAllByName,
-  findAllCategories,
-} from '../../../business/CategoryManager'
+import { createCategory, findAll } from '../../../business/CategoryManager'
 import ApplicationError from '../../../utils/ApplicationError'
-import SortMethod from '../../../DAO/types/SortMethod'
+import IllegalArgumentError from '../../../utils/errors/IllegalArgumentError'
+import CategoryCriteriaBuilder from '../../../DAO/types/CategoryCriteriaBuilder'
+import PageableBuilder from '../../../DAO/types/PageableBuilder'
+import SortCriteriaBuilder from '../../../DAO/types/SortCriteriaBuilder'
 
 export default async function handler(
-  {
-    method,
-    query: { name, page, resultsPerPage, sortMethod, tree },
-    body,
-  }: NextApiRequest,
+  { method, query, body }: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
@@ -29,26 +24,39 @@ export default async function handler(
   switch (method) {
     case 'GET':
       try {
-        if (name) {
-          const categories = await findAllByName(
-            name as string,
-            parseInt(page as string, 10) || 1,
-            parseInt(resultsPerPage as string, 10) || 999,
-            SortMethod.fromType(sortMethod as string) || SortMethod.relevance
-          )
-          res.status(200).json(categories)
-        } else {
-          const categories = await findAllCategories(
-            tree && tree.toString() === 'true'
-          )
-          res.status(200).json(categories)
-        }
-      } catch (err) {
-        const error = ApplicationError.INTERNAL_ERROR.setDetail(
-          'Cannot find categories'
-        ).setInstance('/categories')
+        const categories = await findAll(
+          new CategoryCriteriaBuilder()
+            .withName(query.name as string)
+            .withPagination(
+              new PageableBuilder()
+                .withPage(parseInt(query.page as string, 10) || 1)
+                .withSize(parseInt(query.size as string, 10) || 10)
+                .build()
+            )
+            .withSort(
+              new SortCriteriaBuilder()
+                .withOrder(query['sort.order'] as string)
+                .withAttribute((query['sort.attribute'] as string) || 'name')
+                .build()
+            )
+            .build()
+        )
 
-        res.status(error.status).json(error.toObject())
+        res.status(200).json(categories)
+      } catch (err) {
+        if (err instanceof IllegalArgumentError) {
+          const error = ApplicationError.UNSUPPORTED_QUERY_PARAMETER.setDetail(
+            err.message
+          ).setInstance('/categories')
+
+          res.status(error.status).json(error.toObject())
+        } else {
+          const error = ApplicationError.INTERNAL_ERROR.setDetail(
+            'Cannot find categories'
+          ).setInstance('/categories')
+
+          res.status(error.status).json(error.toObject())
+        }
       }
       break
     case 'POST':
