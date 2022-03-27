@@ -11,7 +11,7 @@ export interface CategoryModel extends Model<CategoryDocument> {
     thumbnailUrl?: string,
     parentCategoryId?: string
   ): Promise<CategoryDocument>
-  findAllCategories(): Promise<CategoryDocument[]>
+  findAll(): Promise<CategoryDocument[]>
   findCategoryById(id: string): Promise<CategoryDocument | null>
   findCategoryByName(name: string): Promise<CategoryDocument | null>
   findAllByName(

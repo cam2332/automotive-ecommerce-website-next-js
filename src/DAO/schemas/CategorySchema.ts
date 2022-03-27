@@ -37,9 +37,7 @@ CategorySchema.statics.createCategory = async (
   return createdCategory
 }
 
-CategorySchema.statics.findAllCategories = async (): Promise<
-  CategoryDocument[]
-> => {
+CategorySchema.statics.findAll = async (): Promise<CategoryDocument[]> => {
   const categories = await Category.find(
     {},
     {
@@ -49,7 +47,7 @@ CategorySchema.statics.findAllCategories = async (): Promise<
       parentCategoryId: 1,
       categories: 1,
     }
-  ).sort({ name: 1 })
+  )
 
   return categories
 }

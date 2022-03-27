@@ -1,11 +1,18 @@
 /* eslint-disable no-plusplus */
 import { ICategory } from '../DAO/documents/Category'
 import Category from '../DAO/models/Category'
+import CategoryCriteriaBuilder from '../DAO/types/CategoryCriteriaBuilder'
+import ICategoryCriteria from '../DAO/types/ICategoryCriteria'
+import PageableBuilder from '../DAO/types/PageableBuilder'
 import { ResultData } from '../DAO/types/ResultData'
+import SortCriteriaBuilder from '../DAO/types/SortCriteriaBuilder'
 import SortMethod from '../DAO/types/SortMethod'
 import ApplicationError from '../utils/ApplicationError'
 import { Either, left, right } from '../utils/Either'
-import { createDataTree, fromCategoryDocument } from '../utils/MongoConverter'
+import {
+  createCategoryDataTree,
+  fromCategoryDocument,
+} from '../utils/MongoConverter'
 
 export const createCategory = async (requestBody: {
   name: string
@@ -53,28 +60,28 @@ export const createCategory = async (requestBody: {
   }
 }
 
-export const findAllCategories = async (
-  makeTree: boolean
-): Promise<Either<ApplicationError, ICategory[]>> => {
+export const findAll = async (
+  criteria: ICategoryCriteria
+): Promise<ResultData<ICategory[]>> => {
   try {
-    const categories = await Category.findAllCategories()
-
-    if (makeTree) {
-      return right(
-        createDataTree(
-          categories.map((category) => fromCategoryDocument(category)),
-          'id',
-          'parentCategoryId'
-        )
-      )
-    }
-    return right(categories.map((category) => fromCategoryDocument(category)))
-  } catch (error) {
-    return left(
-      ApplicationError.INTERNAL_ERROR.setDetail(
-        'Cannot find categories.'
-      ).setInstance('/categories')
+    const categories = await Category.findAll()
+    const categoriesTree = createCategoryDataTree(
+      categories.map((category) => fromCategoryDocument(category)),
+      'id',
+      'parentCategoryId',
+      criteria
     )
+    return {
+      totalResults: categoriesTree.length,
+      totalPages: Math.ceil(categoriesTree.length / criteria.pagination.size),
+      results: categoriesTree,
+    }
+  } catch (error) {
+    return {
+      totalResults: 0,
+      totalPages: 1,
+      results: [],
+    }
   }
 }
 
@@ -116,28 +123,31 @@ export const findCategoryById = async (
   }
 
   let category: ICategory
-  const allCategories = await findAllCategories(true)
-  console.log('categories', allCategories)
-  if (allCategories.isRight()) {
-    for (let i = 0; i < allCategories.value.length; i++) {
-      category = searchCategoryInBranchById(allCategories.value[i], id)
-      if (category) {
-        break
-      }
-    }
+  const allCategories = await findAll(
+    new CategoryCriteriaBuilder()
+      .withPagination(new PageableBuilder().withPage(1).withSize(1000).build())
+      .withSort(
+        new SortCriteriaBuilder()
+          .withOrder('DESC')
+          .withAttribute('numberOfProducts')
+          .build()
+      )
+      .build()
+  )
 
+  for (let i = 0; i < allCategories.results.length; i++) {
+    category = searchCategoryInBranchById(allCategories.results[i], id)
     if (category) {
-      return right(category)
+      break
     }
-    return left(
-      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-        `Category with id '${id}' does not exists.`
-      ).setInstance(`/categories/${id}`)
-    )
+  }
+
+  if (category) {
+    return right(category)
   }
   return left(
-    ApplicationError.INTERNAL_ERROR.setDetail(
-      `Cannot find category with id ${id}.`
+    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+      `Category with id '${id}' does not exists.`
     ).setInstance(`/categories/${id}`)
   )
 }
@@ -163,28 +173,32 @@ export const findRootCategoryById = async (
   }
   let category: ICategory
   let selectedCategory: ICategory
-  const allCategories = await findAllCategories(true)
-  if (allCategories.isRight()) {
-    for (let i = 0; i < allCategories.value.length; i++) {
-      selectedCategory = searchCategoryInBranchById(allCategories.value[i], id)
-      if (selectedCategory) {
-        category = allCategories.value[i]
-        break
-      }
-    }
+  const allCategories = await findAll(
+    new CategoryCriteriaBuilder()
+      .withPagination(new PageableBuilder().withPage(1).withSize(1000).build())
+      .withSort(
+        new SortCriteriaBuilder()
+          .withOrder('DESC')
+          .withAttribute('numberOfProducts')
+          .build()
+      )
+      .build()
+  )
 
-    if (category) {
-      return right({ category, selectedCategory })
+  for (let i = 0; i < allCategories.results.length; i++) {
+    selectedCategory = searchCategoryInBranchById(allCategories.results[i], id)
+    if (selectedCategory) {
+      category = allCategories.results[i]
+      break
     }
-    return left(
-      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-        `Category with id '${id}' does not exists.`
-      ).setInstance(`/categories/${id}`)
-    )
+  }
+
+  if (category) {
+    return right({ category, selectedCategory })
   }
   return left(
-    ApplicationError.INTERNAL_ERROR.setDetail(
-      `Cannot find category with id ${id}.`
+    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+      `Category with id '${id}' does not exists.`
     ).setInstance(`/categories/${id}`)
   )
 }
@@ -227,28 +241,32 @@ export const findCategoryByName = async (
   }
 
   let category: ICategory
-  const allCategories = await findAllCategories(true)
-  if (allCategories.isRight()) {
-    for (let i = 0; i < allCategories.value.length; i++) {
-      category = searchCategoryInBranchByName(allCategories.value[i], name)
-      if (category) {
-        break
-      }
-    }
+  const allCategories = await findAll(
+    new CategoryCriteriaBuilder()
+      .withPagination(new PageableBuilder().withPage(1).withSize(1000).build())
+      .withSort(
+        new SortCriteriaBuilder()
+          .withOrder('DESC')
+          .withAttribute('numberOfProducts')
+          .build()
+      )
+      .build()
+  )
 
+  for (let i = 0; i < allCategories.results.length; i++) {
+    category = searchCategoryInBranchByName(allCategories.results[i], name)
     if (category) {
-      return right(category)
+      break
     }
-    return left(
-      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-        `Category with name '${name}' does not exists.`
-      ).setInstance('/categories/')
-    )
+  }
+
+  if (category) {
+    return right(category)
   }
   return left(
-    ApplicationError.INTERNAL_ERROR.setDetail(
-      `Cannot find category with name ${name}.`
-    ).setInstance('/categories')
+    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+      `Category with name '${name}' does not exists.`
+    ).setInstance('/categories/')
   )
 }
 
@@ -270,27 +288,31 @@ export const findRootCategoryByName = async (
     )
   }
   let category: ICategory
-  const allCategories = await findAllCategories(true)
-  if (allCategories.isRight()) {
-    for (let i = 0; i < allCategories.value.length; i++) {
-      if (searchCategoryInBranchByName(allCategories.value[i], name)) {
-        category = allCategories.value[i]
-        break
-      }
-    }
+  const allCategories = await findAll(
+    new CategoryCriteriaBuilder()
+      .withPagination(new PageableBuilder().withPage(1).withSize(1000).build())
+      .withSort(
+        new SortCriteriaBuilder()
+          .withOrder('DESC')
+          .withAttribute('numberOfProducts')
+          .build()
+      )
+      .build()
+  )
 
-    if (category) {
-      return right(category)
+  for (let i = 0; i < allCategories.results.length; i++) {
+    if (searchCategoryInBranchByName(allCategories.results[i], name)) {
+      category = allCategories.results[i]
+      break
     }
-    return left(
-      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
-        `Category with name '${name}' does not exists.`
-      ).setInstance('/categories')
-    )
+  }
+
+  if (category) {
+    return right(category)
   }
   return left(
-    ApplicationError.INTERNAL_ERROR.setDetail(
-      `Cannot find category with name ${name}.`
+    ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+      `Category with name '${name}' does not exists.`
     ).setInstance('/categories')
   )
 }
