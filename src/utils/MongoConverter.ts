@@ -7,7 +7,7 @@ import { IUser, UserDocument } from '../DAO/documents/User'
 import ICategoryCriteria from '../DAO/types/ICategoryCriteria'
 
 export const fromCarTypeDocument = (carType: CarTypeDocument): ICarType => ({
-  id: carType._id || carType.id,
+  id: carType.id,
   group: carType.group,
   engineDisplacement: carType.engineDisplacement,
   type: carType.type,
@@ -20,7 +20,7 @@ export const fromCarTypeDocument = (carType: CarTypeDocument): ICarType => ({
 export const fromCarModelDocument = (
   carModel: CarModelDocument
 ): ICarModel => ({
-  id: carModel._id || carModel.id,
+  id: carModel.id,
   group: carModel.group,
   name: carModel.name,
   productionStartYear: carModel.productionStartYear,
@@ -32,7 +32,7 @@ export const fromCarModelDocument = (
 })
 
 export const fromCarMakeDocument = (carMake: CarMakeDocument): ICarMake => ({
-  id: carMake._id || carMake.id,
+  id: carMake.id,
   name: carMake.name,
   models: carMake.models
     ? carMake.models.map((model) => fromCarModelDocument(model))
@@ -42,7 +42,7 @@ export const fromCarMakeDocument = (carMake: CarMakeDocument): ICarMake => ({
 export const fromCategoryDocument = (
   category: CategoryDocument
 ): ICategory => ({
-  id: category._id || category.id,
+  id: category.id,
   name: category.name,
   numberOfProducts: category.numberOfProducts || 0,
   parentCategoryId: category.parentCategoryId || null,
@@ -124,7 +124,7 @@ export const createCategoryDataTree = (
 }
 
 export const fromProductDocument = (product: ProductDocument): IProduct => ({
-  id: product._id || product.id,
+  id: product.id,
   title: product.title,
   subTitle: product.subTitle || null,
   identifier: product.identifier,
@@ -141,7 +141,7 @@ export const fromProductDocument = (product: ProductDocument): IProduct => ({
 })
 
 export const fromUserDocument = (user: UserDocument): IUser => ({
-  id: user._id || user.id,
+  id: user.id,
   firstName: user.firstName,
   lastName: user.lastName,
   email: user.email,
