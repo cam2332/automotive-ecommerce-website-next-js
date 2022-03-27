@@ -21,15 +21,4 @@ export default class PageableBuilder {
     this.size = value
     return this
   }
-
-  /**
-   * default values:
-   * page = 1,
-   * size = 10
-   */
-  public withDefaultValues(): this {
-    this.page = 1
-    this.size = 10
-    return this
-  }
 }
