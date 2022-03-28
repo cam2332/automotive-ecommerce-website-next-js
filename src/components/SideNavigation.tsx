@@ -30,7 +30,7 @@ function SideNavigation() {
       .get('/api/categories')
       .then((response) => {
         if (response.status === 200) {
-          setCategories(response.data.value)
+          setCategories(response.data.results || [])
         } else {
           setCategories([])
         }
