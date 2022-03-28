@@ -5,4 +5,5 @@ export default interface ICategoryCriteria {
   sort: ISortCriteria
   name: string
   pagination: IPageable
+  flat: boolean
 }
