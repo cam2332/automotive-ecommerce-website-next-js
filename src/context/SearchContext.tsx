@@ -42,13 +42,16 @@ const SearchProvider: React.FC = ({ children }): React.ReactElement => {
         .catch(() => {
           setResultProducts([])
         })
+
       redaxios
         .get('/api/categories', {
           params: {
             name: value,
             page: 1,
-            resultsPerPage: 10,
-            sortMethod: 'nameAsc',
+            size: 10,
+            'sort.order': 'ASC',
+            'sort.attribute': 'name',
+            flat: true,
           },
         })
         .then((response) => {

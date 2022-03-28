@@ -39,6 +39,7 @@ export default async function handler(
                 .withAttribute((query['sort.attribute'] as string) || 'name')
                 .build()
             )
+            .withFlat((query.flat as string) === 'true')
             .build()
         )
 

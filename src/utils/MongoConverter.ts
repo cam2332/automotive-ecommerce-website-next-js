@@ -49,7 +49,26 @@ export const fromCategoryDocument = (
   thumbnailUrl: category.thumbnailUrl || null,
 })
 
-const compareCategory = (
+export const applyFilterAndPaginationAndSortOnCategories = (
+  categories: ICategory[],
+  criteria: ICategoryCriteria
+) =>
+  categories
+    .filter((category) =>
+      criteria.name && criteria.name.length > 0
+        ? category.name.toLowerCase().includes(criteria.name.toLowerCase())
+        : true
+    )
+    .slice(
+      (criteria.pagination.page - 1) * criteria.pagination.size,
+      (criteria.pagination.page - 1) * criteria.pagination.size +
+        criteria.pagination.size
+    )
+    .sort((category1, category2) =>
+      compareCategory(category1, category2, criteria)
+    )
+
+export const compareCategory = (
   category1: ICategory,
   category2: ICategory,
   criteria: ICategoryCriteria
@@ -112,15 +131,6 @@ export const createCategoryDataTree = (
     }
   })
   return dataTree
-    .filter((category) => new RegExp(criteria.name, 'i').test(category.name))
-    .slice(
-      (criteria.pagination.page - 1) * criteria.pagination.size,
-      (criteria.pagination.page - 1) * criteria.pagination.size +
-        criteria.pagination.size
-    )
-    .sort((category1, category2) =>
-      compareCategory(category1, category2, criteria)
-    )
 }
 
 export const fromProductDocument = (product: ProductDocument): IProduct => ({

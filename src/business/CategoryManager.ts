@@ -10,6 +10,7 @@ import SortMethod from '../DAO/types/SortMethod'
 import ApplicationError from '../utils/ApplicationError'
 import { Either, left, right } from '../utils/Either'
 import {
+  applyFilterAndPaginationAndSortOnCategories,
   createCategoryDataTree,
   fromCategoryDocument,
 } from '../utils/MongoConverter'
@@ -64,17 +65,26 @@ export const findAll = async (
   criteria: ICategoryCriteria
 ): Promise<ResultData<ICategory[]>> => {
   try {
-    const categories = await Category.findAll()
-    const categoriesTree = createCategoryDataTree(
-      categories.map((category) => fromCategoryDocument(category)),
-      'id',
-      'parentCategoryId',
-      criteria
+    const categoryDocs = await Category.findAll()
+    let categories = categoryDocs.map((category) =>
+      fromCategoryDocument(category)
     )
+    if (!criteria.flat) {
+      categories = createCategoryDataTree(
+        categories,
+        'id',
+        'parentCategoryId',
+        criteria
+      )
+    }
+
     return {
-      totalResults: categoriesTree.length,
-      totalPages: Math.ceil(categoriesTree.length / criteria.pagination.size),
-      results: categoriesTree,
+      totalResults: categories.length,
+      totalPages: Math.ceil(categories.length / criteria.pagination.size),
+      results: applyFilterAndPaginationAndSortOnCategories(
+        categories,
+        criteria
+      ),
     }
   } catch (error) {
     return {
