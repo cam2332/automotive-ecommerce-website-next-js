@@ -163,6 +163,7 @@ export const findCategoryById = async (
 }
 
 export const findRootCategoryById = async (
+  categoriesTree: ICategory[],
   id: string
 ): Promise<
   Either<ApplicationError, { category: ICategory; selectedCategory: ICategory }>
@@ -183,22 +184,11 @@ export const findRootCategoryById = async (
   }
   let category: ICategory
   let selectedCategory: ICategory
-  const allCategories = await findAll(
-    new CategoryCriteriaBuilder()
-      .withPagination(new PageableBuilder().withPage(1).withSize(1000).build())
-      .withSort(
-        new SortCriteriaBuilder()
-          .withOrder('DESC')
-          .withAttribute('numberOfProducts')
-          .build()
-      )
-      .build()
-  )
 
-  for (let i = 0; i < allCategories.results.length; i++) {
-    selectedCategory = searchCategoryInBranchById(allCategories.results[i], id)
+  for (let i = 0; i < categoriesTree.length; i++) {
+    selectedCategory = searchCategoryInBranchById(categoriesTree[i], id)
     if (selectedCategory) {
-      category = allCategories.results[i]
+      category = categoriesTree[i]
       break
     }
   }
