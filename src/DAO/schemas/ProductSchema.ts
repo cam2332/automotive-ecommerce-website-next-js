@@ -1,7 +1,8 @@
-import { Schema, Types } from 'mongoose'
+import { Aggregate, Schema, Types } from 'mongoose'
 import { ProductDocument, Property } from '../documents/Product'
 // eslint-disable-next-line import/no-cycle
-import Product from '../models/Product'
+import Product, { ProductModel } from '../models/Product'
+import IProductCriteria from '../types/IProductCriteria'
 import { ResultData } from '../types/ResultData'
 import SortMethod from '../types/SortMethod'
 
@@ -747,6 +748,87 @@ ProductSchema.statics.findAllByTitle = async (
     },
   }
   pipeline.push(pagination)
+
+  const products = await Product.aggregate(pipeline)
+
+  return {
+    totalPages: products[0].metadata[0]
+      ? products[0].metadata[0].totalPages
+      : 1,
+    totalResults: products[0].metadata[0]
+      ? products[0].metadata[0].totalResults
+      : 0,
+    results: products[0].results,
+  }
+}
+
+ProductSchema.statics.findAll = async (
+  criteria: IProductCriteria
+): Promise<ResultData<ProductDocument[]>> => {
+  const pipeline = []
+  if (criteria.title && criteria.title.length > 0) {
+    pipeline.push({
+      $match: {
+        title: { $regex: new RegExp(criteria.title, 'i') },
+      },
+    })
+  }
+
+  if (criteria.categoriesIds && criteria.categoriesIds.length > 0) {
+    pipeline.push({
+      $match: {
+        $expr: {
+          $in: [{ $toString: '$categoryId' }, criteria.categoriesIds],
+        },
+      },
+    })
+  }
+
+  pipeline.push({
+    $addFields: {
+      id: { $toString: '$_id' },
+    },
+  })
+
+  pipeline.push({
+    $project: {
+      _id: 0,
+    },
+  })
+
+  const sort = {}
+  sort[criteria.sort.attribute] = criteria.sort.order === 'DESC' ? -1 : 1
+
+  pipeline.push({
+    $sort: sort,
+  })
+
+  pipeline.push({
+    $facet: {
+      metadata: [
+        {
+          $count: 'totalResults',
+        },
+        {
+          $addFields: {
+            totalPages: {
+              $ceil: {
+                $divide: ['$totalResults', criteria.pagination.size],
+              },
+            },
+          },
+        },
+      ],
+      results: [
+        {
+          $skip: (criteria.pagination.page - 1) * criteria.pagination.size,
+        },
+        {
+          $limit: criteria.pagination.size,
+        },
+      ],
+    },
+  })
 
   const products = await Product.aggregate(pipeline)
 

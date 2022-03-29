@@ -5,6 +5,7 @@ import ApplicationError from '../utils/ApplicationError'
 import { Either, left, right } from '../utils/Either'
 import { fromProductDocument } from '../utils/MongoConverter'
 import SortMethod from '../DAO/types/SortMethod'
+import IProductCriteria from '../DAO/types/IProductCriteria'
 
 export const findProductById = async (
   productId: string,
@@ -54,6 +55,28 @@ export const findProductsByCategoryId = async (
         `Cannot find products with category id ${categoryId}.`
       ).setInstance(`/products`)
     )
+  }
+}
+
+export const findAll = async (
+  criteria: IProductCriteria
+): Promise<ResultData<IProduct[]>> => {
+  try {
+    const productsDocs = await Product.findAll(criteria)
+    const result = {
+      ...productsDocs,
+      results: productsDocs.results.map((product) =>
+        fromProductDocument(product)
+      ),
+    }
+
+    return result
+  } catch (error) {
+    return {
+      totalPages: 1,
+      totalResults: 0,
+      results: [],
+    }
   }
 }
 

@@ -4,6 +4,7 @@ import { ResultData } from '../types/ResultData'
 // eslint-disable-next-line import/no-cycle
 import ProductSchema from '../schemas/ProductSchema'
 import SortMethod from '../types/SortMethod'
+import IProductCriteria from '../types/IProductCriteria'
 
 export interface ProductModel extends Model<ProductDocument> {
   createProduct(): Promise<ProductDocument>
@@ -33,6 +34,7 @@ export interface ProductModel extends Model<ProductDocument> {
     resultsPerPage: number,
     sortMethod: SortMethod
   ): Promise<ResultData<ProductDocument[]>>
+  findAll(criteria: IProductCriteria): Promise<ResultData<ProductDocument[]>>
 }
 
 let product: ProductModel
