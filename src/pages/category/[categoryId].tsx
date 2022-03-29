@@ -11,17 +11,24 @@ import { CgMenuGridO } from 'react-icons/cg'
 import SiteWrapper from '../../components/SiteWrapper'
 import CategoryNav from '../../components/CategoryNav'
 import { IProduct } from '../../DAO/documents/Product'
-import { findRootCategoryById } from '../../business/CategoryManager'
+import {
+  findAll as findAllCategories,
+  findRootCategoryById,
+} from '../../business/CategoryManager'
 import { ICategory } from '../../DAO/documents/Category'
 import dbConnect from '../../utils/dbConnect'
 import QuantitySelect from '../../components/select/QuantitySelect'
 import CustomSelect from '../../components/select/CustomSelect'
 import SimpleItem from '../../components/select/SimpleItem'
 import Modal from '../../components/Modal'
-import { findProductsByCategoryHierarchy } from '../../business/ProductManager'
+import { findAll as findAllProducts } from '../../business/ProductManager'
 import SortMethod from '../../DAO/types/SortMethod'
 import Pagination from '../../components/Pagination'
 import ProductList from '../../components/ProductList'
+import CategoryCriteriaBuilder from '../../DAO/types/CategoryCriteriaBuilder'
+import ProductCriteriaBuilder from '../../DAO/types/ProductCriteriaBuilder'
+import PageableBuilder from '../../DAO/types/PageableBuilder'
+import SortCriteriaBuilder from '../../DAO/types/SortCriteriaBuilder'
 
 function index({
   selectedCategory,
@@ -223,26 +230,59 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     await dbConnect()
 
-    const resultCategories = await findRootCategoryById(categoryId)
-    // eslint-disable-next-line no-console
-    resultCategories.applyOnLeft((error) => console.log(error))
-    resultCategories.applyOnRight((result) => {
-      category = result.category
-      selectedCategory = result.selectedCategory
-    })
-    const resultProducts = await findProductsByCategoryHierarchy(
-      categoryId,
-      undefined,
-      page,
-      resultsPerPage,
-      sortMethod
+    const allCategories = await findAllCategories(
+      new CategoryCriteriaBuilder()
+        .withPagination(
+          new PageableBuilder().withPage(1).withSize(1000).build()
+        )
+        .withSort(
+          new SortCriteriaBuilder()
+            .withOrder('DESC')
+            .withAttribute('numberOfProducts')
+            .build()
+        )
+        .build()
+    )
+    const resultCategories = await findRootCategoryById(
+      allCategories.results,
+      categoryId
     )
     // eslint-disable-next-line no-console
-    resultProducts.applyOnLeft((error) => console.log(error))
-    resultProducts.applyOnRight((foundProducts) => {
-      products = foundProducts.results
-      totalPages = foundProducts.totalPages
-    })
+    resultCategories.applyOnLeft((error) => console.log(error))
+
+    if (resultCategories.isRight()) {
+      category = resultCategories.value.category
+      selectedCategory = resultCategories.value.selectedCategory
+
+      const resultProducts = await findAllProducts(
+        new ProductCriteriaBuilder()
+          .withCategoriesIds(
+            reduceCats(resultCategories.value.selectedCategory)
+          )
+          .withPagination(
+            new PageableBuilder()
+              .withPage(page)
+              .withSize(resultsPerPage)
+              .build()
+          )
+          .withSort(
+            new SortCriteriaBuilder()
+              .withOrder(sortMethod.type.includes('Asc') ? 'ASC' : 'DESC')
+              .withAttribute(
+                sortMethod.type.includes('name')
+                  ? 'title'
+                  : sortMethod.type.includes('price')
+                  ? 'price'
+                  : 'id'
+              )
+              .build()
+          )
+          .build()
+      )
+
+      products = resultProducts.results
+      totalPages = resultProducts.totalPages
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.log(error)
@@ -259,6 +299,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       resultsPerPage,
     },
   }
+}
+
+function reduceCats(rCategory: ICategory): string[] {
+  return [rCategory.id].concat(
+    ...rCategory.categories.map((c) => reduceCats(c))
+  )
 }
 
 const Container = tw.div`
