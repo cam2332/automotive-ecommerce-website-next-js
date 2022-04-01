@@ -8,7 +8,6 @@ import IProductCriteria from '../types/IProductCriteria'
 
 export interface ProductModel extends Model<ProductDocument> {
   createProduct(): Promise<ProductDocument>
-  findProductById(id: string, userId?: string): Promise<ProductDocument | null>
   findAllProducts(userId?: string): Promise<ProductDocument[]>
   findProductsByCategoryId(
     userId?: string,
