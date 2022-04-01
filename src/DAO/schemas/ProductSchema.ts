@@ -486,6 +486,16 @@ ProductSchema.statics.findAll = async (
     })
   }
 
+  if (criteria.ids && criteria.ids.length > 0) {
+    pipeline.push({
+      $match: {
+        $expr: {
+          $in: [{ $toString: '$_id' }, criteria.ids],
+        },
+      },
+    })
+  }
+
   pipeline.push({
     $addFields: {
       id: { $toString: '$_id' },
