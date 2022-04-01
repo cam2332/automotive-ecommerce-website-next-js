@@ -14,7 +14,7 @@ const PropertySchema: Schema = new Schema({
 
 const ProductSchema: Schema = new Schema(
   {
-    _id: { type: Schema.Types.String, required: true },
+    _id: { type: Schema.Types.ObjectId, required: true },
     title: { type: Schema.Types.String, required: true },
     subTitle: { type: Schema.Types.String },
     identifier: { type: Schema.Types.String, required: true },
