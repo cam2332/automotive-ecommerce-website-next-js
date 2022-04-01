@@ -11,12 +11,15 @@ export default class ProductCriteriaBuilder {
 
   private categoriesIds: string[] = undefined
 
+  private ids: string[] = undefined
+
   public build(): IProductCriteria {
     return {
       sort: this.sort,
       pagination: this.pagination,
       title: this.title,
       categoriesIds: this.categoriesIds,
+      ids: this.ids,
     }
   }
 
@@ -37,6 +40,11 @@ export default class ProductCriteriaBuilder {
 
   public withCategoriesIds(value: string[]): this {
     this.categoriesIds = value
+    return this
+  }
+
+  public withIds(value: string[]): this {
+    this.ids = value
     return this
   }
 }

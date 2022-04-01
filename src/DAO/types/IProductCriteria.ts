@@ -6,4 +6,5 @@ export default interface IProductCriteria {
   pagination: IPageable
   title: string
   categoriesIds: string[]
+  ids: string[]
 }
