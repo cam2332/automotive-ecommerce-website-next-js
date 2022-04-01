@@ -13,13 +13,6 @@ export interface ProductModel extends Model<ProductDocument> {
     userId?: string,
     categoryId?: string
   ): Promise<ProductDocument[]>
-  findProductsByCategoryHierarchy(
-    categoryId: string,
-    userId: string | undefined,
-    page: number,
-    resultsPerPage: number,
-    sortMethod: SortMethod
-  ): Promise<ResultData<ProductDocument[]>>
   findProductsByIds(
     ids: string[],
     userId: string | undefined,
