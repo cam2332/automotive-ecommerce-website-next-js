@@ -80,35 +80,6 @@ export const findAll = async (
   }
 }
 
-export const findProductsByCategoryHierarchy = async (
-  categoryId: string,
-  userId: string | undefined,
-  page: number,
-  resultsPerPage: number,
-  sortMethod: SortMethod
-): Promise<Either<ApplicationError, ResultData<IProduct[]>>> => {
-  try {
-    const products = await Product.findProductsByCategoryHierarchy(
-      categoryId,
-      userId,
-      page,
-      resultsPerPage,
-      sortMethod
-    )
-    return right({
-      ...products,
-      results: products.results.map((product) => fromProductDocument(product)),
-    })
-  } catch (error) {
-    console.log(error)
-    return left(
-      ApplicationError.INTERNAL_ERROR.setDetail(
-        `Cannot find products with category id ${categoryId}.`
-      ).setInstance(`/products`)
-    )
-  }
-}
-
 export const findProductsByIds = async (
   ids: string[],
   userId: string | undefined,
