@@ -30,10 +30,9 @@ export default async function handler(
         })
         foundCategory.applyOnRight((category) => res.status(200).json(category))
       } catch (err) {
-        const error =
-          ApplicationError.OPERATION_INVALID_FOR_CURRENT_STATE.setDetail(
-            `Cannot get category with id '${categoryId}'.`
-          ).setInstance('/categories/:id')
+        const error = ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+          `Cannot get category with id '${categoryId}'.`
+        ).setInstance('/categories/:id')
 
         res.status(error.status).json(error.toObject())
       }
