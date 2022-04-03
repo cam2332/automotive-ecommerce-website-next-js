@@ -8,8 +8,7 @@ import SortMethod from '../DAO/types/SortMethod'
 import IProductCriteria from '../DAO/types/IProductCriteria'
 
 export const findProductById = async (
-  productId: string,
-  userId?: string
+  productId: string
   // eslint-disable-next-line consistent-return
 ): Promise<Either<ApplicationError, IProduct>> => {
   if (productId === undefined) {
@@ -28,11 +27,16 @@ export const findProductById = async (
   }
 
   try {
-    const product = await Product.findProductById(productId, userId)
+    const product = await Product.findById(productId)
 
     if (product) {
       return right(fromProductDocument(product))
     }
+    return left(
+      ApplicationError.RESOURCE_NOT_FOUND.setDetail(
+        'Product not found.'
+      ).setInstance('/products/:id')
+    )
   } catch (error) {
     return left(
       ApplicationError.INTERNAL_ERROR.setDetail(
