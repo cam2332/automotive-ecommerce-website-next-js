@@ -28,8 +28,9 @@ const SearchProvider: React.FC = ({ children }): React.ReactElement => {
           params: {
             title: value,
             page: 1,
-            resultsPerPage: 10,
-            sortMethod: 'nameAsc',
+            size: 10,
+            'sort.order': 'ASC',
+            'sort.attribute': 'title',
           },
         })
         .then((response) => {
