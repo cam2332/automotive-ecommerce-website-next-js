@@ -351,7 +351,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     await dbConnect()
 
-    const resultProduct = await findProductById(productId, undefined)
+    const resultProduct = await findProductById(productId)
     if (resultProduct.isRight()) {
       product = resultProduct.value
 
