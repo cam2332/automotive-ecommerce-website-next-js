@@ -112,29 +112,3 @@ export const findProductsByIds = async (
     )
   }
 }
-
-export const findAllByTitle = async (
-  title: string,
-  page: number,
-  resultsPerPage: number,
-  sortMethod: SortMethod
-): Promise<ResultData<IProduct[]>> => {
-  try {
-    const result = await Product.findAllByTitle(
-      title,
-      page,
-      resultsPerPage,
-      sortMethod
-    )
-    return {
-      ...result,
-      results: result.results.map((product) => fromProductDocument(product)),
-    }
-  } catch (error) {
-    return {
-      totalResults: 0,
-      totalPages: 1,
-      results: [],
-    }
-  }
-}
