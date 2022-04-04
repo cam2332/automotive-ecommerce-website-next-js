@@ -4,6 +4,9 @@ module.exports = {
     darkMode: false, // or 'media' or 'class'
     theme: {
         extend: {
+            screens: {
+                'xl': '1280px'
+            },
             colors: {
                 'primary-color': {
                     DEFAULT: '#20548E',
