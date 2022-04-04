@@ -20,12 +20,6 @@ export interface ProductModel extends Model<ProductDocument> {
     resultsPerPage: number,
     sortMethod: SortMethod
   ): Promise<ResultData<ProductDocument[]>>
-  findAllByTitle(
-    title: string,
-    page: number,
-    resultsPerPage: number,
-    sortMethod: SortMethod
-  ): Promise<ResultData<ProductDocument[]>>
   findAll(criteria: IProductCriteria): Promise<ResultData<ProductDocument[]>>
 }
 
