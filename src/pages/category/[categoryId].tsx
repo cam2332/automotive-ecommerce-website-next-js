@@ -313,9 +313,14 @@ const Container = tw.div`
  	justify-between
  	w-full
   h-full
+  duration-300
+
  	lg:flex-row
  	lg:w-5xl
  	lg:max-w-5xl
+
+  xl:w-[1280px] 
+  xl:max-w-[1280px] 
 `
 const Nav = tw.div`
   hidden

@@ -184,9 +184,13 @@ const Container = tw.div`
   pb-6
   space-y-5
   bg-gray-200
+  duration-300
   
   lg:w-5xl
   lg:max-w-5xl
+
+  xl:w-[1280px]
+  xl:max-w-[1280px]
 `
 
 const TitleWrapper = tw.div`

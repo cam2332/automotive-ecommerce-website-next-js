@@ -428,6 +428,7 @@ const Container = tw.div`
   
   md:p-3
   md:w-7/12
+  xl:w-1/2
 `
 
 const PropertiesWrapper = tw.div`

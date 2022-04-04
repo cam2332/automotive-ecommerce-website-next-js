@@ -71,7 +71,7 @@ function SiteWrapper({
         {headerType === 'full' && (
           <>{!vehicleFilterHidden && <VehicleFilter />}</>
         )}
-        <div className='flex flex-col items-center lg:w-5xl lg:max-w-5xl'>
+        <div className='flex flex-col items-center lg:w-5xl lg:max-w-5xl xl:w-[1280px] xl:max-w-[1280px] duration-300'>
           {children}
         </div>
         <div>

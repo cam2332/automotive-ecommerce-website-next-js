@@ -132,10 +132,14 @@ const Navigation = tw.nav`
   justify-between
   h-12
   mx-4
+  duration-300
 
   lg:h-16
   lg:w-5xl
   lg:max-w-5xl
+
+  xl:w-[1280px] 
+  xl:max-w-[1280px] 
 `
 
 const LeftSide = tw.div`

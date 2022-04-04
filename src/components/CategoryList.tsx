@@ -52,9 +52,13 @@ const TitleText = tw.h1`
 const CategoriesGrid = tw.div`
   grid
  	w-full
+  duration-300
+  
  	sm:grid-cols-2
  	md:grid-cols-3
  	lg:grid-cols-3
- 	lg:max-w-5xl
+ 	
+  xl:w-[1280px]
+  xl:max-w-[1280px]
 `
 export default CategoryList
