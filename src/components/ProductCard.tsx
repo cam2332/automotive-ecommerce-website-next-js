@@ -139,6 +139,7 @@ function ProductCard({
 
           <CartWishListContainer>
             <AddToCartButton
+              aria-label='Dodaj do koszyka'
               onClick={() => onAddToCart(amount)}
               disabled={quantity === 0}
               $quantity={quantity}>
