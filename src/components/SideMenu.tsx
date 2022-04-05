@@ -70,6 +70,7 @@ const Container = tw.div`
 
   lg:top-20
   lg:right-50%-512px
+  xl:right-50%-640px
 `
 
 const Header = tw.div`

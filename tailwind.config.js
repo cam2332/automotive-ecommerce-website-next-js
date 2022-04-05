@@ -26,7 +26,8 @@ module.exports = {
                 'body-color': '#f1faee',
             },
             inset: {
-                '50%-512px': 'calc(50% - 512px)'
+                '50%-512px': 'calc(50% - 512px)',
+                '50%-640px': 'calc(50% - 640px)'
             },
             minHeight: {
                 '8': '32px',

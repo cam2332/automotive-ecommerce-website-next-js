@@ -146,7 +146,10 @@ const Container = tw.div`
 
   lg:left-1/2
   lg:-translate-x-1/2
+  lg:w-2/3
   lg:max-w-3xl
+
+  xl:max-w-5xl
 
   ${({ $visible }: { $visible: boolean }) => !$visible && `hidden`}
 `
