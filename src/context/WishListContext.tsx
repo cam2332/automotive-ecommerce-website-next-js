@@ -38,7 +38,7 @@ const WishListProvider: React.FC = ({ children }): React.ReactElement => {
         })
         .then((response) => {
           if (response.status === 200) {
-            setProducts(response.data || [])
+            setProducts(response.data.results || [])
           } else {
             setProducts([])
           }
