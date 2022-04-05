@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { findProductsByIds } from '../../../business/ProductManager'
+import { findAll } from '../../../business/ProductManager'
 import { authorize } from '../../../business/SessionManager'
 import {
   addProduct,
@@ -7,7 +7,9 @@ import {
   removeAllProducts,
   removeProduct,
 } from '../../../business/WishListManager'
-import SortMethod from '../../../DAO/types/SortMethod'
+import PageableBuilder from '../../../DAO/types/PageableBuilder'
+import ProductCriteriaBuilder from '../../../DAO/types/ProductCriteriaBuilder'
+import SortCriteriaBuilder from '../../../DAO/types/SortCriteriaBuilder'
 import ApplicationError from '../../../utils/ApplicationError'
 import dbConnect from '../../../utils/dbConnect'
 import { Either } from '../../../utils/Either'
@@ -37,24 +39,31 @@ const handler = defaultHandler<NextApiRequest, NextApiResponse>()
   .get(async (req, res) => {
     const result = await getProducts(req['user'].id)
     if (result.isRight()) {
-      if (result.value.length > 0) {
-        const productResult = await findProductsByIds(
-          result.value,
-          req['user'].id,
-          1,
-          result.value.length > 0 ? result.value.length : 1,
-          SortMethod.nameAsc
-        )
-        if (productResult.isRight()) {
-          res.status(200).json(productResult.value.results)
-        } else {
-          res
-            .status(productResult.value.status)
-            .json(productResult.value.toObject())
-        }
-      } else {
-        res.status(200).json([])
+      let productsResult = {
+        totalPages: 1,
+        totalResults: 0,
+        results: [],
       }
+      if (result.value.length > 0) {
+        productsResult = await findAll(
+          new ProductCriteriaBuilder()
+            .withIds(result.value)
+            .withPagination(
+              new PageableBuilder()
+                .withPage(1)
+                .withSize(result.value.length)
+                .build()
+            )
+            .withSort(
+              new SortCriteriaBuilder()
+                .withOrder('ASC')
+                .withAttribute('title')
+                .build()
+            )
+            .build()
+        )
+      }
+      res.status(200).json(productsResult)
     } else {
       res.status(result.value.status).json(result.value.toObject())
     }
