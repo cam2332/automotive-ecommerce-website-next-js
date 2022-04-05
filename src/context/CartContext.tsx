@@ -50,7 +50,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
         })
         .then((response) => {
           if (response.status === 200) {
-            setProducts(response.data || [])
+            setProducts(response.data.results || [])
           } else {
             setProducts([])
           }
@@ -140,13 +140,22 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
             })
           }
         })
-        .catch(() => {
-          toastContext.addToast({
-            text: 'Wystąpił błąd podczas dodawania produktu do koszyka.',
-            appearance: 'error',
-            autoDismiss: true,
-            dismissDelay: 5000,
-          })
+        .catch((error) => {
+          if (error.status === 409) {
+            toastContext.addToast({
+              text: 'W koszyku jest już maksymalna ilość wybranego produktu.',
+              appearance: 'error',
+              autoDismiss: true,
+              dismissDelay: 5000,
+            })
+          } else {
+            toastContext.addToast({
+              text: 'Wystąpił błąd podczas dodawania produktu do koszyka.',
+              appearance: 'error',
+              autoDismiss: true,
+              dismissDelay: 5000,
+            })
+          }
         })
     } else {
       const index = products.findIndex((prod) => prod.id === product.id)
