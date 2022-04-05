@@ -30,12 +30,7 @@ function SideWishList() {
           {wishListContext.products
             .slice(0, maxNumberOfVisibleProducts)
             .map(({ id, title, price, thumbnailUrl }) => (
-              <ProductItem
-                key={id}
-                onClick={() => {
-                  router.push(`/product/${id}`)
-                  appContext.setSideWishListVisible(false)
-                }}>
+              <ProductItem key={id}>
                 <ThumbnailWrapper>
                   {thumbnailUrl && (
                     <Image
@@ -47,7 +42,13 @@ function SideWishList() {
                     />
                   )}
                 </ThumbnailWrapper>
-                <ProductNameText>{title}</ProductNameText>
+                <ProductNameText
+                  onClick={() => {
+                    router.push(`/product/${id}`)
+                    appContext.setSideWishListVisible(false)
+                  }}>
+                  {title}
+                </ProductNameText>
                 <PriceText>
                   {price && price.toFixed(2).replace('.', ',')}
                 </PriceText>
