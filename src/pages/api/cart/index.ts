@@ -5,10 +5,12 @@ import {
   removeAllProducts,
   removeProduct,
 } from '../../../business/CartManager'
-import { findProductsByIds } from '../../../business/ProductManager'
+import { findAll } from '../../../business/ProductManager'
 import { authorize } from '../../../business/SessionManager'
 import { ICart } from '../../../DAO/documents/User'
-import SortMethod from '../../../DAO/types/SortMethod'
+import PageableBuilder from '../../../DAO/types/PageableBuilder'
+import ProductCriteriaBuilder from '../../../DAO/types/ProductCriteriaBuilder'
+import SortCriteriaBuilder from '../../../DAO/types/SortCriteriaBuilder'
 import ApplicationError from '../../../utils/ApplicationError'
 import dbConnect from '../../../utils/dbConnect'
 import { Either } from '../../../utils/Either'
@@ -38,28 +40,39 @@ const handler = defaultHandler<NextApiRequest, NextApiResponse>()
   .get(async (req, res) => {
     const result = await getProducts(req['user'].id)
     if (result.isRight()) {
-      const productsResult = await findProductsByIds(
-        result.value.map(({ productId }) => productId),
-        req['user'].id,
-        1,
-        result.value.length > 0 ? result.value.length : 1,
-        SortMethod.nameAsc
-      )
-      if (productsResult.isRight()) {
-        res.status(200).json(
-          productsResult.value.results.map((product) =>
-            Object.assign(product, {
-              quantity: result.value.find(
-                (prod) => prod.productId === product.id
-              ).quantity,
-            })
-          )
-        )
-      } else {
-        res
-          .status(productsResult.value.status)
-          .json(productsResult.value.toObject())
+      let productsResult = {
+        totalPages: 1,
+        totalResults: 0,
+        results: [],
       }
+      if (result.value.length > 0) {
+        productsResult = await findAll(
+          new ProductCriteriaBuilder()
+            .withIds(result.value.map(({ productId }) => productId))
+            .withPagination(
+              new PageableBuilder()
+                .withPage(1)
+                .withSize(result.value.length)
+                .build()
+            )
+            .withSort(
+              new SortCriteriaBuilder()
+                .withOrder('ASC')
+                .withAttribute('title')
+                .build()
+            )
+            .build()
+        )
+
+        productsResult.results.map((product) =>
+          Object.assign(product, {
+            quantity:
+              result.value.find((prod) => prod.productId === product.id)
+                .quantity || 0,
+          })
+        )
+      }
+      res.status(200).json(productsResult)
     } else {
       res.status(result.value.status).json(result.value.toObject())
     }
