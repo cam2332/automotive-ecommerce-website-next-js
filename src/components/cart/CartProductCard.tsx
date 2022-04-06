@@ -2,11 +2,10 @@ import Image from 'next/image'
 import { IoCheckmarkSharp, IoCloseSharp, IoTrashOutline } from 'react-icons/io5'
 import tw from 'tailwind-styled-components'
 import QuantitySelect from '../select/QuantitySelect'
-import { IProduct } from '../../DAO/documents/Product'
+import CartProduct from '../../DAO/types/CartProduct'
 
 interface ICartProductCardProps {
-  product: IProduct
-  selectedAmount: number
+  product: CartProduct
   onClickTitle: () => void
   onClickSetAmount: (amount: number) => void
   onClickRemove: () => void
@@ -14,7 +13,6 @@ interface ICartProductCardProps {
 
 function CartProductCard({
   product,
-  selectedAmount,
   onClickTitle,
   onClickSetAmount,
   onClickRemove,
@@ -51,7 +49,7 @@ function CartProductCard({
             {product.quantity > 0 ? (
               <>
                 <QuantitySelect
-                  selectedValue={selectedAmount}
+                  selectedValue={product.selectedAmount}
                   numberOfOptions={product.quantity}
                   onClickItem={(amount: number) => onClickSetAmount(amount)}
                 />
@@ -66,7 +64,7 @@ function CartProductCard({
           <PricesContainer>
             {product.oldPrice && (
               <OldPriceText>
-                {(product.oldPrice * selectedAmount)
+                {(product.oldPrice * product.selectedAmount)
                   .toFixed(2)
                   .replace('.', ',')}{' '}
                 {product.currency}
@@ -74,7 +72,7 @@ function CartProductCard({
             )}
             <PriceText>
               {product.price &&
-                (product.price * selectedAmount)
+                (product.price * product.selectedAmount)
                   .toFixed(2)
                   .replace('.', ',')}{' '}
               {product.currency}

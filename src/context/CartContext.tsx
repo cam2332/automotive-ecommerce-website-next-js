@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import redaxios from 'redaxios'
 import { IProduct } from '../DAO/documents/Product'
+import CartProduct from '../DAO/types/CartProduct'
 import { useSessionContext } from './SessionContext'
 import { useToastContext } from './ToastContext'
 
 type CartContextProps = {
-  products: IProduct[]
+  products: CartProduct[]
   numberOfProducts: number
   numberOfUniqueProducts: number
   total: number
@@ -27,10 +28,10 @@ export const CartContext = createContext<CartContextProps>(
 const CartProvider: React.FC = ({ children }): React.ReactElement => {
   const sessionContext = useSessionContext()
   const toastContext = useToastContext()
-  const [products, setProducts] = useState<IProduct[]>([])
+  const [products, setProducts] = useState<CartProduct[]>([])
   const [currency, setCurrency] = useState<string>('zł')
 
-  const saveToLocalStorage = (products: IProduct[]) => {
+  const saveToLocalStorage = (products: CartProduct[]) => {
     localStorage.setItem(
       'cart',
       JSON.stringify(
@@ -103,7 +104,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
 
   const addToCart = async (
     product: IProduct,
-    quantity: number,
+    amountToAdd: number,
     setAddQuantity?: boolean
   ): Promise<void> => {
     if (sessionContext.user) {
@@ -112,7 +113,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
           '/api/cart',
           {
             productId: product.id,
-            quantity: quantity,
+            quantity: amountToAdd,
           },
           {
             params: {
@@ -161,8 +162,8 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
       const index = products.findIndex((prod) => prod.id === product.id)
       if (index !== -1) {
         const newQuantity = setAddQuantity
-          ? quantity
-          : products[index].quantity + quantity
+          ? amountToAdd
+          : products[index].selectedAmount + amountToAdd
         if (newQuantity > product.quantity) {
           toastContext.addToast({
             text: 'W koszyku jest już maksymalna ilość wybranego produktu.',
@@ -171,7 +172,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
             dismissDelay: 5000,
           })
         }
-        products[index].quantity = Math.min(newQuantity, product.quantity)
+        products[index].selectedAmount = newQuantity
         setProducts((products) => {
           const newProductList = [...products]
           saveToLocalStorage(newProductList)
@@ -181,7 +182,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
         setProducts((products) => {
           const newProductList = [
             ...products,
-            { ...product, quantity: quantity },
+            { ...product, selectedAmount: amountToAdd },
           ]
           saveToLocalStorage(newProductList)
           return newProductList
@@ -195,7 +196,7 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
       redaxios
         .delete('/api/cart', {
           params: {
-            productId: productId,
+            productId,
           },
           headers: { authorization: sessionContext.token },
         })
@@ -268,15 +269,19 @@ const CartProvider: React.FC = ({ children }): React.ReactElement => {
         products,
         numberOfProducts:
           products.length > 0
-            ? products.reduce((prev, product) => prev + product.quantity, 0)
+            ? products.reduce(
+                (prev, product) => prev + product.selectedAmount,
+                0
+              )
             : 0,
         numberOfUniqueProducts: products.filter(
-          (product) => product.quantity > 0
+          (product) => product.selectedAmount > 0
         ).length,
         total:
           products.length > 0
             ? products.reduce(
-                (prev, product) => prev + product.price * product.quantity,
+                (prev, product) =>
+                  prev + product.price * product.selectedAmount,
                 0
               )
             : 0,

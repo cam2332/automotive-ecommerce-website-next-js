@@ -11,20 +11,15 @@ import {
 } from 'react-icons/io5'
 import { FaSms } from 'react-icons/fa'
 import { HiOutlineTruck } from 'react-icons/hi'
-import { findProductsByIds } from '../../business/ProductManager'
 import { authorize } from '../../business/SessionManager'
 import CartProductCard from '../../components/cart/CartProductCard'
 import SiteWrapper from '../../components/SiteWrapper'
-import { IProduct } from '../../DAO/documents/Product'
-import SortMethod from '../../DAO/types/SortMethod'
 import dbConnect from '../../utils/dbConnect'
 import { useCartContext } from '../../context/CartContext'
 import InputText from '../../components/InputText'
 import Button from '../../components/Button'
 import { useToastContext } from '../../context/ToastContext'
 import OptionBox from '../../components/cart/OptionBox'
-
-type CartProduct = IProduct & { selectedAmount: number }
 
 type DeliveryType = 'Courier' | 'InPost'
 
@@ -38,11 +33,10 @@ const paymentPrice = { PaymentCard: 0, GooglePay: 0, CashOnDelivery: 4.95 }
 
 const additionalServicePrice = { None: 0, SMSNotification: 0.99 }
 
-export default function index({ products }: { products: CartProduct[] }) {
+export default function index() {
   const router = useRouter()
   const cartContext = useCartContext()
   const toastContext = useToastContext()
-  const [localProducts, setLocalProducts] = useState(products)
   const [discountCode, setDiscountCode] = useState<string>('')
   const [totalDiscount, setTotalDiscount] = useState<number>(0)
   const [isDiscountApplied, setIsDiscountApplied] = useState<boolean>(false)
@@ -63,16 +57,15 @@ export default function index({ products }: { products: CartProduct[] }) {
         <>
           <SectionWrapper>
             <SectionTitle>Lista produktów</SectionTitle>
-            {localProducts.map((product) => (
+            {cartContext.products.map((product) => (
               <CartProductCard
                 key={product.id}
                 product={product}
-                selectedAmount={product.selectedAmount}
                 onClickTitle={() => {
-                  router.push('/product/' + product.id)
+                  router.push(`/product/${product.id}`)
                 }}
                 onClickSetAmount={(amount) => {
-                  /** */
+                  cartContext.addToCart(product, amount, true)
                 }}
                 onClickRemove={() => {
                   cartContext.removeFromCart(product.id)
@@ -98,14 +91,11 @@ export default function index({ products }: { products: CartProduct[] }) {
                   setTotalDiscount(discountAmount)
                   setIsDiscountApplied(true)
                   toastContext.addToast({
-                    text:
-                      'Zaoszczędzono ' +
-                      discountAmount.toFixed(2).replace('.', ',') +
-                      ' ' +
-                      cartContext.currency +
-                      " dzięki kodowi rabatowemu '" +
-                      discountCode +
-                      "'.",
+                    text: `Zaoszczędzono ${discountAmount
+                      .toFixed(2)
+                      .replace('.', ',')} ${
+                      cartContext.currency
+                    } dzięki kodowi rabatowemu '${discountCode}'.`,
                     appearance: 'info',
                     autoDismiss: true,
                     dismissDelay: 5000,
@@ -387,12 +377,10 @@ const CheckoutButtonText = tw.div`
 `
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  let products: IProduct[] = []
   try {
     await dbConnect()
     const authorized = await authorize(context.req, context.res)
     if (authorized.isLeft()) {
-      console.log('u', authorized.value)
       return {
         redirect: {
           destination: '/account/login',
@@ -400,31 +388,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         },
       }
     }
-    const user = authorized.value.user
-
-    const productsResult = await findProductsByIds(
-      user.cart.map(({ productId }) => productId),
-      user.id,
-      1,
-      user.cart.length > 0 ? user.cart.length : 1,
-      SortMethod.nameAsc
-    )
-    if (productsResult.isRight()) {
-      products = productsResult.value.results.map((product) =>
-        Object.assign(product, {
-          selectedAmount: user.cart.find(
-            (prod) => prod.productId === product.id
-          ).quantity,
-        })
-      )
-    }
   } catch (error) {
     console.log(error)
   }
 
   return {
-    props: {
-      products: products,
-    },
+    props: {},
   }
 }

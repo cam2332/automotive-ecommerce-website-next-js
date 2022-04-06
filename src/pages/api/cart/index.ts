@@ -66,7 +66,7 @@ const handler = defaultHandler<NextApiRequest, NextApiResponse>()
 
         productsResult.results.map((product) =>
           Object.assign(product, {
-            quantity:
+            selectedAmount:
               result.value.find((prod) => prod.productId === product.id)
                 .quantity || 0,
           })

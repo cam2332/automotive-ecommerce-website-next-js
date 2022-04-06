@@ -29,7 +29,7 @@ function SideShoppingList() {
           {cartContext.numberOfUniqueProducts > 0 &&
             cartContext.products
               .slice(0, maxNumberOfVisibleProducts)
-              .map(({ id, title, price, quantity, thumbnailUrl }) => (
+              .map(({ id, title, price, selectedAmount, thumbnailUrl }) => (
                 <ProductItem key={id}>
                   <ThumbnailWrapper>
                     {thumbnailUrl && (
@@ -53,7 +53,7 @@ function SideShoppingList() {
                     {price && price.toFixed(2).replace('.', ',')}
                   </PriceText>
                   <QuantityTrashContainer>
-                    <ProductText>x{quantity}</ProductText>
+                    <ProductText>x{selectedAmount}</ProductText>
                     <TrashIcon onClick={() => cartContext.removeFromCart(id)} />
                   </QuantityTrashContainer>
                 </ProductItem>
