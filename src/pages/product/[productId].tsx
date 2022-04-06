@@ -84,8 +84,10 @@ function index(props: IProduct & { compatibleCars: ICarMake[] }) {
         <Container>
           <TitleWrapper>
             <Title>
-              <TitleText>{props.title}</TitleText>
-              <SubTitleText>{props.subTitle}</SubTitleText>
+              <TitleText>{`${props.title} ${props.manufacturer} ${props.identifier}`}</TitleText>
+              <SubTitleText>
+                {props.subTitle || props.manufacturer}
+              </SubTitleText>
             </Title>
             {wishListContext.isInWishList(localProduct.id) ? (
               <HeartFillIcon onClick={toggleInWishList} />
