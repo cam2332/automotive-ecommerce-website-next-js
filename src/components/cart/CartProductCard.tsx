@@ -1,5 +1,6 @@
 import Image from 'next/image'
-import { IoCheckmarkSharp, IoCloseSharp, IoTrashOutline } from 'react-icons/io5'
+import Link from 'next/link'
+import { IoCloseSharp, IoTrashOutline } from 'react-icons/io5'
 import tw from 'tailwind-styled-components'
 import QuantitySelect from '../select/QuantitySelect'
 import CartProduct from '../../DAO/types/CartProduct'
@@ -19,33 +20,45 @@ function CartProductCard({
 }: ICartProductCardProps) {
   return (
     <Container>
-      <ThumbnailWrapper>
-        {product.thumbnailUrl && (
-          <Image
-            width={100}
-            height={100}
-            layout='responsive'
-            src={product.thumbnailUrl}
-            alt={product.title}
-          />
-        )}
-      </ThumbnailWrapper>
-
-      <MainContainer>
-        <DescriptionContainer>
-          <TitleMobileTrash>
-            <TitleText onClick={onClickTitle}>{product.title}</TitleText>
-            <TrashIcon
-              className='flex md:hidden'
-              onClick={() => onClickRemove()}
+      <Link key={product.id} href={`/product/${product.id}`} passHref>
+        <ThumbnailWrapper>
+          {product.thumbnailUrl && (
+            <Image
+              width={100}
+              height={100}
+              layout='fixed'
+              src={product.thumbnailUrl}
+              alt={product.title}
             />
-          </TitleMobileTrash>
-          <SubTitleText>{product.subTitle}</SubTitleText>
-          <ArticleId>Nr artykułu: {product.identifier}</ArticleId>
-        </DescriptionContainer>
+          )}
+        </ThumbnailWrapper>
+      </Link>
+      <Info>
+        <Link key={product.id} href={`/product/${product.id}`} passHref>
+          <Details>
+            <Manufacturer>{product.manufacturer}</Manufacturer>
+            <Title onClick={onClickTitle}>{product.title}</Title>
+            <ArticleId>{product.identifier}</ArticleId>
+          </Details>
+        </Link>
 
-        <DetailsContainer>
-          <AvailabilityContainer>
+        <Summary>
+          <Price>
+            {product.price &&
+              (product.price * product.selectedAmount)
+                .toFixed(2)
+                .replace('.', ',')}{' '}
+            {product.currency}
+          </Price>
+          <PricePerItem>
+            {`(${product.selectedAmount} x 
+            ${product.price && product.price.toFixed(2).replace('.', ',')}
+            ${product.currency})`}
+          </PricePerItem>
+          <Actions>
+            <Delete>
+              <TrashIcon onClick={() => onClickRemove()} />
+            </Delete>
             {product.quantity > 0 ? (
               <>
                 <QuantitySelect
@@ -60,30 +73,9 @@ function CartProductCard({
                 <NotAvailableText>Niedostępny</NotAvailableText>
               </>
             )}
-          </AvailabilityContainer>
-          <PricesContainer>
-            {product.oldPrice && (
-              <OldPriceText>
-                {(product.oldPrice * product.selectedAmount)
-                  .toFixed(2)
-                  .replace('.', ',')}{' '}
-                {product.currency}
-              </OldPriceText>
-            )}
-            <PriceText>
-              {product.price &&
-                (product.price * product.selectedAmount)
-                  .toFixed(2)
-                  .replace('.', ',')}{' '}
-              {product.currency}
-            </PriceText>
-          </PricesContainer>
-          <TrashIcon
-            className='hidden md:flex'
-            onClick={() => onClickRemove()}
-          />
-        </DetailsContainer>
-      </MainContainer>
+          </Actions>
+        </Summary>
+      </Info>
     </Container>
   )
 }
@@ -91,95 +83,64 @@ function CartProductCard({
 const Container = tw.div`
   flex
   flex-row
-  items-start
-  justify-between
-  p-4
-  w-full
+  py-5
+  border-t
   
   md:p-6
 `
 
-const ThumbnailWrapper = tw.div`
-  grid
-  w-32
-  p-3
-  
-  lg:w-60
+const ThumbnailWrapper = tw.a`
+  h-[102px]
+  w-[102px]
+  border
+  mr-2
 `
 
-const MainContainer = tw.div`
+const Info = tw.div`
   flex
-  flex-col
-  justify-between
-  w-full
-  
-  md:flex-row
-`
-
-const DescriptionContainer = tw.div`
-  flex
-  flex-col
-  w-full
-`
-
-const TitleMobileTrash = tw.div`
-  flex 
-  flex-row 
-  items-center 
+  flex-1
+  flex-row
   justify-between
 `
 
-const TitleText = tw.span`
-  mr-5
-  font-medium
+const Details = tw.a`
+  flex
+  flex-col
+  text-primary-color
+  font-semibold
+  min-w-[50%]
   cursor-pointer
-  text-primary-color
 `
 
-const SubTitleText = tw.span`
-  py-1
-  text-sm
-  text-primary-color
+const Title = tw.span`
+  cursor-pointer
 `
 
-const ArticleId = tw.span`
-  text-sm
- 	text-gray-500
+const Manufacturer = tw.span`
+  text-gray-500
+  font-normal
 `
 
-const DetailsContainer = tw.div`
+const ArticleId = tw.span``
+
+const Summary = tw.div`
   flex
- 	flex-row
- 	items-center
-  justify-between
-  my-4
+ 	flex-col
+ 	items-end
   w-2/3
 `
 
-const PricesContainer = tw.div`
-  flex
- 	flex-col
- 	items-start
-`
-
-const PriceText = tw.span`
-  text-xl
+const Price = tw.span`
+text-primary-color
  	font-semibold
  	whitespace-nowrap
-  mx-3
-  lg:mx-6
 `
 
-const OldPriceText = tw.span`
-  text-base
-  text-gray-500
-  line-through
-  whitespace-nowrap
-  mx-3
-  lg:mx-6
+const PricePerItem = tw.span`
+  text-gray-400
 `
 
-const AvailabilityContainer = tw.div`
+const Actions = tw.div`
   flex
  	flex-row
  	items-center
@@ -187,15 +148,24 @@ const AvailabilityContainer = tw.div`
  	my-1
 `
 
-const CheckmarkIcon = tw(IoCheckmarkSharp)`
-  m-3
-  scale-200
-  text-xl
-  text-green-600
+const Delete = tw.div`
+  flex
+  items-center
+  justify-center
+  mr-2
+  bg-white
+  border-2
+  border-gray-200
+  rounded-2xl
+  py-2px
+  min-h-8
+  min-w-70px
+  cursor-pointer
 `
 
 const TrashIcon = tw(IoTrashOutline)`
-  text-xl
+  flex
+  text-lg
   cursor-pointer
   text-primary-color
 `
