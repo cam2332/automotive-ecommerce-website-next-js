@@ -59,20 +59,12 @@ function CartProductCard({
             <Delete>
               <TrashIcon onClick={() => onClickRemove()} />
             </Delete>
-            {product.quantity > 0 ? (
-              <>
-                <QuantitySelect
-                  selectedValue={product.selectedAmount}
-                  numberOfOptions={product.quantity}
-                  onClickItem={(amount: number) => onClickSetAmount(amount)}
-                />
-              </>
-            ) : (
-              <>
-                <CloseIcon />
-                <NotAvailableText>Niedostępny</NotAvailableText>
-              </>
-            )}
+            <QuantitySelect
+              selectedValue={product.selectedAmount}
+              numberOfOptions={product.quantity}
+              onClickItem={(amount: number) => onClickSetAmount(amount)}
+              disabled={product.quantity <= 0}
+            />
           </Actions>
         </Summary>
       </Info>
