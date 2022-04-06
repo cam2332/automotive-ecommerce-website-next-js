@@ -56,7 +56,10 @@ export default function index() {
       {cartContext.numberOfUniqueProducts > 0 ? (
         <>
           <SectionWrapper>
-            <SectionTitle>Lista produktów</SectionTitle>
+            <SectionTitle>
+              {`Liczba produktów w koszyku: ${cartContext.numberOfUniqueProducts}
+              `}
+            </SectionTitle>
             {cartContext.products.map((product) => (
               <CartProductCard
                 key={product.id}
