@@ -5,13 +5,15 @@ function QuantitySelect({
   selectedValue,
   numberOfOptions,
   onClickItem,
+  disabled,
 }: {
   selectedValue: number
   numberOfOptions: number
   onClickItem: (value: number) => void
+  disabled?: boolean
 }) {
   return (
-    <CustomSelect value={selectedValue.toString()}>
+    <CustomSelect value={selectedValue.toString()} disabled={disabled}>
       {Array(numberOfOptions)
         .fill(null)
         .map((_, i) => i + 1)
