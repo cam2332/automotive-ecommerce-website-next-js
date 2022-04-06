@@ -15,14 +15,24 @@ interface ICustomSelectProps {
   expanded?: boolean
 }
 
-function CustomSelect(props: ICustomSelectProps) {
-  const [expanded, setExpanded] = useState<boolean>(props.expanded || false)
+function CustomSelect({
+  value,
+  children,
+  input,
+  inputValue,
+  inputPlaceholder,
+  onInputChange,
+  onClickField,
+  disabled,
+  expanded,
+}: ICustomSelectProps) {
+  const [lExpanded, setLExpanded] = useState<boolean>(expanded || false)
   const [up, setUp] = useState(false)
   const listWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setExpanded(props.expanded)
-  }, [props.expanded])
+    setLExpanded(expanded)
+  }, [expanded])
 
   useEffect(() => {
     const { innerHeight } = window
@@ -36,39 +46,47 @@ function CustomSelect(props: ICustomSelectProps) {
           setUp(true)
         }
       },
-      expanded ? 0 : 200
+      lExpanded ? 0 : 200
     )
-  }, [expanded])
+  }, [lExpanded])
 
   return (
-    <Container $expanded={expanded}>
+    <Container $expanded={lExpanded}>
       <FullSizeBackground
-        $expanded={expanded}
-        onClick={() => setExpanded(false)}
+        $expanded={!disabled && lExpanded}
+        onClick={() => setLExpanded(false)}
       />
-      <InnerContainer>
+      <InnerContainer $active={!disabled}>
         <ValueContainer
           onClick={() => {
-            setExpanded(!expanded)
-            props.onClickField && props.onClickField()
+            if (!disabled) {
+              setLExpanded(!lExpanded)
+              onClickField?.()
+            }
           }}>
-          {props.input ? (
+          {input ? (
             <Input
-              disabled={props.disabled}
-              placeholder={props.inputPlaceholder}
-              value={props.inputValue}
-              onChange={(e) => props.onInputChange(e.target.value)}
+              disabled={disabled}
+              placeholder={inputPlaceholder}
+              value={inputValue}
+              onChange={(e) => onInputChange(e.target.value)}
             />
           ) : (
-            <Value $active={!props.disabled}>{props.value}</Value>
+            <Value $active={!disabled}>{value}</Value>
           )}
           <IconWrapper>
-            <ChevronIcon $active={!props.disabled} $expanded={expanded} />
+            <ChevronIcon
+              $active={!disabled}
+              $expanded={!disabled && lExpanded}
+            />
           </IconWrapper>
         </ValueContainer>
-        <ListWrapper ref={listWrapperRef} $expanded={expanded} $up={up}>
-          <List onClick={() => !props.disabled && setExpanded(!expanded)}>
-            {props.children}
+        <ListWrapper
+          ref={listWrapperRef}
+          $expanded={!disabled && lExpanded}
+          $up={up}>
+          <List onClick={() => !disabled && setLExpanded(!lExpanded)}>
+            {children}
           </List>
         </ListWrapper>
       </InnerContainer>
@@ -96,6 +114,9 @@ const InnerContainer = tw.div`
   flex-col
   items-center
   w-full
+  select-none
+  ${({ $active }: { $active: boolean }) =>
+    $active ? 'cursor-pointer' : 'cursor-default'}
 `
 
 const ValueContainer = tw.div`
@@ -128,9 +149,9 @@ const Value = tw.span`
   mr-1
   bg-white
   appearance-none
-  text-primary-color
   text-sm
-  ${({ $active }: { $active: boolean }) => 'cursor-pointer'}
+  ${({ $active }: { $active: boolean }) =>
+    $active ? 'text-primary-color' : 'text-gray-400'}
 `
 
 const IconWrapper = tw.div`
